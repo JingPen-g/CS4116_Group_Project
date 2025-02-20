@@ -9,7 +9,7 @@
 */
 
 
-$config = require("config.php")
+$config = require("db_config.php");
 
 $dbHost = $config['DB_HOST'];
 $dbName = $config['DB_NAME'];
@@ -20,10 +20,10 @@ $dbPassword = $config['DB_PASSWORD'];
 $conn = new mysqli($dbName, $dbUser, $dbPassword, $dbName);
 
 if($conn->connect_error){
-    die("Connection Failed.")
+    die("Connection Failed.");
 }
 
-echo "Connected Successfully."
+echo "Connected Successfully.";
 
 // OPTION 2 
 // This is probably what we should go with for error handling n logging n stuff
@@ -38,7 +38,7 @@ try {
     //More like (yes error log is builtin php go look at docs we should use it):
     //error_log("Database Connection Error: ", $e->getMessage(), 3, "/logs/db_logs.log")
     //throw new $e
-    echo "Propogate error up."
+    echo "Propogate error up.";
 }
 
 ?>
