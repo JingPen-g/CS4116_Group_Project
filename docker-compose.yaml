@@ -7,7 +7,7 @@ services:
     ports:
       - "8080:80"  # Expose Nginx on host port 8080
     volumes:
-      - ./src/back-end:/var/www/html  # Mount project files
+      - ./src/public:/var/www/public  # Mount project files
       - ./nginx.conf:/etc/nginx/conf.d/default.conf  # Use custom Nginx config
     depends_on:
       - php
@@ -16,4 +16,7 @@ services:
     image: php:7.4-fpm
     container_name: php
     volumes:
-      - ./src/back-end:/var/www/html
+      - ./src/public:/var/www/public
+      - ./src/routes:/var/www/routes
+      - ./src/front-end:/var/www/front-end
+      - ./Src/back-end:/var/www/back-end
