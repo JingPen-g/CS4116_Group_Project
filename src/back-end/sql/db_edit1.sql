@@ -1,4 +1,4 @@
-USE 4592700_fursure;
+USER 4592700_fursure;
 
 CREATE TABLE Transactions (
     Transaction_ID INT AUTO_INCREMENT PRIMARY KEY,

@@ -12,7 +12,9 @@ services:
       - php
 
   php:
-    image: php:7.4-fpm
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: php
     volumes:
       - ./src/public:/var/www/public
