@@ -17,7 +17,7 @@ $dbUser = $config['DB_USER'];
 $dbPassword = $config['DB_PASSWORD'];
 
 // OPTION 1
-$conn = new mysqli($dbName, $dbUser, $dbPassword, $dbName);
+$conn = new mysqli($dbHost, $dbUser, $dbPassword, $dbName);
 
 if($conn->connect_error){
     die("Connection Failed.");
@@ -28,7 +28,7 @@ echo "Connected Successfully.";
 // OPTION 2 
 // This is probably what we should go with for error handling n logging n stuff
 try {
-    $conn = new mysqli($dbName, $dbUser, $dbPassword, $dbName);
+    $conn = new mysqli($dbHost, $dbUser, $dbPassword, $dbName);
 
     if($conn->connect_error){
         throw new mysqli_sql_exception("Connection Error: " . $conn->connect_error);
