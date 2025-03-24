@@ -5,36 +5,80 @@ class Model {
     protected $conn;
     protected $table;
 
-    public function __construct(){
+    public function __construct() {
         $this->conn = Database::getInstance()->getConnection();
     }
 
-    public function find(...$args) {
-        if (count($args) % 2 != 0) throw new InvalidArgumentException("Value, Column pairs are required for the find method.");
-    
+    public function find(array $criteria = []) {
+        if (empty($criteria)) {
+            return $this->fetchAll();
+        }
+
         $conditions = [];
         $values = [];
-        
-        for ($i = 0; $i < count($args); $i += 2) {
-            $column = $args[$i + 1]; 
-            $value = $args[$i];
-    
-            $conditions[] = "$column = :param$i";
-            $values[":param$i"] = $value;
+        $types = '';
+
+        foreach ($criteria as $column => $value) {
+            $conditions[] = "$column = ?";
+            $values[] = &$value;
+
+            if (is_int($value)) {
+                $types .= 'i'; 
+            } elseif (is_double($value)) {
+                $types .= 'd'; 
+            } else {
+                $types .= 's';
+            }
         }
-    
+
         $whereClause = implode(" AND ", $conditions);
         $query = "SELECT * FROM $this->table WHERE $whereClause";
-    
+
         $stmt = $this->conn->prepare($query);
-    
-        foreach ($values as $param => $val) {
-            $stmt->bindValue($param, $val);
+
+        if (!$stmt) {
+            throw new Exception("Prepare failed: " . $this->conn->error);
         }
-    
+
+        // Bind parameters
+        if (!empty($values)) {
+            $refs = array_merge([$stmt, $types], $values);
+            call_user_func_array('mysqli_stmt_bind_param', $refs);
+        }
+
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Get result
+        $result = $stmt->get_result();
+
+        if (!$result) {
+            throw new Exception("Execute failed: " . $stmt->error);
+        }
+
+        // Fetch all results
+        $rows = [];
+        while ($row = $result->fetch_assoc()) {
+            $rows[] = $row;
+        }
+
+        $stmt->close();
+        return $rows;
+    }
+
+    private function fetchAll() {
+        $query = "SELECT * FROM $this->table";
+        $result = $this->conn->query($query);
+
+        if (!$result) {
+            throw new Exception("Query failed: " . $this->conn->error);
+        }
+
+        $rows = [];
+        while ($row = $result->fetch_assoc()) {
+            $rows[] = $row;
+        }
+
+        return $rows;
     }
 }
-
 ?>

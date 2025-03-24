@@ -13,7 +13,9 @@ class Database {
             $this->config["DB_HOST"], 
             $this->config["DB_USER"], 
             $this->config["DB_PASSWORD"], 
-            $this->config["DB_NAME"]);
+            $this->config["DB_NAME"],
+            $this->config["DB_PORT"]
+        );
 
         if($this->conn->connect_error){
             die("Connection Failed: " . $this->conn->connect_error);

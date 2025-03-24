@@ -5,9 +5,8 @@ services:
     ports:
       - "8080:80"  # Expose Nginx on host port 8080
     volumes:
-      - ./src/public:/var/www/public  # Mount project files
-      - ./src/front-end:/var/www/front-end
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf  # Use custom Nginx config
+      - ./src:/var/www/html
+      - ./nginx.conf:/etc/nginx/nginx.conf  # Use custom Nginx config
     depends_on:
       - php
 
@@ -17,7 +16,4 @@ services:
       dockerfile: Dockerfile
     container_name: php
     volumes:
-      - ./src/public:/var/www/public
-      - ./src/routes:/var/www/routes
-      - ./src/front-end:/var/www/front-end
-      - ./src/back-end:/var/www/back-end
+      - ./src:/var/www/html
