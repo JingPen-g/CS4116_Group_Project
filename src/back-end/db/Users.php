@@ -8,6 +8,10 @@ class Users extends Model {
     public function getUser($name) {
         return $this->find(['Name' => $name]);
     }
+
+    public function getUserCount(){
+        return $this->count();
+    }
 }
 
 ?>

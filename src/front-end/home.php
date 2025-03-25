@@ -1,4 +1,27 @@
 <?php
+    #Here is example of pre-fetching something for a page.
+    require_once("../back-end/curl_helper.php");
+
+    $url = "http://nginx/api/users.php";
+    $params = [
+        'usercount' => 1,
+    ];
+
+    $queryString = http_build_query($params);
+
+    $response = makeAPIRequest($url . "?" . $queryString, 'GET', [
+        'Content-Type: application/'
+    ]);
+
+
+    if($response['status'] === 'success'){
+        $data = $response['data'][0]; //Yes this 0 needs to be here its because the way things are structured maybe I change later
+
+        print("User Count: " . $data['count']);
+    } else {
+        print($response['status'] . ": " . $response['message']);
+    }
+
 
 ?>
 
@@ -22,6 +45,7 @@
             }
         </style>
         <script>
+            //This is an example of dynamically fetching something for a page
             async function fetchAdmin() {
                 try {
                     let params = new URLSearchParams({ name: "Ben" });

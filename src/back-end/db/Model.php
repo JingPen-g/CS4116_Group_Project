@@ -9,7 +9,7 @@ class Model {
         $this->conn = Database::getInstance()->getConnection();
     }
 
-    public function find(array $criteria = []) {
+    protected function find(array $criteria = []) {
         if (empty($criteria)) {
             return $this->fetchAll();
         }
@@ -55,14 +55,25 @@ class Model {
             throw new Exception("Execute failed: " . $stmt->error);
         }
 
-        // Fetch all results
-        $rows = [];
-        while ($row = $result->fetch_assoc()) {
-            $rows[] = $row;
+        $rows = $this->fetchDBResults($result);
+        $stmt->close();
+
+        return $rows;
+    }
+
+    protected function count() {
+        $query = "SELECT COUNT(*) AS count FROM $this->table";
+
+        $result = $this->conn->query($query);
+
+        if (!$result) {
+            throw new Exception("Query failed: " . $this->conn->error);
         }
 
-        $stmt->close();
+        $rows = $this->fetchDBResults($result);
+
         return $rows;
+
     }
 
     private function fetchAll() {
@@ -73,12 +84,18 @@ class Model {
             throw new Exception("Query failed: " . $this->conn->error);
         }
 
+        $rows = $this->fetchDBResults($result);
+
+        return $rows;
+    }
+
+    private function fetchDBResults($result){
         $rows = [];
         while ($row = $result->fetch_assoc()) {
             $rows[] = $row;
         }
 
         return $rows;
-    }
+    }  
 }
 ?>
