@@ -60,6 +60,8 @@
 
                     let data = await response.json();
 
+                    //Everything after this point is just displaying stuff
+
                     if (Array.isArray(data) && data.length > 0) {
                         data = data[0];
 
