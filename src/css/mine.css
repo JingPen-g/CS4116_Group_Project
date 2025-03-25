@@ -1,0 +1,43 @@
+/* THIS IS TEST NEED TO DELETE YEEEEAAAASSS */
+
+body {
+    display: flex;
+    height: 100vh;
+    margin: 0;
+}
+
+h1 {
+    color: red;
+    border: solid 3px black;
+    transition: top 1s ease-in-out;
+    position: relative;
+    height: 40px;
+    left: 50vh;
+}
+
+h1.up-down {
+    animation: up-down 3s ease-in-out forwards;
+}
+
+@keyframes up-down {
+    0%, 100% {
+        top: 0;
+        left: 50vh;
+    }
+
+    25%{
+        top: 40vh;
+        left: 80vh;
+    }
+
+    50% {
+        top: 80vh;
+        left: 50vh;
+    }
+
+    75% {
+        top: 40vh;
+        left: 20vh;
+    }
+}
+

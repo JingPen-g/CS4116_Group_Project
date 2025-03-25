@@ -5,7 +5,7 @@ FROM php:7.4-fpm
 RUN docker-php-ext-install mysqli && docker-php-ext-enable mysqli
 
 # Set working directory
-WORKDIR /var/www/front-end
+WORKDIR /var/www/html
 
 # Expose the PHP-FPM port (default 9000)
 EXPOSE 9000
