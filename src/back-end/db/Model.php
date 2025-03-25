@@ -23,7 +23,7 @@ class Model {
 
         foreach ($criteria as $column => $value) {
             $conditions[] = "$column = ?";
-            $values[] = &$value;
+            $values[] = &$criteria[$column];
 
             $types .= $this->decideType($value);
         }
