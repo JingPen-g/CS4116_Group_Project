@@ -12,6 +12,16 @@ class Users extends Model {
     public function getUserCount(){
         return $this->count();
     }
+
+    public function insertUser($name, $email, $password) {
+        $insertableData = [
+            'Name' => $name,
+            'Email' => $email,
+            'Password' => $password
+        ];
+
+        return $this->insert($insertableData);
+    }
 }
 
 ?>

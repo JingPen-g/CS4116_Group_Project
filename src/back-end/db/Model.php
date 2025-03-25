@@ -66,22 +66,25 @@ class Model {
     }
 
     //Expected values of type ['ColName1' => val1, 'ColName2' => val2]
-    protected function insert(array $values = []){
-        if (empty($values)){
+    protected function insert(array $data = []){
+        if (empty($data)){
             throw new Exception("Values not found.");
         }
-
+        print_r($data);
         $cols = [];
         $values = [];
         $types = "";
 
-        foreach($values as $column => $value){
+        foreach($data as $column => $value){
+            print("col, val: " . $column . ", " . $value);
             $cols[] = $column;
-            $values[] = &$value;
-
+            $values[] = &$data[$column];
             $types .= $this->decideType($value);
         }
         
+        print_r($cols);
+        print_r($values);
+
         $columnList = implode(", ", $cols);
         $valueList = implode(", ", array_fill(0, count($values), "?"));
 
@@ -101,7 +104,7 @@ class Model {
 
         // Execute the statement
         if (!$stmt->execute()) {
-            throw new Exception("Failed to Insert: " . $stmt->error);
+            throw new Exception("Failed to Insert: " . $stmt->error . "\nAttempted query: " . $query);
         }
 
         $stmt->close();
