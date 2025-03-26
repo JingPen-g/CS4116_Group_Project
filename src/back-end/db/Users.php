@@ -22,6 +22,18 @@ class Users extends Model {
 
         return $this->insert($insertableData);
     }
+
+    public function updatePassword($email, $new_password){
+        $conditions = [
+            'Email' => $email,
+        ];
+
+        $data = [
+            'Password' => $new_password,
+        ];
+
+        return $this->update($conditions, $data);
+    }
 }
 
 ?>

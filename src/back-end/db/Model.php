@@ -104,10 +104,68 @@ class Model {
         }
 
         $stmt->close();
+
+        return true;
     }
 
-    //THIS NEXT
-    protected function update(array $criteria = [], array $data = []){}
+    protected function update(array $conditions = [], array $data = []){
+        if(empty($data)){
+            throw new Exception("Values not found.");
+        }
+
+        $conditions_cols = [];
+        $conditions_values = [];
+        $conditions_types = "";
+
+        foreach($conditions as $column => $value){
+            $conditions_cols[] = "$column = ?";
+            $conditions_values[] = &$conditions[$column];
+            $conditions_types .= $this->decideType($value);
+        }
+
+        $data_cols = [];
+        $data_values = [];
+        $data_types = "";
+
+        foreach($data as $column => $value){
+            $data_cols[] = "$column = ?";
+            $data_values[] = &$data[$column];
+            $data_types .= $this->decideType($value);
+        }
+
+        // Combine conditions and data values since both need to be bound
+        $values = array_merge($data_values, $conditions_values);
+        $types = $data_types . $conditions_types;
+
+        $conditionList = implode(" AND ", $conditions_cols);
+        $dataList = implode(", ", $data_cols);
+
+        $query = "";
+        if(empty($conditions)){
+            $query = "UPDATE $this->table SET $dataList";
+        } else {
+            $query = "UPDATE $this->table SET $dataList WHERE $conditionList";
+        }
+
+        $stmt = $this->conn->prepare($query);
+
+        if (!$stmt) {
+            throw new Exception("Prepare failed: " . $this->conn->error);
+        }
+
+        if (!empty($values)) {
+            $refs = array_merge([$stmt, $types], $values);
+            call_user_func_array('mysqli_stmt_bind_param', $refs);
+        }
+
+        if (!$stmt->execute()) {
+            throw new Exception("Failed to Insert: " . $stmt->error . "\nAttempted query: " . $query);
+        }
+
+        $stmt->close();
+
+        return true;
+    }
     
     protected function delete(){}
 

@@ -34,10 +34,33 @@ else if($_SERVER["REQUEST_METHOD"] == "POST"){
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    $user->insertUser($name, $email, $password);
+    $result = $user->insertUser($name, $email, $password);
+
+    if ($result) {
+        http_response_code(201); // Created
+        echo json_encode(['success' => 'User inserted successfully']);
+    } else {
+        http_response_code(500);
+        echo json_encode(['error' => 'Failed to insert user']);
+    }
 } 
 else if($_SERVER["REQUEST_METHOD"] == "PUT"){
+    $input = file_get_contents('php://input');
+    $data = json_decode($input, true);
 
+    $result = null;
+
+    if(isset($data['type']) && $data['type'] === 'reset-password'){
+        $result = $user->updatePassword($data['email'], $data['password']);
+    }
+
+    if ($result) {
+        http_response_code(201); // Created
+        echo json_encode(['success' => 'User inserted successfully']);
+    } else {
+        http_response_code(500);
+        echo json_encode(['error' => 'Failed to insert user']);
+    }
 } 
 else if($_SERVER["REQUEST_METHOD"] == "DELETE") {
 
