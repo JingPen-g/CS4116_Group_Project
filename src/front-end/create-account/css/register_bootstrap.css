@@ -1,0 +1,21 @@
+.password-strength-meter {
+    display: flex;
+    height: 10px;
+    margin-top: 10px;
+}
+.meter-section {
+    flex:1;
+    background-color: #f0f0f0;
+}
+.weak {
+    background-color: #ff0000;
+}
+.medium {
+    background-color: #ff9900;
+}
+.strong {
+    background-color: #00ff00;
+}       
+.very-strong {
+    background-color: #15cc15;
+}

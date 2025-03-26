@@ -9,7 +9,7 @@ $user = new Users();
 
 if (isset($_GET['name'])) {
     $userData = $user->getUser($_GET['name']);
-    
+
     if ($userData !== null) {
         echo json_encode($userData);
     } else {
