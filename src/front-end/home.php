@@ -1,6 +1,6 @@
 <?php
     #Here is example of pre-fetching something for a page.
-    require_once("../back-end/curl_helper.php");
+    include("../back-end/curl_helper.php");
 
     $url = "http://nginx/api/users.php";
     $params = [
