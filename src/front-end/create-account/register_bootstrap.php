@@ -39,7 +39,7 @@ crossorigin="anonymous">
                 <label for="username" class="text-black-50">Enter Username</label>
             </div>
             <div class="me-2">
-                <small id="usernameErr" class="text-danger"><?php echo $usernameErr ?></small>
+                <small id="usernameErr" class="text-danger"><?php if (!empty($usernameErr)) echo htmlspecialchars($usernameErr); ?></small>
             </div>
             <div class="form-floating mb-1 mt-1">
                 <input type="password" class="form-control" id="password" placeholder="Enter password" name="password" required>
@@ -55,21 +55,21 @@ crossorigin="anonymous">
                 <div class="meter-section rounded me-2"></div>
             </div>
             <div class="me-2">
-                <small id="meter-text" class="text-danger"><?php echo $passwordErr ?></small>
+                <small id="meter-text" class="text-danger"><?php if (!empty($passwordErr)) echo htmlspecialchars($passwordErr); ?></small>
             </div>
             <div class="form-floating mb-3 mt-3">
                 <input type="password" class="form-control" id="re_password" placeholder="Repeat password" name="re_password" required>
                 <label for="Repeat password" class="text-black-50">Repeat password</label>
             </div>
             <div class="me-2">
-                <small id="error_message_re" class="text-danger"><?php echo $re_password ?></small>
+                <small id="error_message_re" class="text-danger"><?php if (!empty($re_password)) echo htmlspecialchars($re_password); ?></small>
             </div>
             <div class="form-floating mb-3 mt-3">
                 <input type="email" class="form-control" id="email" placeholder="Enter email" name="email" required>
                 <label for="Enter email" class="text-black-50">Enter email</label>
             </div>
             <div class="me-2">
-                <small id="error_message_email" class="text-danger"><?php echo $email ?></small>
+                <small id="error_message_email" class="text-danger"><?php if (!empty($email)) echo htmlspecialchars($email); ?></small>
             </div>
             <div class="form-check mb-3">
                 <label class="form-check-label">
