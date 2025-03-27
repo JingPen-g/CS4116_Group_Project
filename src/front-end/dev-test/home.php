@@ -30,7 +30,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>User Data</title>
+        <title>Dev</title>
         <style>
             table {
                 width: 100%;
@@ -114,6 +114,30 @@
                 }
             }
 
+            async function deleteName(){
+                let name = document.getElementById("deleteName").value;
+
+                const data = { 'type': 'delete-user', 'name': name};
+
+                let response = await fetch('api/users.php', {
+                    method: "DELETE",
+                    headers: {
+                        'Content-Type': 'application/JSON'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                let json = response.json();
+
+                if('error' in json){
+                    document.getElementById("delete-error").style.visibility = "visible";
+                }
+            }
+
             window.onload = fetchAdmin;
         </script>
     </head>
@@ -174,5 +198,10 @@
         <input id = "putPassword" type = "password" name = "password" placeholder="Input new password" required></input>
         <button onclick="putPassword()">Submit</button>
         <h1 style = "visibility: hidden" id="put-error">Failed to change password.</h1>
+
+        <h1>DELETE USER GIVEN NAME</h1>
+        <input id = "deleteName" type = "text" name = "deleteName" placeholder="Input name to delete" required></input>
+        <button onclick="deleteName()">Submit</button>
+        <h1 style = "visibility: hidden" id="delete-error">Failed to delete user.</h1>
     </body>
 </html>

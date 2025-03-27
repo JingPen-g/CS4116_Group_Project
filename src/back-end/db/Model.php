@@ -167,7 +167,46 @@ class Model {
         return true;
     }
     
-    protected function delete(){}
+    //The criteria here expects the same structure as past criteria so
+    // ['ColName1' => va1, 'ColName2' => val2, ...]
+    protected function delete(array $criteria){
+        if (empty($criteria)) {
+            throw new Exception("Criteria cannot be empty.");
+        }
+
+        $conditions = [];
+        $values = [];
+        $types = "";
+
+        foreach ($criteria as $column => $value) {
+            $conditions[] = "$column = ?";
+            $values[] = &$criteria[$column];
+
+            $types .= $this->decideType($value);
+        }
+
+        $whereClause = implode(" AND ", $conditions);
+
+        $query = "DELETE FROM $this->table WHERE $whereClause";
+
+        $stmt = $this->conn->prepare($query);
+
+        if (!$stmt) {
+            throw new Exception("Prepare failed: " . $this->conn->error);
+        }
+
+        // Bind parameters
+        if (!empty($values)) {
+            $refs = array_merge([$stmt, $types], $values);
+            call_user_func_array('mysqli_stmt_bind_param', $refs);
+        }
+
+        if (!$stmt->execute()) {
+            throw new Exception("Execute failed: " . $stmt->error);
+        }
+
+        return true;
+    }
 
     protected function count() {
         $query = "SELECT COUNT(*) AS count FROM $this->table";

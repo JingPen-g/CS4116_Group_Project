@@ -34,6 +34,14 @@ class Users extends Model {
 
         return $this->update($conditions, $data);
     }
+
+    public function deleteUser($name){
+        $criteria = [
+            "Name" => $name
+        ];
+
+        return $this->delete($criteria);
+    }
 }
 
 ?>
