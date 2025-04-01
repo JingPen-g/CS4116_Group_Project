@@ -31,6 +31,18 @@ document.addEventListener('DOMContentLoaded', function() {
             passwordIn.classList.add('is-invalid');   // Add Bootstrap red cross
             return;
         } 
+        // Check if any radio button is selected
+        const userTypeSelected = document.querySelector('input[name="usertype"]:checked');
+
+        if (!userTypeSelected) {
+            console.log("Please select!");
+            // If no radio button is selected, show an error message
+            document.getElementById('error_message_radio').textContent = 'Please select a user type.';
+            return; 
+        } else {
+            document.getElementById('error_message_radio').textContent = '';
+        }
+
         form.classList.add('was-validated');
         
         const formData = new FormData(form);
@@ -58,10 +70,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     `;
                     document.body.insertAdjacentHTML('beforeend', modalHtml);
 
-                    // Redirect after 3 seconds
+                    // Redirect after 1 second
                     setTimeout(() => {
                         window.location.href = data.redirect;
-                    }, 3000);
+                    }, 1000);
                 } else if (data.status === 'error') {
                     // Reload the page to display session-based errors
                     window.location.reload();
