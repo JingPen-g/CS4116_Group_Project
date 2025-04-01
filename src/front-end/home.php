@@ -141,5 +141,10 @@
 
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
+        
+        <!-- This is how you will call advertisment page Note: Note done yet but you will just pass it ad_id-->
+        <form action="get-advertisment.php">
+            <input type="submit" name="get-advertisment-button" value="hello">       
+        </form>        
     </body>
 </html>
