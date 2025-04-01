@@ -9,11 +9,19 @@ class Model {
         $this->conn = Database::getInstance()->getConnection();
     }
 
+    /*
+        Expected criteria of the form ['ColName1' => val1, 'ColName2' => val2]
+        Expected cols of the form ['ColName1', 'ColName2']
+    */
+    protected function find(
+        array $criteria = [], 
+        array $cols = [], 
+        array $customValues = [],
+        string $customWhere = "",
+        string $customOrder = ""
+        ) {
 
-    //Expected criteria of the form ['ColName1' => val1, 'ColName2' => val2]
-    //Expected cols of the form ['ColName1', 'ColName2']
-    protected function find(array $criteria = [], array $cols = []) {
-        if (empty($criteria)) {
+        if (empty($criteria) && !empty($customWhere)) {
             return $this->fetchAll();
         }
 
@@ -28,15 +36,20 @@ class Model {
             $types .= $this->decideType($value);
         }
 
-        $whereClause = implode(" AND ", $conditions);
-
-        $query = "";
+        if(empty($customWhere))
+            $whereClause = implode(" AND ", $conditions);
+        else{
+            $values = &$customValues;
+            $whereClause = $customWhere;
+        }
 
         if(empty($cols)) $query = "SELECT * FROM $this->table WHERE $whereClause";
         else {
             $selectCols = implode(", ", $cols);
             $query = "SELECT $selectCols FROM $this->table WHERE $whereClause";
         }
+
+        $query .= $customOrder;
 
         $stmt = $this->conn->prepare($query);
 

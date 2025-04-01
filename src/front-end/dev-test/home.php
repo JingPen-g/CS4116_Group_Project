@@ -9,9 +9,13 @@
 
     $queryString = http_build_query($params);
 
-    $response = makeAPIRequest($url . "?" . $queryString, 'GET', [
-        'Content-Type: application/'
-    ]);
+    try {
+        $response = makeAPIRequest($url . "?" . $queryString, 'GET', [
+            'Content-Type: application/'
+        ]);
+    } catch(Exception $error){
+        print($error);
+    }
 
 
     if($response['status'] === 'success'){
@@ -31,6 +35,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Dev</title>
+
         <style>
             table {
                 width: 100%;
@@ -141,7 +146,7 @@
             window.onload = fetchAdmin;
         </script>
     </head>
-    <body>
+    <>
         <h1>Hello.</h1>
         <h1>SHOWS FIRST USER IN DB</h1>
         <table>
