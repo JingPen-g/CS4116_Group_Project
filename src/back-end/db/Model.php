@@ -111,13 +111,16 @@ class Model {
             call_user_func_array('mysqli_stmt_bind_param', $refs);
         }
 
-        // Execute the statement
+
         if (!$stmt->execute()) {
-            throw new Exception("Failed to Insert: " . $stmt->error . "\nAttempted query: " . $query);
+            // If insertion fails, return false
+            return false;
         }
-
+        
+        // Close the statement
         $stmt->close();
-
+        
+        // Return true if insertion was successful
         return true;
     }
 

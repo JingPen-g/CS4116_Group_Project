@@ -31,7 +31,7 @@ crossorigin="anonymous">
                 <img src="https://dummyimage.com/800x600/000/fff&text=register" alt="logo" class="img-fluid">
             </div>
             <div class="col">
-            <form action="/api/users.php" method="post" id="register_form">
+            <form action="/api/users.php" method="post" id="register_form" novalidate>
             <div class="form-floating mb-3 mt-3">
                 <input type="text" class="form-control" id="username" placeholder="Enter username" name="username" required>
                 <label for="username" class="text-black-50">Enter Username</label>
@@ -56,7 +56,7 @@ crossorigin="anonymous">
                 <small id="meter-text" class="text-danger"><?php echo $passwordErr ?></small>
             </div>
             <div class="form-floating mb-3 mt-3">
-                <input type="password" class="form-control" id="re_password" placeholder="Repeat password" required>
+                <input type="password" class="form-control" id="re_password" placeholder="Repeat password" name="re_password" required>
                 <label for="Repeat password" class="text-black-50">Repeat password</label>
             </div>
             <div class="me-2">
@@ -71,7 +71,7 @@ crossorigin="anonymous">
             </div>
             <div class="form-check mb-3">
                 <label class="form-check-label">
-                <input class="form-check-input" type="checkbox" > Remember me
+                <input class="form-check-input" type="checkbox" name="remember"> Remember me
                 </label>
             </div>
             <button type="submit" class="btn btn-primary">Register</button>
