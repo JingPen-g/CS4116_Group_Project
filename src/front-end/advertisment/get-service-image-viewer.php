@@ -2,10 +2,10 @@
 function generate_service_image_viewer() {
 
     $service_images = [
-        "images/carton-baby-dragon.png",
-        "images/hello.jpg",
-        "images/dog-and-turtle.jpg",
-        "images/spot-the-dog.jpg",
+        "../front-end/advertisment/images/carton-baby-dragon.png",
+        "../front-end/advertisment/images/hello.jpg",
+        "../front-end/advertisment/images/dog-and-turtle.jpg",
+        "../front-end/advertisment/images/spot-the-dog.jpg",
     ];
 
 echo "<div class=\"row\">" ;

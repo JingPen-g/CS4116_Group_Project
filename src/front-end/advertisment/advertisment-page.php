@@ -12,9 +12,9 @@ include __DIR__ . '/../global/get-footer.php';
     <title>advertisment</title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
-    <link rel="stylesheet" href="../global/css/global-style.css">
-    <link rel="stylesheet" href="css/service-listing.css">
-    <link rel="stylesheet" href="css/image-viewer.css">
+    <link rel="stylesheet" href="../front-end/global/css/global-style.css">
+    <link rel="stylesheet" href="../front-end/advertisment/css/service-listing.css">
+    <link rel="stylesheet" href="../front-end/advertisment/css/image-viewer.css">
 
 </head>
 <body>
@@ -50,7 +50,7 @@ include __DIR__ . '/../global/get-footer.php';
 
 
     <!-- scripts -->
-    <script src="js/image-viewer.js"></script>
-    <script src="../global/js/global-margin.js"></script>
+    <script src="../front-end/advertisment/js/image-viewer.js"></script>
+    <script src="../front-end/global/js/global-margin.js"></script>
 </body>
 </html>
