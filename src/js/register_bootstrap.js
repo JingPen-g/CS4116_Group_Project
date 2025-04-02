@@ -18,17 +18,70 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     form.addEventListener('submit', function(event) {
+        // stop the form submission
+        event.preventDefault();
+
         if (!form.checkValidity()) {
-            // stop the form submission
-            event.preventDefault();
+            form.classList.add('was-validated');
+            return; // Stop further execution if the form is invalid
         }
         if (strength === 'weak' || strength === 'medium') {
             passwordMeterText.textContent = 'Please choose a strong password.';
             passwordIn.classList.remove('is-valid');  // Remove Bootstrap green tick
             passwordIn.classList.add('is-invalid');   // Add Bootstrap red cross
-            event.preventDefault();
+            return;
         } 
+        // Check if any radio button is selected
+        const userTypeSelected = document.querySelector('input[name="usertype"]:checked');
+
+        if (!userTypeSelected) {
+            console.log("Please select!");
+            // If no radio button is selected, show an error message
+            document.getElementById('error_message_radio').textContent = 'Please select a user type.';
+            return; 
+        } else {
+            document.getElementById('error_message_radio').textContent = '';
+        }
+
         form.classList.add('was-validated');
+        
+        const formData = new FormData(form);
+        fetch('/api/users.php', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    // Show success message in a modal
+                    const modalHtml = `
+                        <div class="modal fade show" id="successModal" tabindex="-1" aria-hidden="true" style="display: block;">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Success</h5>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>${data.message}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+                    // Redirect after 1 second
+                    setTimeout(() => {
+                        window.location.href = data.redirect;
+                    }, 1000);
+                } else if (data.status === 'error') {
+                    // Reload the page to display session-based errors
+                    window.location.reload();
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
     });
 
 
@@ -86,16 +139,19 @@ document.addEventListener('DOMContentLoaded', function() {
             return 'weak';
         }
         if (strength === 2) {
+            passwordMeterText.classList.remove('text-danger');
             passwordMeterText.style.color = '#ff9900';
             passwordMeterText.textContent = 'Your password is decent, but with more mix criteria would make it stronger.';
             return 'medium';
         }
         if (strength === 3) {
+            passwordMeterText.classList.remove('text-danger');
             passwordMeterText.style.color = '#00ff00';
             passwordMeterText.textContent = 'Great! Your password is strong.';
             return 'strong';
         }
         if (strength >= 4) {
+            passwordMeterText.classList.remove('text-danger');
             passwordMeterText.style.color = '#15cc15';
             passwordMeterText.textContent = 'Excellent! Your password is very strong.';
             return 'very-strong';

@@ -1,15 +1,19 @@
 <?php
+    session_start();
+
     // Check if there's an error message in the session and store it in a variable
     $usernameErr = isset($_SESSION['usernameErr']) ?? "";
     $passwordErr = isset($_SESSION["passwordErr"]) ??"";
     $re_password = isset($_SESSION["re_password"]) ?? "";
-    $email = isset($_SESSION["email"]) ?? "";
+    $emailErr = isset($_SESSION["email"]) ?? "";
+    $userTypeErr = $_SESSION['userTypeErr'] ??"";
 
     // After using the error message, clear it from the session
     unset($_SESSION['usernameErr']);
     unset($_SESSION['passwordErr']);
     unset($_SESSION['re_password']);
     unset($_SESSION['email']);
+    unset($_SESSION['userTypeErr']);
 ?>
 
 <!DOCTYPE html>
@@ -32,14 +36,16 @@ crossorigin="anonymous">
             </div>
             <div class="col">
             <form action="/api/users.php" method="post" id="register_form" novalidate>
+            <!-- Add a hidden input field to send the form's identifier -->
+            <input type="hidden" name="id" value="register_form">
             <div class="form-floating mb-3 mt-3">
                 <input type="text" class="form-control" id="username" placeholder="Enter username" name="username" required>
                 <label for="username" class="text-black-50">Enter Username</label>
             </div>
             <div class="me-2">
-                <small id="usernameErr" class="text-danger"><?php echo $usernameErr ?></small>
+                <small id="usernameErr" class="text-danger"><?php if (!empty($usernameErr)) echo htmlspecialchars($usernameErr); ?></small>
             </div>
-            <div class="form-floating mb-1 mt-1">
+            <div class="form-floating mb-3 mt-3">
                 <input type="password" class="form-control" id="password" placeholder="Enter password" name="password" required>
                 <label for="password" class="text-black-50">Enter Password</label>
             </div>
@@ -53,26 +59,35 @@ crossorigin="anonymous">
                 <div class="meter-section rounded me-2"></div>
             </div>
             <div class="me-2">
-                <small id="meter-text" class="text-danger"><?php echo $passwordErr ?></small>
+                <small id="meter-text" class="text-danger"><?php if (!empty($passwordErr)) echo htmlspecialchars($passwordErr); ?></small>
             </div>
             <div class="form-floating mb-3 mt-3">
                 <input type="password" class="form-control" id="re_password" placeholder="Repeat password" name="re_password" required>
-                <label for="Repeat password" class="text-black-50">Repeat password</label>
+                <label for="re_password" class="text-black-50">Repeat password</label>
             </div>
             <div class="me-2">
-                <small id="error_message_re" class="text-danger"><?php echo $re_password ?></small>
+                <small id="error_message_re" class="text-danger"><?php if (!empty($re_password)) echo htmlspecialchars($re_password); ?></small>
             </div>
             <div class="form-floating mb-3 mt-3">
                 <input type="email" class="form-control" id="email" placeholder="Enter email" name="email" required>
-                <label for="Enter email" class="text-black-50">Enter email</label>
+                <label for="email" class="text-black-50">Enter email</label>
             </div>
             <div class="me-2">
-                <small id="error_message_email" class="text-danger"><?php echo $email ?></small>
+                <small id="error_message_email" class="text-danger"><?php if (!empty($emailErr)) echo htmlspecialchars($emailErr); ?></small>
             </div>
-            <div class="form-check mb-3">
-                <label class="form-check-label">
-                <input class="form-check-input" type="checkbox" name="remember"> Remember me
-                </label>
+            <div class="mb-3 mt-3">
+                <label class="text-dark mb-1 mt-1">Select User Type:</label>
+                <div>
+                    <input type="radio" id="customer" name="usertype" value="customer" required>
+                    <label for="customer">Customer</label>
+                </div>
+                <div>
+                    <input type="radio" id="business owner" name="usertype" value="business owner">
+                    <label for="business owner">Business owner</label>
+                </div>
+            </div>
+            <div class="me-2">
+                <small id="error_message_radio" class="text-danger"><?php if (!empty($userTypeErr)) echo htmlspecialchars($userTypeErr); ?></small>
             </div>
             <button type="submit" class="btn btn-primary">Register</button>
             </form> 

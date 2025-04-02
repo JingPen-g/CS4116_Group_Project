@@ -1,11 +1,11 @@
 <?php
-session_start();
-
 require_once("../db/Users.php");
+require_once("../db/Business.php");
 
 header('Content-Type: application/json');
 
 $user = new Users();
+$business = new Business();
 
 if($_SERVER["REQUEST_METHOD"] == "GET"){
     if (isset($_GET['name'])) {
@@ -30,20 +30,161 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
 
 } 
 else if($_SERVER["REQUEST_METHOD"] == "POST"){
-    $name = $_POST['username'];
-    $email = $_POST['email'];
-    $password = $_POST['password'];
+    $formId = $_POST["id"] ?? "";
 
-    $result = $user->insertUser($name, $email, $password);
+    if ($formId === "login_form") {
+        $username = trim($_POST["username"] ?? "");
+        $password = trim($_POST["password"] ?? "");
 
-    if ($result) {
-        http_response_code(201); // Created
-        echo json_encode(['success' => 'User inserted successfully']);
+        // todo: validation
+        $username = test_input($username); 
+        $password = test_input($password); 
+
+        if (empty($username) || empty($password)) {
+            $_SESSION['error_message'] = "Please enter your usernamd and password";
+        } else {
+            $_SESSION['error_message'] = "";        
+        }
+
+        
+
+        // search by username based on usertype, register -> login
+        // todo: if user login first, search by username in both users table and business table, and administor?
+        $userData = $user->getUser($username);
+
+        if (!$userData) {
+            // If not found in Users table, try the Business table
+            $userData = $business->getBusiness($username);
+        }
+        // to do
+        $_SESSION['passwordDatabase'] = $userData[0]['Password']; 
+        $_SESSION['nameDatabase'] = $userData[0]['Name']; 
+        $_SESSION['userData'] = $userData;
+        
+        if (!empty($userData) && password_verify($password, $userData[0]['Password'])) {
+
+            echo json_encode([
+                'status' => 'success',
+                'message' => 'Login successful! Redirecting you to the home page...',
+                'redirect' => 'http://localhost:8080/index'
+            ]);
+            
+            exit();
+            
+        } else {
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Invalid username or password.'
+            ]);
+        }
     } else {
-        http_response_code(500);
-        echo json_encode(['error' => 'Failed to insert user']);
+        $username = trim($_POST["username"] ?? "");
+        $password = trim($_POST["password"] ?? ""); 
+        $re_password = trim($_POST["re_password"] ?? "");
+        $email = trim($_POST["email"] ?? "");
+        $usertype = $_POST["usertype"];
+
+        $usernameErr = "";
+        $passwordErr = "";
+        $re_passwordErr = "";
+        $emailErr = "";
+        $userTypeErr = "";
+
+        if (empty($username)) {
+            $_SESSION['usernameErr'] = "Username is required";
+        } else {
+            
+            if (!preg_match("/^[a-zA-Z0-9]*$/",test_input($username))) {
+                $usernameErr = "Only letters and white space allowed";
+            }
+                
+        }
+        if (empty($password)) {
+            $_SESSION['passwordErr'] = "Password is required";
+        } else {
+            $meetConditions = 0;
+            $hasUppercase = "/(?=.*[A-Z])/";
+            $hasLowercase = "/(?=.*[a-z])/";
+            $hasNumber = "/(?=.*[0-9])/";
+            $hasSpecial = "/(?=.*[\W_])/";
+
+            $conditions = array($hasUppercase, $hasLowercase, $hasNumber, $hasSpecial);
+            foreach ($conditions as $condition) {
+                if (preg_match($condition,test_input($password))) {
+                    $meetConditions++;
+                }
+            }
+            if ($meetConditions < 3 && strlen($password) < 8) {
+                $passwordErr = "Please choose a stronger password.";
+            }
+        }
+
+        if (empty($re_password)) {
+            $_SESSION['re_passwordErr'] = "Please repeat your password";
+        } else {
+            if ($password != test_input($re_password)) {
+                $_SESSION['re_passwordErr'] = "Passwords do not match.";
+            } else {
+                $_SESSION['re_passwordErr'] = "";
+            }
+        }
+
+        if (empty($email)) {
+            $_SESSION['emailErr'] = "Email is required";
+        } else {
+            if (!filter_var(test_input($email), FILTER_VALIDATE_EMAIL)) {
+                $_SESSION['$emailErr'] = "Please enter a valid email address.";
+            } else {
+                $_SESSION['emailErr'] = "";
+            }
+        }
+        
+        if (empty($usertype)) {
+            $_SESSION['userTypeErr'] = "UserType is required";
+        } else {
+            $_SESSION['userTypeErr'] = "";
+        }
+
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+        $_SESSION['username'] = $username;
+        $_SESSION['password'] = $password;
+        $_SESSION['hashedpassword'] = $hashedPassword;
+        $_SESSION['usertype'] = $usertype;
+
+        if ($usertype === "customer") {
+            $registration_success = $user->insertUser($username, $email, $hashedPassword);
+            $_SESSION['registration_success'] = $registration_success;
+        } else {
+            $registration_success = $business->insertBusiness($username, $email, $hashedPassword);
+        }
+        
+        
+
+        // If registration is successful (e.g., no errors in validation)
+        if ($registration_success) {
+            if (headers_sent($file, $line)) {
+                die("Headers already sent in $file on line $line");
+            }
+
+            
+            // to do - alert ("susccessful registration")
+            echo json_encode([
+                'status' => 'success',
+                'message' => 'Registration successful! Redirecting you to the login page...',
+                'redirect' => 'http://localhost:8080/login'
+            ]);
+            exit();
+        } else {
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Failed to register user. Please try again.'
+            ]);
+        }
+            
     }
-} 
+}
+
 else if($_SERVER["REQUEST_METHOD"] == "PUT"){
     $input = file_get_contents('php://input');
     $data = json_decode($input, true);
@@ -79,11 +220,18 @@ else if($_SERVER["REQUEST_METHOD"] == "DELETE") {
         http_response_code(500);
         echo json_encode(['error' => 'Failed to insert user']);
     }
-} 
+}
+
 else {
     http_response_code(400);
-    print_r($_POST);
-    echo json_encode(['error' => 'Name parameter is required']);
+    
+}
+
+function test_input($data)  {
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
 }
 
 

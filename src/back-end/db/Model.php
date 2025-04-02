@@ -83,16 +83,20 @@ class Model {
         if (empty($data)){
             throw new Exception("Values not found.");
         }
-        
+        // print_r($data);
         $cols = [];
         $values = [];
         $types = "";
 
         foreach($data as $column => $value){
+            // print("col, val: " . $column . ", " . $value);
             $cols[] = $column;
             $values[] = &$data[$column];
             $types .= $this->decideType($value);
         }
+        
+        // print_r($cols);
+        // print_r($values);
 
         $columnList = implode(", ", $cols);
         $valueList = implode(", ", array_fill(0, count($values), "?"));
@@ -115,7 +119,7 @@ class Model {
         if (!$stmt->execute()) {
             // If insertion fails, return false
             return false;
-        }
+        } 
         
         // Close the statement
         $stmt->close();
