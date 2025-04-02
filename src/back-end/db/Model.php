@@ -9,11 +9,19 @@ class Model {
         $this->conn = Database::getInstance()->getConnection();
     }
 
+    /*
+        Expected criteria of the form ['ColName1' => val1, 'ColName2' => val2]
+        Expected cols of the form ['ColName1', 'ColName2']
+    */
+    protected function find(
+        array $criteria = [], 
+        array $cols = [], 
+        array $customValues = [],
+        string $customWhere = "",
+        string $customOrder = ""
+        ) {
 
-    //Expected criteria of the form ['ColName1' => val1, 'ColName2' => val2]
-    //Expected cols of the form ['ColName1', 'ColName2']
-    protected function find(array $criteria = [], array $cols = []) {
-        if (empty($criteria)) {
+        if (empty($criteria) && !empty($customWhere)) {
             return $this->fetchAll();
         }
 
@@ -23,20 +31,25 @@ class Model {
 
         foreach ($criteria as $column => $value) {
             $conditions[] = "$column = ?";
-            $values[] = &$value;
+            $values[] = &$criteria[$column];
 
             $types .= $this->decideType($value);
         }
 
-        $whereClause = implode(" AND ", $conditions);
-
-        $query = "";
+        if(empty($customWhere))
+            $whereClause = implode(" AND ", $conditions);
+        else{
+            $values = &$customValues;
+            $whereClause = $customWhere;
+        }
 
         if(empty($cols)) $query = "SELECT * FROM $this->table WHERE $whereClause";
         else {
             $selectCols = implode(", ", $cols);
             $query = "SELECT $selectCols FROM $this->table WHERE $whereClause";
         }
+
+        $query .= $customOrder;
 
         $stmt = $this->conn->prepare($query);
 
@@ -71,19 +84,16 @@ class Model {
             throw new Exception("Values not found.");
         }
         // print_r($data);
+        
         $cols = [];
         $values = [];
         $types = "";
 
         foreach($data as $column => $value){
-            // print("col, val: " . $column . ", " . $value);
             $cols[] = $column;
             $values[] = &$data[$column];
             $types .= $this->decideType($value);
         }
-        
-        // print_r($cols);
-        // print_r($values);
 
         $columnList = implode(", ", $cols);
         $valueList = implode(", ", array_fill(0, count($values), "?"));
@@ -115,10 +125,105 @@ class Model {
         return true;
     }
 
-    //THIS NEXT
-    protected function update(){}
+    protected function update(array $conditions = [], array $data = []){
+        if(empty($data)){
+            throw new Exception("Values not found.");
+        }
+
+        $conditions_cols = [];
+        $conditions_values = [];
+        $conditions_types = "";
+
+        foreach($conditions as $column => $value){
+            $conditions_cols[] = "$column = ?";
+            $conditions_values[] = &$conditions[$column];
+            $conditions_types .= $this->decideType($value);
+        }
+
+        $data_cols = [];
+        $data_values = [];
+        $data_types = "";
+
+        foreach($data as $column => $value){
+            $data_cols[] = "$column = ?";
+            $data_values[] = &$data[$column];
+            $data_types .= $this->decideType($value);
+        }
+
+        // Combine conditions and data values since both need to be bound
+        $values = array_merge($data_values, $conditions_values);
+        $types = $data_types . $conditions_types;
+
+        $conditionList = implode(" AND ", $conditions_cols);
+        $dataList = implode(", ", $data_cols);
+
+        $query = "";
+        if(empty($conditions)){
+            $query = "UPDATE $this->table SET $dataList";
+        } else {
+            $query = "UPDATE $this->table SET $dataList WHERE $conditionList";
+        }
+
+        $stmt = $this->conn->prepare($query);
+
+        if (!$stmt) {
+            throw new Exception("Prepare failed: " . $this->conn->error);
+        }
+
+        if (!empty($values)) {
+            $refs = array_merge([$stmt, $types], $values);
+            call_user_func_array('mysqli_stmt_bind_param', $refs);
+        }
+
+        if (!$stmt->execute()) {
+            throw new Exception("Failed to Insert: " . $stmt->error . "\nAttempted query: " . $query);
+        }
+
+        $stmt->close();
+
+        return true;
+    }
     
-    protected function delete(){}
+    //The criteria here expects the same structure as past criteria so
+    // ['ColName1' => va1, 'ColName2' => val2, ...]
+    protected function delete(array $criteria){
+        if (empty($criteria)) {
+            throw new Exception("Criteria cannot be empty.");
+        }
+
+        $conditions = [];
+        $values = [];
+        $types = "";
+
+        foreach ($criteria as $column => $value) {
+            $conditions[] = "$column = ?";
+            $values[] = &$criteria[$column];
+
+            $types .= $this->decideType($value);
+        }
+
+        $whereClause = implode(" AND ", $conditions);
+
+        $query = "DELETE FROM $this->table WHERE $whereClause";
+
+        $stmt = $this->conn->prepare($query);
+
+        if (!$stmt) {
+            throw new Exception("Prepare failed: " . $this->conn->error);
+        }
+
+        // Bind parameters
+        if (!empty($values)) {
+            $refs = array_merge([$stmt, $types], $values);
+            call_user_func_array('mysqli_stmt_bind_param', $refs);
+        }
+
+        if (!$stmt->execute()) {
+            throw new Exception("Execute failed: " . $stmt->error);
+        }
+
+        return true;
+    }
 
     protected function count() {
         $query = "SELECT COUNT(*) AS count FROM $this->table";

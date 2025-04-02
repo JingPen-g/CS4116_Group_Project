@@ -1,5 +1,5 @@
 # Use the base PHP 7.4 FPM image
-FROM php:7.4-fpm
+FROM php:8.0-fpm
 
 # Install MySQLi extension
 RUN docker-php-ext-install mysqli && docker-php-ext-enable mysqli

@@ -1,6 +1,4 @@
 <?php
-    session_start();
-
     // Check if there's an error message in the session and store it in a variable
     $usernameErr = isset($_SESSION['usernameErr']) ?? "";
     $passwordErr = isset($_SESSION["passwordErr"]) ??"";

@@ -7,5 +7,6 @@ return [
     '/admin' => 'site-management/admin.php',
     '/advertisment' => '/advertisment/advertisment-page.php',
     '/index'=> 'index.php',
+    '/dev' => '/dev-test/home.php',
 ]
 ?>

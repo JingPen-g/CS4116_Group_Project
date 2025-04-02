@@ -1,0 +1,298 @@
+@font-face {
+    font-family: 'custom-font';
+    src: url('../fonts/myFont.ttf') format('truetype');
+}
+
+.left-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.rigth-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.image-item {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  background-image: url('paw-print.png');
+  background-size: contain;
+  right: 0px;
+  transform: translateX(-50%);
+  margin-top: 50px;
+  z-index: -1;
+}
+
+.invisible {
+    display: none;
+}
+html, body { 
+    background-color: #f0e3d9;
+    overflow-x: hidden;
+    font-family: custom-font, sans-serif !important;
+    color: #bb5320;
+}
+
+h1, h2 {
+    z-index: 1;
+    font-size: 8rem;
+}
+
+
+
+.global-footer {
+    background-color: #c3cf62;
+    z-index: 1; /* */
+    position: relative;
+}
+
+.curved-grass-background {                                                                                                                                                                                     
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    line-height: 0;              
+    transform: rotate(180deg);
+}                        
+
+
+.curved-grass-background .shape-fill {              
+    fill: #c3cf62;
+}     
+
+.curved-grass-background svg {
+    transition: all 0.5s ease;
+}
+.grass-3 {                                      
+    transition: all 0.5s ease;
+    height: auto;
+}
+.grass-2 {                   
+    transition: all 0.5s ease;
+    height: auto;
+}                          
+.grass-1 {
+    transition: all 0.5s ease;
+    height: auto;
+}
+
+.footer-socail-links {
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+.footer-insta {
+    width: auto;
+}
+
+.footer-X {
+    width: auto;
+}
+
+.footer-X {
+    width: auto;
+}
+
+
+.footer-animal {
+    height: 40%;
+    width: auto;
+    z-index: 3;
+    transition: all 0.5s ease;
+    overflow-x: hidden;
+}
+
+@media only screen and (min-width: 0px) and (max-width: 625px) {
+    .image-item {
+        display: none;
+    }
+    .curved-grass-background svg {
+        position: relative;
+        display: block;          
+        width: calc(122% + 10.3px);
+        height: 50px;    
+    }                                          
+     
+    .grass-3 {                                      
+        transform:  translateY(6vw) translateX(-15vw);
+        width: 75%;           
+        position: relative;                     
+     }
+    .grass-2 {                   
+        transform:  translateY(8vw) translateX(0vw);
+        width: 50%;
+        position: relative;
+    }                          
+    .grass-1 {
+        transform: translateX(-5vw);
+        width: 75%;
+        position: relative;
+    }
+
+    .footer-insta {
+        position: absolute;
+        height: 5vh;
+    }
+
+    .footer-X {
+        height: 5vh;
+    }
+
+    .footer-X {
+        height: 5vh;
+    }
+
+    .footer-animal{
+        transform: translateY(-14vw);
+        height: 20%;
+    }
+
+}
+@media only screen and (min-width: 625px) and (max-width: 980px){
+    .image-item {
+        display: none;
+    }
+
+    .curved-grass-background svg {
+        position: relative;
+        display: block;          
+        width: calc(122% + 10.3px);
+        height: 75px;    
+    }                                          
+
+    .grass-3 {                                      
+        transform:  translateY(6vw) translateX(-15vw);
+        width: 75%;           
+        position: relative;                     
+     }
+    .grass-2 {                   
+        transform:  translateY(8vw) translateX(0vw);
+        width: 50%;
+        position: relative;
+    }                          
+    .grass-1 {
+        transform: translateX(-5vw) translateY(0vh);
+        width: 75%;
+        position: relative;
+    }
+
+    .footer-insta {
+        position: absolute;
+        height: 5vh;
+    }
+
+    .footer-X {
+        height: 5vh;
+    }
+
+    .footer-X {
+        height: 5vh;
+    }
+
+    .footer-animal{
+        transform: translateY(-2vw);
+        height: 20%;
+    }
+}
+
+
+@media only screen and (min-width: 980px) and (max-width: 1475px){
+
+    .curved-grass-background svg {
+        position: relative;
+        display: block;          
+        width: calc(122% + 10.3px);
+        height: 100px;    
+    }                                          
+
+    .grass-3 {                                      
+        transform:  translateY(8vw) translateX(-15vw);
+        width: 75%;           
+        position: relative;                     
+     }
+    .grass-2 {                   
+        transform:  translateY(9vw) translateX(0vw);
+        width: 50%;
+        position: relative;
+    }                          
+    .grass-1 {
+        transform:translateY(2vh) translateX(-5vw);
+        width: 75%;
+        position: relative;
+    }
+
+    .footer-insta {
+        position: absolute;
+        height: 5vh;
+    }
+
+    .footer-X {
+        height: 5vh;
+    }
+
+    .footer-X {
+        height: 5vh;
+    }
+
+    .footer-animal{
+        transform: translateY(-2vw);
+    }
+}
+
+
+@media only screen and (min-width: 1475px){
+    .curved-grass-background svg {
+        position: relative;
+        display: block;          
+        width: calc(122% + 10.3px);
+        height: 100px;    
+    }                                          
+
+    .grass-3 {                                      
+        transform:  translateY(8vw) translateX(-15vw);
+        width: 75%;           
+        position: relative;                     
+     }
+    .grass-2 {                   
+        transform:  translateY(10vw) translateX(0vw);
+        width: 50%;
+        position: relative;
+    }                          
+    .grass-1 {
+        transform:translateY(10vh) translateX(-5vw);
+        width: 75%;
+        position: relative;
+    }
+
+    .footer-insta {
+        position: absolute;
+        height: 25%;
+    }
+
+    .footer-X {
+        position: relative;
+        height: 6vw;
+    }
+
+    .footer-X {
+        position: absolute;
+        height: 20%;
+    }
+
+    .footer-animal {
+        transform: translateY(8vw);
+    }
+}
+
+@media only screen and (min-width: 1475px) and (max-width: 2000px){
+    .footer-animal {                                                                                                                                                                                                
+        transform: translateY(4vw);
+    }
+}
