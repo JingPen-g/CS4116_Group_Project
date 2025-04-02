@@ -17,18 +17,18 @@ All content should be contained within the "main" div
  
 The following css file should be linked
 
-     <link rel="stylesheet" href="../global/css/global-style.css">
+     <link rel="stylesheet" href="../front-end/global/css/global-style.css">
 
 The following script should be added at the bottom of each page to load the paw print margins
 
-     <script src="../global/js/global-margin.js"></script>
+     <script src="../front-end/global/js/global-margin.js"></script>
 
 
 ### 2. Footer
 
 The following script should be included at the top of every page
 
-    include __DIR__ . '/../global/get-footer.php';
+    include __DIR__ . '/../front-end/global/get-footer.php';
 
 The following should be at the bottom of each page
  
