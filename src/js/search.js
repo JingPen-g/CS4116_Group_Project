@@ -42,7 +42,7 @@ async function fetchAdvertisements() {
         method: 'GET',
         headers: { "Content-Type": "application/x-www-form-urlencoded" }
     })
-        .then(response => response.json())
+        .then(async response => await response.json())
         .then(data => displayAdvertisements(data))
         .catch(error => console.error('Error fetching advertisements:', error));
 }
