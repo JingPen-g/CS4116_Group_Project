@@ -7,7 +7,6 @@ header('Content-Type: application/json');
 
 $user = new Users();
 
-<<<<<<< HEAD
 if($_SERVER["REQUEST_METHOD"] == "GET"){
     if (isset($_GET['name'])) {
         $userData = $user->getUser($_GET['name']);
@@ -27,16 +26,6 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
             http_response_code(404);
             echo json_encode(['error' => 'User Count not found']);
         }
-=======
-if (isset($_GET['name'])) {
-    $userData = $user->getUser($_GET['name']);
-
-    if ($userData !== null) {
-        echo json_encode($userData);
-    } else {
-        http_response_code(404);
-        echo json_encode(['error' => 'User not found']);
->>>>>>> create-account
     }
 
 } 
