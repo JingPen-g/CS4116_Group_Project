@@ -73,7 +73,7 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
             echo json_encode([
                 'status' => 'success',
                 'message' => 'Login successful! Redirecting you to the home page...',
-                'redirect' => 'http://localhost:8080/index'
+                'redirect' => 'http://localhost:8080/search'
             ]);
             
             exit();
@@ -161,11 +161,10 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
 
         if ($usertype === "customer") {
             $registration_success = $user->insertUser($username, $email, $hashedPassword);
-            $_SESSION['registration_success'] = $registration_success;
         } else {
             $registration_success = $business->insertBusiness($username, $email, $hashedPassword);
         }
-        
+        $_SESSION['registration_success'] = $registration_success;
         
 
         // If registration is successful (e.g., no errors in validation)
