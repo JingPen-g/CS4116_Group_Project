@@ -88,11 +88,6 @@ class Model {
         if (empty($data)){
             throw new Exception("Values not found.");
         }
-<<<<<<< HEAD
-=======
-        // print_r($data);
-        
->>>>>>> create-account
         $cols = [];
         $values = [];
         $types = "";
@@ -102,11 +97,7 @@ class Model {
             $values[] = &$data[$column];
             $types .= $this->decideType($value);
         }
-<<<<<<< HEAD
         
-=======
->>>>>>> create-account
-
         $columnList = implode(", ", $cols);
         $valueList = implode(", ", array_fill(0, count($values), "?"));
 
