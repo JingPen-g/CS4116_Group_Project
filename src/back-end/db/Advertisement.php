@@ -27,7 +27,7 @@ class Advertisement extends Model {
         int $amount = 20,
         int $offset = 0
     ) {
-        if(empty($searchTerm)) return $this->find();
+        //if(empty($searchTerm)) return $this->find();
 
         // Default date range
         $before = $before ? new DateTime($before) : new DateTime("1960-01-01 00:00:00");
@@ -72,7 +72,6 @@ class Advertisement extends Model {
         // Combine query components
         $whereClause = !empty($whereTerms) ? implode(" AND ", $whereTerms) : " ";
         $orderClause = !empty($orderTerms) ? implode(" ", $orderTerms) : " ";
-
         // Execute query
         return $this->find(
             cols: $cols,

@@ -16,11 +16,12 @@ function updateTagView() {
         closeButton.className = 'close-btn';
         closeButton.textContent = '×';
         closeButton.addEventListener('click', () => {
-            selectingTags = true;
             const index = selectedTags.indexOf(tag);
             if (index !== -1) {
                 selectedTags.splice(index, 1);
                 updateTagView(); 
+                getTags();
+                fetchAdvertisements();
             }
         });
 
@@ -63,16 +64,20 @@ function displayTags(data) {
             selectingTags = true;
 
             if(index === -1){
+                
                 selectedTags.push(value);
                 button.classList.remove('bg-blue-400');
                 button.classList.remove('hover:bg-blue-500');
                 button.classList.add('bg-blue-800');
+                fetchAdvertisements();
             }
             else {
+                
                 selectedTags.splice(index, 1);
                 button.classList.remove('bg-blue-800');
                 button.classList.add('hover:bg-blue-500');
                 button.classList.add('bg-blue-400');
+                fetchAdvertisements();
             }
 
             updateTagView();

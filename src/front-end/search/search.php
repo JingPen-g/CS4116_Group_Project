@@ -141,17 +141,8 @@
         </main>
     </div>
 
-    <script src="js/tags.js"></script>
+    
     <script src="js/search.js"></script>
-    <script>
-        let selectingTags = false;
-
-        document.addEventListener('click', event => {
-            if(!tagBox.contains(event.target) && selectingTags){
-                selectingTags = false;
-                fetchAdvertisements();
-            }
-        });
-    </script>
+    <script src="js/tags.js"></script>
 </body>
 </html>
