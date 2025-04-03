@@ -1,14 +1,16 @@
 <?php
 session_start();
 
-require_once("../db/Advertisement.php");
+require_once(__DIR__ . "/../db/Advertisement.php");
+require_once(__DIR__ . "/../db/Service.php");
 
-header('Content-Type: application/json');
 
 $ad = new Advertisement();
+$service = new Service();
 
 if($_SERVER["REQUEST_METHOD"] == "GET"){
     if(isset($_GET['method']) && $_GET['method'] === "filterAdvertisementList"){
+        header('Content-Type: application/json');
         $searchTerm = $_GET['searchTerm'] ?? "";
         $beforeDate = $_GET['beforeDate']?? null;
         $afterDate = $_GET['afterDate'] ?? null;
@@ -36,11 +38,26 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
             http_response_code(404);
             echo json_encode(['error' => 'User not found']);
         }
+
+    } else {
+        echo json_encode(['error' => 'Method not defined']);
     }
 
 } 
 else if($_SERVER["REQUEST_METHOD"] == "POST"){
 
+    if (isset($_POST['method']) && $_POST['method'] == "getAdvertInformation") {
+
+        $ad_info = $ad->getAdvertInformation($_POST['Ad_ID']);
+
+        echo json_encode($ad_info);
+    }
+    else if (isset($_POST['method']) && $_POST['method'] == "getAdvertServicesInformation") {
+
+        $ad_services_info = $service->getAdvertServicesInformation($_POST['Business_ID']);
+
+        echo json_encode($ad_services_info);
+    }
 } 
 else if($_SERVER["REQUEST_METHOD"] == "PUT"){
 

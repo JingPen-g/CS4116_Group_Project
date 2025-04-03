@@ -75,6 +75,23 @@ function displayAdvertisements(data) {
             <p class="text-gray-600 mt-2">${ad.Description}</p>
             <p class="text-gray-600  mt-2">Tags: ${tags}</p>
         `;
+
+        //Open ad page and submit relevant Ad_ID
+        const form = document.createElement('form');
+        form.method = 'POST'
+        form.action = 'advertisment'
+
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'Ad_ID';
+        input.value = `${ad.Ad_ID}`;
+        form.appendChild(input);
+
+        adItem.appendChild(form);
+
+        adItem.addEventListener('click',() => {
+            form.submit();
+        });
         adList.appendChild(adItem);
     });
 

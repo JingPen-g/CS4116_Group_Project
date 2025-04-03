@@ -2,7 +2,9 @@
     background-color: #a3cae7;
     border-radius: 25px;
     margin: 10px 10px 10px 10px;
+    border: 3px solid black;
     box-shadow: 10px 10px #4c4949;
+    z-index: 1;
 }
 
 .service-listing:hover {
