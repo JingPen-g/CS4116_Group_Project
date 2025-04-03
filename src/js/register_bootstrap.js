@@ -9,6 +9,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('register_form');
     let strength = "";
 
+    document.querySelectorAll('input[type="radio"]').forEach(radio => {
+        radio.style.pointerEvents = "auto";
+        radio.style.opacity = "1";
+        radio.style.visibility = "visible";
+        radio.style.position = "relative";
+        radio.style.zIndex = "1000";
+        radio.disabled = false;
+    });
+
+    
     email.addEventListener('input', function() {
         if (email.validity.typeMismatch) {
             document.getElementById('error_message_email').textContent = 'Please enter a valid email address.';

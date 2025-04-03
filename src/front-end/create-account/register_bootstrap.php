@@ -25,9 +25,9 @@
 href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
 integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
 crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="../front-end/global/css/global-style.css">
     <link rel="stylesheet" type="text/css" href="css/register_bootstrap.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     </head>
     <body>
     <div class="invisible image-item"></div>
@@ -91,7 +91,7 @@ crossorigin="anonymous">
                             <label for="customer">Customer</label>
                         </div>
                         <div>
-                            <input type="radio" id="business owner" name="usertype" value="business owner">
+                            <input type="radio" id="business owner" name="usertype" value="business owner" required>
                             <label for="business owner">Business owner</label>
                         </div>
                     </div>
