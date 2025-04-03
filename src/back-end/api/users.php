@@ -28,8 +28,18 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
         }
     }
 
+<<<<<<< HEAD
 } 
 else if($_SERVER["REQUEST_METHOD"] == "POST"){
+=======
+    if ($userData !== null){
+        echo json_encode($userData);
+    } else {
+        http_response_code(404);
+        echo json_encode(['error' => 'User Count not found']);
+    }
+} else if($_SERVER["REQUEST_METHOD"] == "POST"){
+>>>>>>> create-account
     $formId = $_POST["id"] ?? "";
 
     if ($formId === "login_form") {
@@ -66,7 +76,7 @@ else if($_SERVER["REQUEST_METHOD"] == "POST"){
             echo json_encode([
                 'status' => 'success',
                 'message' => 'Login successful! Redirecting you to the home page...',
-                'redirect' => 'http://localhost:8080/index'
+                'redirect' => 'http://localhost:8080/search'
             ]);
             
             exit();
@@ -154,11 +164,10 @@ else if($_SERVER["REQUEST_METHOD"] == "POST"){
 
         if ($usertype === "customer") {
             $registration_success = $user->insertUser($username, $email, $hashedPassword);
-            $_SESSION['registration_success'] = $registration_success;
         } else {
             $registration_success = $business->insertBusiness($username, $email, $hashedPassword);
         }
-        
+        $_SESSION['registration_success'] = $registration_success;
         
 
         // If registration is successful (e.g., no errors in validation)
@@ -185,6 +194,24 @@ else if($_SERVER["REQUEST_METHOD"] == "POST"){
     }
 }
 
+<<<<<<< HEAD
+=======
+else if($_SERVER["REQUEST_METHOD"] == "POST"){
+    $name = $_POST['username'];
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+
+    $result = $user->insertUser($name, $email, $password);
+
+    if ($result) {
+        http_response_code(201); // Created
+        echo json_encode(['success' => 'User inserted successfully']);
+    } else {
+        http_response_code(500);
+        echo json_encode(['error' => 'Failed to insert user']);
+    }
+} 
+>>>>>>> create-account
 else if($_SERVER["REQUEST_METHOD"] == "PUT"){
     $input = file_get_contents('php://input');
     $data = json_decode($input, true);
@@ -220,8 +247,12 @@ else if($_SERVER["REQUEST_METHOD"] == "DELETE") {
         http_response_code(500);
         echo json_encode(['error' => 'Failed to insert user']);
     }
+<<<<<<< HEAD
 }
 
+=======
+} 
+>>>>>>> create-account
 else {
     http_response_code(400);
     
