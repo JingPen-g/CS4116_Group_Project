@@ -18,10 +18,10 @@ class Model {
         array $cols = [], 
         array $customValues = [],
         string $customWhere = "",
-        string $customOrder = ""
+        string $customExtra = ""
         ) {
 
-        if (empty($criteria) && !empty($customWhere)) {
+        if (empty($criteria) && empty($customWhere)) {
             return $this->fetchAll();
         }
 
@@ -40,8 +40,15 @@ class Model {
             $whereClause = implode(" AND ", $conditions);
         else{
             $values = &$customValues;
+
+            foreach ($values as $value) {
+                $types .= $this->decideType($value);
+            }
+
             $whereClause = $customWhere;
         }
+
+        $query = "";
 
         if(empty($cols)) $query = "SELECT * FROM $this->table WHERE $whereClause";
         else {
@@ -49,8 +56,7 @@ class Model {
             $query = "SELECT $selectCols FROM $this->table WHERE $whereClause";
         }
 
-        $query .= $customOrder;
-
+        $query .= $customExtra;
         $stmt = $this->conn->prepare($query);
 
         if (!$stmt) {
@@ -67,9 +73,8 @@ class Model {
 
         // Get result
         $result = $stmt->get_result();
-
         if (!$result) {
-            throw new Exception("Execute failed: " . $stmt->error);
+            throw new Exception("Execute failed: " . $query);
         }
 
         $rows = $this->fetchDBResults($result);
@@ -83,20 +88,16 @@ class Model {
         if (empty($data)){
             throw new Exception("Values not found.");
         }
-        // print_r($data);
         $cols = [];
         $values = [];
         $types = "";
 
         foreach($data as $column => $value){
-            // print("col, val: " . $column . ", " . $value);
             $cols[] = $column;
             $values[] = &$data[$column];
             $types .= $this->decideType($value);
         }
         
-        // print_r($cols);
-        // print_r($values);
 
         $columnList = implode(", ", $cols);
         $valueList = implode(", ", array_fill(0, count($values), "?"));
@@ -243,10 +244,9 @@ class Model {
 
     }
 
-    private function fetchAll() {
+    protected function fetchAll() {
         $query = "SELECT * FROM $this->table";
         $result = $this->conn->query($query);
-
         if (!$result) {
             throw new Exception("Query failed: " . $this->conn->error);
         }
@@ -269,11 +269,17 @@ class Model {
     //If you encounter a bug it most likely is because the type isnt present here
     private function decideType($value) {
         if (is_int($value)) {
-            return'i'; 
-        } elseif (is_double($value)) {
-            return 'd'; 
+            return 'i'; // Integer
+        } elseif (is_float($value)) {
+            return 'd'; // Double
+        } elseif ($value instanceof DateTime) {
+            return 's'; // DateTime objects are converted to strings (e.g., 'Y-m-d H:i:s')
+        } elseif (is_array($value) || is_object($value)) {
+            return 's'; // JSON-encoded arrays/objects are treated as strings
+        } elseif ($value === null) {
+            return 's'; // Null values are treated as strings (bound as NULL in SQL)
         } else {
-            return 's';
+            return 's'; // Default to string for all other types
         }
     }
 }

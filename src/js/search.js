@@ -5,6 +5,18 @@ document.getElementById('search-button').addEventListener('click', () => {
     currentPage = 1;
     fetchAdvertisements();
 });
+document.getElementById('search-term').addEventListener('keydown', (event) => {
+    if(event.key == 'Enter'){
+        currentPage = 1;
+        fetchAdvertisements();
+    }
+});
+
+document.getElementById('search-button').addEventListener('click', () => {
+    currentPage = 1;
+    fetchAdvertisements();
+});
+
 
 document.getElementById('prev-page').addEventListener('click', () => {
     if (currentPage > 1) {
@@ -19,16 +31,16 @@ document.getElementById('next-page').addEventListener('click', () => {
 });
 
 async function fetchAdvertisements() {
-    const searchTerm = document.getElementById('search-term').value;
+    const searchTerm = document.getElementById('search-term').value.trim();
     const beforeDate = document.getElementById('before-date').value;
     const afterDate = document.getElementById('after-date').value;
-    const tags = document.getElementById('tags').value.split(',').map(tag => tag.trim()).filter(tag => tag);
+    const tags = selectedTags;
 
     const params = {
         method: "filterAdvertisementList",
         searchTerm: searchTerm,
-        beforeDate: beforeDate || null,
-        afterDate: afterDate || null,
+        beforeDate: beforeDate || "",
+        afterDate: afterDate || "",
         tags: tags.length > 0 ? tags : null,
         page: currentPage,
         count: pageSize
@@ -48,19 +60,20 @@ async function fetchAdvertisements() {
 }
 
 function displayAdvertisements(data) {
-    console.log(data);
-    if(!data) { console.log(data); return; }
+    if(!data) { console.log(data); }
     const adList = document.getElementById('ad-list');
-    adList.innerHTML = ''; // Clear previous results
+    adList.innerHTML = ''; 
 
     data.forEach(ad => {
+        const tags = JSON.parse(ad.Label)['labels'];
+
         const adItem = document.createElement('div');
         adItem.className = 'ad-item';
         adItem.innerHTML = `
             <embed src="${ad.ImagePath}" >
             <h3>${ad.Name}</h3>
             <p>${ad.Description}</p>
-            <p>Tags: ${ad.Label}</p>
+            <p>Tags: ${tags}</p>
         `;
         adList.appendChild(adItem);
     });

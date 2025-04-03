@@ -29,6 +29,12 @@
   z-index: -1;
 }
 
+.paw-bg {
+    background-image: url('paw-print.png');
+    background-size: 100px 100px;
+    background-repeat: space ;
+}
+
 .invisible {
     display: none;
 }

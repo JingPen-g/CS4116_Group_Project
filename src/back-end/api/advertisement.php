@@ -10,9 +10,11 @@ $ad = new Advertisement();
 if($_SERVER["REQUEST_METHOD"] == "GET"){
     if(isset($_GET['method']) && $_GET['method'] === "filterAdvertisementList"){
         $searchTerm = $_GET['searchTerm'] ?? "";
-        $beforeDate = isset($_GET['beforeDate']) ? $_GET['beforeDate'] : null;
-        $afterDate = isset($_GET['afterDate']) ? $_GET['afterDate'] : null;
-        $tags = isset($_GET['tags']) ? explode(",", $_GET['tags']) : [];
+        $beforeDate = $_GET['beforeDate']?? null;
+        $afterDate = $_GET['afterDate'] ?? null;
+        $tags = isset($_GET['tags']) && $_GET['tags'] !== "" && $_GET['tags'] !== "null"
+                ? explode(",", $_GET['tags'])
+                : [];
         $page = ((int) $_GET['page']) - 1;
         $count = (int) $_GET['count'];
 
