@@ -68,12 +68,12 @@ function displayAdvertisements(data) {
         const tags = JSON.parse(ad.Label)['labels'];
 
         const adItem = document.createElement('div');
-        adItem.className = 'ad-item';
+        adItem.className = 'ad-item bg-blue-200 shadow-md rounded-lg p-4 mb-4 flex flex-col items-center text-center max-w-sm mx-auto';
         adItem.innerHTML = `
-            <embed src="${ad.ImagePath}" >
-            <h3>${ad.Name}</h3>
-            <p>${ad.Description}</p>
-            <p>Tags: ${tags}</p>
+            <embed src="${ad.ImagePath}" class="w-full h-48 object-cover rounded-t-lg" />
+            <h3 class="text-xl text-orange-400 font-bold mt-2">${ad.Name}</h3>
+            <p class="text-gray-600 mt-2">${ad.Description}</p>
+            <p class="text-gray-600  mt-2">Tags: ${tags}</p>
         `;
         adList.appendChild(adItem);
     });

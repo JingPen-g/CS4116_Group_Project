@@ -1,7 +1,4 @@
 <?php
-    echo '<pre>';
-    print_r($_SESSION);
-    echo '</pre>';
 
     if (isset($_SESSION['usertype']) && isset($_SESSION['username'])) {
         $usertype = $_SESSION['usertype'];

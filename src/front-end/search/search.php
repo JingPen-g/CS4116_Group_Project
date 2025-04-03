@@ -116,7 +116,7 @@
 
             <!-- Main Content (Ad List + Pagination) -->
             <section class="flex-1 bg-orange-200 p-6 rounded-lg shadow-md">
-                <section class="ad-list space-y-4" id="ad-list">
+                <section class="ad-list grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6" id="ad-list">
                     <!-- Placeholder for dynamically inserted ads -->
                 </section>
 
