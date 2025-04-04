@@ -8,16 +8,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const email = document.getElementById('email');
     const form = document.getElementById('register_form');
     let strength = "";
-
-    document.querySelectorAll('input[type="radio"]').forEach(radio => {
-        radio.style.pointerEvents = "auto";
-        radio.style.opacity = "1";
-        radio.style.visibility = "visible";
-        radio.style.position = "relative";
-        radio.style.zIndex = "1000";
-        radio.disabled = false;
-    });
-
     
     email.addEventListener('input', function() {
         if (email.validity.typeMismatch) {
@@ -184,5 +174,15 @@ document.addEventListener('DOMContentLoaded', function() {
             passwordMeter[i].classList.add(strengthLevels[i]);
         }
     }
+
+    document.querySelectorAll('input[type="radio"]').forEach(radio => {
+        radio.style.pointerEvents = "auto";
+        radio.style.opacity = "1";
+        radio.style.visibility = "visible";
+        radio.style.position = "relative";
+        radio.style.zIndex = "1000";
+        radio.disabled = false;
+    });
+    
 });
 console.log("Hello, World again!");
