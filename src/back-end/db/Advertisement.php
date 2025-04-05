@@ -80,4 +80,13 @@ class Advertisement extends Model {
             customExtra: $orderClause
         );
     }
+
+
+    public function getAdvertInformation(string $Ad_ID){
+
+        return $this->find(
+            customWhere: "Ad_ID = " . $Ad_ID
+        );
+    }
+
 }

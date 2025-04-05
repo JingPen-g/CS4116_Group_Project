@@ -3,6 +3,64 @@ include 'get-advertisment.php' ;
 include 'get-services.php';
 include 'get-service-image-viewer.php';
 include __DIR__ . '/../global/get-footer.php';
+
+$ad_data = null;
+$ad_services_data = null;
+
+/* retreive_ad_data 
+ * This method gets all the cols on a row for TABLE Advertisment
+ * @param: Ad_ID {passed in POST} from the search page
+ * @return: JSONArray of length 1 containg a JSONOBject
+ */
+function retreive_ad_data(){
+    global $ad_data;
+
+    //Get Information on posted Ad_ID 
+    $_POST['method'] = 'getAdvertInformation';
+    ob_start(); // read in data echoed from advertisement.php
+    include __DIR__ . '/../../back-end/api/advertisement.php';
+    $response = ob_get_clean();
+
+    //echo "<BR>RAW RESPONSE<BR>" . $response ."<BR><BR>RAW RESPONSE END<BR>";//testing
+    //Ensures a json object is contained in output
+    if ( str_contains($response, ']') && str_contains($response, '[') && strrpos($response, ']',0) > strrpos($response, '[',0) ) {
+
+        $ad_data = substr($response, strrpos($response, '[', 0), ( strrpos($response, ']',0) - strrpos($response, '[', 0)) + 1 );
+        $ad_data = json_decode($ad_data);
+        //print_r($ad_data);//testing
+    }
+}
+
+/* retreive_ad_services_data 
+ * This method gets all the rows from TABLE Service with Business_ID that was
+ * retreived in retreive_ad_data()
+ * @param: Ad_ID {passed in POST} from the search page
+ * @return: JSON Array of JSONOBjects
+ */
+function retreive_ad_services_data(){
+    
+    global $ad_services_data;
+    global $ad_data;
+
+    //Get Information on posted Ad_ID 
+    $_POST['method'] = 'getAdvertServicesInformation';
+    $_POST['Business_ID'] = $ad_data[0]->Business_ID; 
+    ob_start(); // read in data echoed from advertisement.php
+    include __DIR__ . '/../../back-end/api/advertisement.php';
+    $response = ob_get_clean();
+
+    //echo "<BR>RAW RESPONSE<BR>" . $response ."<BR><BR>RAW RESPONSE END<BR>";//testing
+    //Ensures a json object is contained in output
+    if ( str_contains($response, ']') && str_contains($response, '[') && strrpos($response, ']',0) > strrpos($response, '[',0) ) {
+
+        $ad_services_data = substr($response, strrpos($response, '[', 0), ( strrpos($response, ']',0) - strrpos($response, '[', 0)) + 1 );
+        $ad_services_data = json_decode($ad_services_data);
+        //print_r($ad_services_data);//testing
+    }
+}
+
+retreive_ad_data();
+retreive_ad_services_data();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -29,7 +87,7 @@ include __DIR__ . '/../global/get-footer.php';
         </div>
 
         <!-- Headder --!>
-        <?php generate_advertisment_header() ?>
+        <?php generate_advertisment_header($ad_data[0]->Name, $ad_data[0]->Description) ?>
 
         <div class="row" style="margin: 25px"></div>
 
@@ -38,7 +96,7 @@ include __DIR__ . '/../global/get-footer.php';
         <div class="row" style="margin: 50px"></div>
 
         <!-- Service Details --!>
-        <?php generate_service_elements()?>
+        <?php generate_service_elements($ad_services_data)?>
 
         <!-- Reviews --!>
         <div class="row"></div>
