@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Advertisement Search</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/css/search.css">
     <link rel="stylesheet" href="../front-end/global/css/global-style.css">
     <style>
         .custom-scrollbar::-webkit-scrollbar {
@@ -64,7 +64,7 @@
         <!-- Header Section -->
         <header >
             <navbar class="flex justify-between items-center mb-6">
-                <h1 class="text-4xl font-bold text-orange-800">Bob's Pet Grooming</h1>
+                <h1 class="text-2xl font-bold text-orange-800">Bob's Pet Grooming</h1>
                 <section class="search-bar flex items-center space-x-2">
                     <input
                         type="text"
