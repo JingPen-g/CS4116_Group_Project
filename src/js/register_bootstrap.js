@@ -1,5 +1,6 @@
 console.log("Hello, World!");
 document.addEventListener('DOMContentLoaded', function() {
+    const usernameErr = document.getElementById('usernameErr');
     const passwordIn = document.getElementById('password');
     const re_passwordIn = document.getElementById('re_password');
     // Return a nodelist of all the meter sections
@@ -9,6 +10,31 @@ document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('register_form');
     let strength = "";
     
+    async function checkUsernameAvalibility(_username) {
+        try {
+            let response = await fetch(`/api/users.php?username=${encodeURIComponent(_username)}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            let data = await response.json();
+            if (data.length > 0) {
+                usernameErr.textContent = 'Username is already taken.';
+            } else {
+                usernameErr.style.setProperty('color', '#38CF63', 'important');
+                usernameErr.textContent = 'username is available';
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    document.getElementById("username").addEventListener("input", function() {
+        let username = this.value;
+        if (username.length > 2) { // Avoid too many requests
+            checkUsernameAvalibility(username);
+        }
+    });
+
     email.addEventListener('input', function() {
         if (email.validity.typeMismatch) {
             document.getElementById('error_message_email').textContent = 'Please enter a valid email address.';

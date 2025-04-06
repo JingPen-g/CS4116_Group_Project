@@ -51,7 +51,7 @@ crossorigin="anonymous">
                         <input type="text" class="form-control" id="username" placeholder="Enter username" name="username" required>
                         <label for="username" class="text-black-50">Enter Username</label>
                     </div>
-                    <div class="me-2">
+                    <div class="me-2 mb-3 mt-3">
                         <small id="usernameErr" class="text-danger"><?php if (!empty($usernameErr)) echo htmlspecialchars($usernameErr); ?></small>
                     </div>
                     <div class="form-floating mb-3 mt-3">
