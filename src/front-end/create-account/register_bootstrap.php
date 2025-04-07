@@ -41,7 +41,7 @@ crossorigin="anonymous">
         <div class="container-fluid p-5 my-5 border">
             <div class="row">
                 <div class="col">
-                    <img src="../front-end/create-account/images/cat.jpg" alt="logo" class="img-fluid">
+                    <img src="../front-end/create-account/images/cat2.png" alt="logo" class="img-fluid">
                 </div>
                 <div class="col">
                     <form action="/api/users.php" method="post" id="register_form" novalidate>

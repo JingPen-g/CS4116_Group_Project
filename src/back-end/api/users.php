@@ -72,7 +72,7 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
             $_SESSION['userType'] = 'admin';
             echo json_encode([
                 'status' => 'success',
-                'message' => 'Login successful! Redirecting you to the admin page...',
+                'message' => 'Login successful! Redirecting you to the search page...',
                 'redirect' => 'http://localhost:8080/search'
             ]);
             exit();
@@ -82,7 +82,7 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
 
             echo json_encode([
                 'status' => 'success',
-                'message' => 'Login successful! Redirecting you to the home page...',
+                'message' => 'Login successful! Redirecting you to the search page...',
                 'redirect' => 'http://localhost:8080/search'
             ]);
             
