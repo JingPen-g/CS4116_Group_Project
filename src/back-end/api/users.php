@@ -65,7 +65,7 @@ else if($_SERVER["REQUEST_METHOD"] == "POST"){
             $_SESSION['userType'] = 'admin';
             echo json_encode([
                 'status' => 'success',
-                'message' => 'Login successful! Redirecting you to the admin page...',
+                'message' => 'Login successful! Redirecting you to the search page...',
                 'redirect' => 'http://localhost:8080/search'
             ]);
             exit();
@@ -75,7 +75,7 @@ else if($_SERVER["REQUEST_METHOD"] == "POST"){
 
             echo json_encode([
                 'status' => 'success',
-                'message' => 'Login successful! Redirecting you to the home page...',
+                'message' => 'Login successful! Redirecting you to the search page...',
                 'redirect' => 'http://localhost:8080/search'
             ]);
             
