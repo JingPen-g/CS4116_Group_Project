@@ -1,5 +1,6 @@
 <?php
     include __DIR__ . '/../global/get-footer.php';
+    include __DIR__ . '/../global/get-nav.php';
 
     if (isset($_SESSION['usertype']) && isset($_SESSION['username'])) {
         $usertype = $_SESSION['usertype'];
@@ -24,8 +25,11 @@ integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKm
 crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="../front-end/global/css/global-style.css">
+    <link rel="stylesheet" type="text/css" href="../front-end/global/css/nav.css">
     </head>
     <body>
+    <?php get_nav() ?>
+
     <div class="invisible image-item"></div>
         <div id="main" class="container-fluid">       
     
