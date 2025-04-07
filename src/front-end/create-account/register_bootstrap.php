@@ -1,6 +1,7 @@
 <?php
 
     include __DIR__ . '/../global/get-footer.php';
+    include __DIR__ . '/../global/get-nav.php';
     // Check if there's an error message in the session and store it in a variable
     $usernameErr = isset($_SESSION['usernameErr']) ?? "";
     $passwordErr = isset($_SESSION["passwordErr"]) ??"";
@@ -28,8 +29,12 @@ crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="../front-end/global/css/global-style.css">
     <link rel="stylesheet" type="text/css" href="css/register_bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../front-end/global/css/nav.css">
     </head>
     <body>
+    <?php get_nav() ?>
+    
+
     <div class="invisible image-item"></div>
         <div id="main" class="container-fluid">       
     
