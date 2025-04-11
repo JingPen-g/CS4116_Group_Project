@@ -12,6 +12,9 @@ class Users extends Model {
     public function getUserCount(){
         return $this->count();
     }
+    public function getUserName($user_id){
+        return $this->find(['User_Id' => $user_id]);
+    }
 
     public function insertUser($name, $email, $password) {
         $insertableData = [
