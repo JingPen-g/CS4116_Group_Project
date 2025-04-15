@@ -7,6 +7,7 @@ const tagBox = document.getElementById("tagBox");
 function updateTagView() {
     tagView.innerHTML = '';
 
+    //Make flex items-center
     selectedTags.forEach((tag) => {
         const tagElement = document.createElement('span');
         tagElement.className = 'tag-view-item';
@@ -48,14 +49,16 @@ function displayTags(data) {
     data.forEach(tagData => {
         const tag = document.createElement("div");
         tag.className = "tag-button inline-block mr-2 mb-2";
-
+        tag.style = "text-align: center;color: black";
+ //bg-blue-400 hover:bg-blue-500 font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out
         tag.innerHTML = `
-            <button class="bg-blue-400 hover:bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out">
+            <button class="tag-container">
                 ${tagData.Description}
             </button>
         `;
 
         tag.addEventListener('click', function () {
+            this.classList.toggle('tag-container-selected');
             const button = this.querySelector("button");
 
             const value = tagData.Description;

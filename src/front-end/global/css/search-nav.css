@@ -13,9 +13,10 @@ nav {
 }
 
 .navbar-nav {
-    display: flex !important;
+    display: flex ;
 }
 
 div.navbar-header {
-    display: flex !important;
+    display: flex ;
 }
+
