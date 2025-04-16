@@ -1,6 +1,6 @@
 <?php
 return [
-    '/' => 'messaging/messageing.php',
+    '/' => '/messaging/convo.php',
     '/register' => 'create-account/register_bootstrap.php',
     '/login' => 'create-account/login.php',
     '/search' => 'search/search.php',
@@ -8,6 +8,7 @@ return [
     '/advertisment' => '/advertisment/advertisment-page.php',
     '/index'=> 'index.php',
     '/dev' => '/dev-test/home.php',
-    '/message'=> 'messaging/messageing.php',
+    '/message'=> '/messaging/messageing.php',
+    '/conversation' => '/messaging/convo.php'
 ]
 ?>

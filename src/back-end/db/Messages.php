@@ -3,7 +3,7 @@
 require_once("Model.php");
 
 class Messages extends Model {
-    protected $table = " Messages";
+    protected $table = "Messages";
 
 
     public function insertMessage($userID, $messsage, $recieverId, $timestamp) {
@@ -29,6 +29,11 @@ class Messages extends Model {
         $colVals = ["User_Id" => $userID, "Reciever_Id" => $recieverID];
         return $this->find($colVals, ["Message", "Timestamp"]);
     }
+    public function getTimeStamps($userID, $recieverID){
+        $colVals = ["User_Id" => $userID, "Reciever_Id" => $recieverID];
+        return $this->find($colVals, ["Timestamp"]);
 
+    }
+ // Going to change all of this
     }
 ?>

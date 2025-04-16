@@ -1,21 +1,18 @@
 <?php 
-include "Messages.php";
-include "Users.php";
+require_once(__DIR__ . "/../../back-end/db/Users.php");
+require_once(__DIR__ . "/../../back-end/db/Messages.php");
 function generate_conversation($user_id, $reciever_Id) {
     $messaging = new Messages();
-    $conversations = $messaging.getUserConversation($reciever_Id, $user_id);
-    $users = new Users();
+    $reciever_Id = [$reciever_Id];
+   // $conversation = $messaging->getConversation($user_id, $reciever_Id);
+    $t = date(DATE_RFC822,time());
+    $timeStamps = [$t];
+    $messages = ["Test to show this works"];
 
 
-echo "<section class=\"wrapper\">" ;
-
-    foreach ($conversations as $conversation) {
-        
-        echo "<h3>$conversation<h3>";
-
-        echo "<h3>I should just kill myself</h3>";
-    }
-
+    for($i=0; $i<count($timeStamps)-1; $i++) {
+        echo $timeStamps[$i].'-'.$messages[$i];
+      }
 
 
     }

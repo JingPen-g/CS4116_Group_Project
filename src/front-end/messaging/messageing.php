@@ -18,8 +18,6 @@
     function getUserConversation($recivierid, $user_id){
         generate_conversation($recivierid, $user_id);
     }
-
-    getUserConversations();
     getUserId()
 ?>
 
@@ -40,11 +38,11 @@
             <section class="message-list" id="message-list">
         </section>
         <?php getUserConversations()?>
-        <table class='conversations >
+        <table class='conversations' >
 
         <tbody>
             <?php
-                if(1 > 0){
+                if(1 < 0){
                     /*while(){
                         echo 
                         "<tr>".
@@ -57,6 +55,7 @@
             ?>
         </tbody>
       </table>
+      <script type="application/javascript" src="js/messages.js"></script>
     </div>
     
 </html>
