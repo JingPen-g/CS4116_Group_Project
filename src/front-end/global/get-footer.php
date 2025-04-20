@@ -40,7 +40,7 @@ function generate_footer(){
                     echo "</div>" ;
                     echo "<div class=\"col-4\" style=\"max-height: 10vh\">" ;
                         echo "<a href=\"https://www.google.com\">" ;
-                            echo "<img class=\"footer-X\" src=\"../front-end/global/images/linkedin-in-logo.png\" alt=\"linkedin-in-logo\">" ;
+                            echo "<img class=\"footer-linkedin\" src=\"../front-end/global/images/linkedin-in-logo.png\" alt=\"linkedin-in-logo\">" ;
                         echo "</a>" ;
                     echo "</div>" ;
                     echo "<div class=\"col-4 d-flex justify-content-start\">" ;

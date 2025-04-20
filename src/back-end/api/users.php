@@ -1,6 +1,4 @@
 <?php
-session_start();
-
 require_once("../db/Users.php");
 require_once("../db/Business.php");
 
@@ -30,13 +28,8 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
         }
     }
 
-    if ($userData !== null){
-        echo json_encode($userData);
-    } else {
-        http_response_code(404);
-        echo json_encode(['error' => 'User Count not found']);
-    }
-} else if($_SERVER["REQUEST_METHOD"] == "POST"){
+} 
+else if($_SERVER["REQUEST_METHOD"] == "POST"){
     $formId = $_POST["id"] ?? "";
 
     if ($formId === "login_form") {
@@ -199,7 +192,6 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
             
     }
 }
- 
 else if($_SERVER["REQUEST_METHOD"] == "PUT"){
     $input = file_get_contents('php://input');
     $data = json_decode($input, true);
@@ -235,7 +227,8 @@ else if($_SERVER["REQUEST_METHOD"] == "DELETE") {
         http_response_code(500);
         echo json_encode(['error' => 'Failed to insert user']);
     }
-} 
+}
+
 else {
     http_response_code(400);
     

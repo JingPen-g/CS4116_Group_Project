@@ -2,7 +2,16 @@
     include __DIR__ . '/../global/get-footer.php';
     include __DIR__ . '/../global/get-nav.php';
 
-    
+    if (isset($_SESSION['usertype']) && isset($_SESSION['username'])) {
+        $usertype = $_SESSION['usertype'];
+        $username = $_SESSION['username'];
+        $password = $_SESSION['password'];
+        $registration_success = $_SESSION['registration_success'];
+        $hashedpassword = $_SESSION['hashedpassword'];
+        $user_message = 'Hello ' . htmlspecialchars($username) . ', you are registered as ' . htmlspecialchars($usertype) . 'password is: ' . htmlspecialchars($password) . ' hashed password is: ' . htmlspecialchars($hashedpassword) . ' and registration success is: ' . htmlspecialchars($registration_success);
+    } else {
+        $user_message = "Username and user type are not set.";
+    }
 ?>
 
 <!DOCTYPE html>

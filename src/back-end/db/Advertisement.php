@@ -5,71 +5,88 @@ require_once("Model.php");
 class Advertisement extends Model {
     protected $table = "Advertisement";
 
-    public function getAllAdvertisements(){
+    public function getAllAdvertisements() {
         return $this->find();
     }
 
     /*
         Sample query:
-        SELECT *, MATCH(Name, Description) AGAINST('?' IN NATURAL LANGUAGE MODE) AS relevance
-        FROM $this->table
+        SELECT *, MATCH(Name, Description) AGAINST(?) AS relevance
+        FROM Advertisement
         WHERE 
-         JSON_CONTAINS(Label, '?') AND
-         JSON_CONTAINS(Label, '?') AND
-         JSON_CONTAINS(Label, '?') AND
-         UploadDate BETWEEN ? AND ?
-         MATCH(title, content) AGAINST('?' IN NATURAL LANGUAGE MODE)
+            JSON_CONTAINS(Label, ?) AND
+            UploadDate BETWEEN ? AND ?
         ORDER BY relevance DESC
-        LIMIT ?
+        LIMIT ? OFFSET ?
     */
     public function getRecommendedAdvertisements(
         string $searchTerm, 
         array $tags = [], 
-        ?string $before = null, 
-        ?string $after = null,
+        ?string $before = "", 
+        ?string $after = "",
         int $amount = 20,
         int $offset = 0
-        ){
-            
-        $before = $before === null ? new Datetime($before) : new Datetime();
-        $after = $after === null ? new Datetime($after) : new Datetime("1960/01/01 00:00:00");
+    ) {
+        //if(empty($searchTerm)) return $this->find();
 
-        //Collects a list of strings to later implode with AND prefixed with WHERE
+        // Default date range
+        $before = $before ? new DateTime($before) : new DateTime("1960-01-01 00:00:00");
+        $after = $after ? new DateTime($after) : new DateTime();
+
+        // Initialize query components
         $whereTerms = [];
-        $orderClause = "ORDER BY ";
+        $orderTerms = [];
         $cols = ['*'];
         $values = [];
 
-        //Construct tag search
-        foreach($tags as $tag){
-            $whereTerms[] = "JSON_CONTAINS(Label, '?')";
-            $values[] = $tag;
+        // Construct tag search
+        foreach ($tags as $tag) {
+            $whereTerms[] = "JSON_CONTAINS(Label, ?, '$.labels')";
+            $val = '"' . $tag . '"';
+            $values[] = &$val; // JSON tags must be encoded as strings
         }
 
-        //Construct date search
+        // Construct date search
         $whereTerms[] = "UploadDate BETWEEN ? AND ?";
-        $values[] = $before->format('Y-m-d H:i:s');
-        $values[] = $after->format('Y-m-d H:i:s');
+        $beforeDate = $before->format('Y-m-d H:i:s');
+        $afterDate = $after->format('Y-m-d H:i:s');
+        $values[] = &$beforeDate;
+        $values[] = &$afterDate;
 
-        //Construct name search 
-        if(!empty($searchTerm)){
-            $whereTerms[] = "MATCH(title, content) AGAINST('?' IN NATURAL LANGUAGE MODE)";
-            $orderClause .= "relevance DESC ";
-            $cols[] = "MATCH(Name, Description) AGAINST('?' IN NATURAL LANGUAGE MODE) AS relevance";
-            array_unshift($values, $searchTerm);
-            $values[] = $searchTerm;
+        // Construct name search
+        if (!empty($searchTerm)) {
+            $whereTerms[] = "MATCH(Name, Description) AGAINST(? IN BOOLEAN MODE)";
+            $orderTerms[] = "ORDER BY relevance DESC";
+            $cols[] = "MATCH(Name, Description) AGAINST(? IN BOOLEAN MODE) AS relevance";
+            $wildSearchTerm = $searchTerm . '*';
+            array_unshift($values, null);
+            $values[0] = &$wildSearchTerm; 
+            $values[] = &$wildSearchTerm; 
         }
 
-        //Add limit
-        $whereTerms[] = "LIMIT ? OFFSET ?";
-        $values[] = $amount;
-        $values[] = $offset;
+        // Add limit and offset
+        $orderTerms[] = " LIMIT ? OFFSET ? ";
+        $values[] = &$amount;
+        $values[] = &$offset;
 
-        $whereClause = "WHERE " . implode(" AND ", $whereTerms);
+        // Combine query components
+        $whereClause = !empty($whereTerms) ? implode(" AND ", $whereTerms) : " ";
+        $orderClause = !empty($orderTerms) ? implode(" ", $orderTerms) : " ";
+        // Execute query
+        return $this->find(
+            cols: $cols,
+            customValues: $values,
+            customWhere: $whereClause,
+            customExtra: $orderClause
+        );
+    }
 
-        return $this->find(cols: $cols, customValues: $values, customWhere: $whereClause, customOrder: $orderClause);
+
+    public function getAdvertInformation(string $Ad_ID){
+
+        return $this->find(
+            customWhere: "Ad_ID = " . $Ad_ID
+        );
     }
 
 }
-
-?>

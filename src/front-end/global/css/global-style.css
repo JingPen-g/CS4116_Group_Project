@@ -29,6 +29,13 @@
   z-index: -1;
 }
 
+.paw-bg {
+    background-image: url('paw-print.png');
+    background-size: 100px 100px;
+    background-repeat: space ;
+    z-index: -1;
+}
+
 .invisible {
     display: none;
 }
@@ -92,7 +99,7 @@ h1, h2 {
     width: auto;
 }
 
-.footer-X {
+.footer-linkedin {
     width: auto;
 }
 
@@ -145,7 +152,7 @@ h1, h2 {
         height: 5vh;
     }
 
-    .footer-X {
+    .footer-linkedin {
         height: 5vh;
     }
 
@@ -188,7 +195,7 @@ h1, h2 {
         height: 5vh;
     }
 
-    .footer-X {
+    .footer-linkedin {
         height: 5vh;
     }
 
@@ -233,7 +240,7 @@ h1, h2 {
         height: 5vh;
     }
 
-    .footer-X {
+    .footer-linkedin {
         height: 5vh;
     }
 
@@ -281,7 +288,7 @@ h1, h2 {
         height: 6vw;
     }
 
-    .footer-X {
+    .footer-linkedin {
         position: absolute;
         height: 20%;
     }
@@ -289,10 +296,15 @@ h1, h2 {
     .footer-animal {
         transform: translateY(8vw);
     }
+
 }
 
 @media only screen and (min-width: 1475px) and (max-width: 2000px){
     .footer-animal {                                                                                                                                                                                                
         transform: translateY(4vw);
+    }
+    .footer-linkedin {
+        position: absolute;
+        height: 25%;
     }
 }
