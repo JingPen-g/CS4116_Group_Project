@@ -19,6 +19,7 @@ function generate_convo_elements($convo) {
                                 echo "<div class=\"group-container\">";
                                     echo "<div class=\"row\">";
                                         echo "<button>"  . htmlspecialchars($row) . "</button>"; 
+                                        echo '<button class="review-submit-message-request" type="button">Message</button>';
                                     echo "</div>";
                                 echo "</div>";
                             echo "</div>";
@@ -32,6 +33,27 @@ function generate_convo_elements($convo) {
             echo "</div>";
 
         echo "<BR>"; 
+    }
+    function generate_message($message, $timestamp){
+        echo "<div class='row'>";
+           echo "<div class='col grey-light' style='background-color: lightgrey; opacity: 0.5;'> </div>";
+            echo '<div class="col-8">';
+              echo '<div class="group-container">';
+                    echo '<div class="row review-border-top">';
+                       echo' <!-- User Profile Picture and Name --> ';
+                        echo '<div class="col-8 grey">';
+                            echo '<div class="review-user-info">';
+                                echo '<img class="review-profile" src="default_profile.jpg" alt="profile picture">';
+                                echo '<p>' ;
+                                echo $message;
+                                echo '</p>';
+                            echo '</div>';
+                        echo '</div>';
+                    echo '</div>';
+                echo '</div>';
+                echo '</div>';
+                echo '<div class="col grey" style="background-color: grey; opacity: 0.5;"> </div>';
+            echo '</div>';
     }
 }
 ?>
@@ -47,7 +69,7 @@ function generate_convo_elements($convo) {
     </head>
 
 
-    
+
     <div id="header"></div>
         <div style="display: inline">
         <div style="width:20%; display: inline-block; float:left; margin-right: 10px; border: 1px solid blue">
@@ -60,7 +82,7 @@ function generate_convo_elements($convo) {
 
                 <tbody style = image-item>
                     <?php
-            
+                        generate_message("This is a message", "9:00");
                     ?>
                     <tr>
                         <input type="message"  id="message" placeholder="Message" name="Message">
