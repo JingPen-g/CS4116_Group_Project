@@ -36,7 +36,6 @@ function generate_convo_elements($convo) {
 }
 ?>
 
-
 <!DOCTYPE html>
 
 <html lang = "en">
@@ -44,33 +43,33 @@ function generate_convo_elements($convo) {
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="../front-end/global/css/global-style.css">
+        <link rel="stylesheet" href="../front-end/global/css/convo.css">
     </head>
-
-
     
-    <div id="header"></div>
-        <div style="display: inline">
-        <div style="width:20%; display: inline-block; float:left; margin-right: 10px; border: 1px solid blue">
-            <?php generate_convo_elements($messages) ?>
-        
-        </div>
-        <div style="width: 19%; display: inline-block; border: 1px solid red">
-            <div  class = right>
-                <table class='conversation' >
+    <div class="row">
+                <div class="col left-container"></div>
+                <div class="col rigth-container"></div>
+    </div>
+    <div id = "wrapper">
+        </div id = "c1">
+            <?php 
+              generate_convo_elements($messages);
+            ?>
+        <div  class = right>
+            <table class='conversation' >
 
-                <tbody style = image-item>
-                    <?php
+            <tbody style = image-item>
+                <?php
             
-                    ?>
-                    <tr>
-                        <input type="message"  id="message" placeholder="Message" name="Message">
-                        <button id="send_button">Send</button>
-                    </tr>
-                </tbody>
-             </table>
-            </div>
+                ?>
+                <tr>
+                    <input type="message"  id="message" placeholder="Message" name="Message">
+                    <button id="send_button">Send</button>
+                </tr>
+            </tbody>
+            </table>
+        <script type="application/javascript" src="js/messages.js"></script>
         </div>
     </div>
-    </div>
-
+    
 </html>

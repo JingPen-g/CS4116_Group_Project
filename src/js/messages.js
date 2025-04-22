@@ -30,7 +30,7 @@ document.getElementById("send_button").addEventListener("click", function(){
 function openExisting(){
     alert("button works")
     window.location.href = "front-end/messaging/convo.php";
-    /*
+    
     fetch('/api/users.php', {
             method: 'POST',
             body: formData
@@ -39,7 +39,7 @@ function openExisting(){
     
     
     
-    */
+        
 }
 
 
