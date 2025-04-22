@@ -1,5 +1,12 @@
 <?php
-
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+    if (isset($_SESSION['username'])) {
+        // User is already logged in
+        header("http://localhost:8080/search"); 
+        exit();
+    }
     include __DIR__ . '/../global/get-footer.php';
     include __DIR__ . '/../global/get-nav.php';
     // Check if there's an error message in the session and store it in a variable

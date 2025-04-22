@@ -8,5 +8,7 @@ return [
     '/advertisment' => '/advertisment/advertisment-page.php',
     '/index'=> 'index.php',
     '/dev' => '/dev-test/home.php',
+    '/userprofile' => 'create-account/userprofile.php',
+    '/logout' => 'global/logout.php',
 ]
 ?>

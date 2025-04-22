@@ -1,11 +1,21 @@
+<?php
+
+include __DIR__ . '/../global/get-nav.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Advertisement Search</title>
+    <link rel="stylesheet"
+href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
+integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
+crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="/css/search.css">
     <link rel="stylesheet" href="../front-end/global/css/nav.css">
+    
     <style>
 
         @font-face {                                                                                                                                                                                                   
@@ -120,7 +130,8 @@
     </style>
 </head>
 <body class="min-h-screen">
-    <!-- Header Section -->
+<?php get_nav() ?>
+    <!-- Header Section 
     <nav>
         <ul style="display: flex;list-style:none;">
 
@@ -130,7 +141,7 @@
             <li style="flex:1;text-align:end;max-width: max-content;margin-left: 20px"><a href="login"><span class="glyphicon glyphicon-user"></span> Login</a></li>
 
         </ul>
-    </nav>
+    </nav>-->
 
     <div class="container mx-auto p-4">
 

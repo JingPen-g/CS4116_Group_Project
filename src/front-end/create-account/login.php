@@ -1,4 +1,12 @@
 <?php
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+    if (isset($_SESSION['username'])) {
+        // User is already logged in, redirect them away from register page
+        header("Location: http://localhost:8080/search"); // or wherever they should go
+        exit();
+    }
     include __DIR__ . '/../global/get-footer.php';
     include __DIR__ . '/../global/get-nav.php';
 

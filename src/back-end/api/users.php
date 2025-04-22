@@ -1,4 +1,7 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 require_once("../db/Users.php");
 require_once("../db/Business.php");
 
@@ -56,23 +59,28 @@ else if($_SERVER["REQUEST_METHOD"] == "POST"){
             // If not found in Users table, try the Business table
             $userData = $business->getBusiness($username);
         }
+
+        $_SESSION['username'] = $username;
         // to do
         $_SESSION['passwordDatabase'] = $userData[0]['Password']; 
         $_SESSION['nameDatabase'] = $userData[0]['Name']; 
         $_SESSION['userData'] = $userData;
         
+        // !!!!!!!!!!for testing purpose only
         if ($username == 'admin' && $password == 'adminPassword') {
             $_SESSION['userType'] = 'admin';
+            $_SESSION['username'] = 'admin';
             echo json_encode([
                 'status' => 'success',
-                'message' => 'Login successful! Redirecting you to the search page...',
-                'redirect' => 'http://localhost:8080/search'
+                'message' => 'Login successful! Redirecting you to the admin page...',
+                'redirect' => 'http://localhost:8080/admins'
             ]);
             exit();
         }
 
+        // !!!!!!!!!!for testing purpose 
         if (!empty($userData) && password_verify($password, $userData[0]['Password'])) {
-
+            $_SESSION['username'] = $username;
             echo json_encode([
                 'status' => 'success',
                 'message' => 'Login successful! Redirecting you to the search page...',
