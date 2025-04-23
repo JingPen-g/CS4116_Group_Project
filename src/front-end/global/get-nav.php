@@ -5,9 +5,6 @@ function get_nav(){
         session_start();
     }
 
-    echo '<pre>';
-    print_r($_SESSION); // Debug: Print session data
-    echo '</pre>';
     echo '<nav class="navbar navbar-expand-lg navbar-light">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">FurSure</a>

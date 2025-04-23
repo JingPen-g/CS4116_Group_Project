@@ -12,11 +12,11 @@ echo "<div class=\"row\">" ;
 echo "<div class=\"col-3\"></div>" ;
 echo "<div class=\"col-6\">" ;
 echo "<section class=\"wrapper\">" ;
-echo "<img id=\"mainPhoto\" src=" . $service_images[0] . " alt=\"roar\">" ;
+echo "<img id=\"imageViewerMain\" src=" . $service_images[0] . " alt=\"focused service image\">" ;
 echo "<div class=\"d-flex justify-content-center\">" ;
 
     foreach ($service_images as $image_path) {
-        echo "<img class=\"imgCarousel\" src=" . $image_path . " alt=\"roar\">" ;
+        echo "<img class=\"imgCarousel\" src=" . $image_path . " alt=\"service image\">" ;
     }
 
 echo "</div>" ;
@@ -25,6 +25,7 @@ echo "</section>" ;
 echo "</div>" ;
 echo "<div class=\"col-3\"></div>" ;
 echo "</div>" ;
-
+//Gap after image display
+echo '<div class="row" style="margin: 50px"></div>';
 }
 ?>

@@ -3,6 +3,9 @@
     src: url('../fonts/myFont.ttf') format('truetype');
 }
 
+.container-fluid {
+    padding: 0px;
+}
 .left-container {
   position: absolute;
   width: 100%;
@@ -40,7 +43,7 @@
     display: none;
 }
 html, body { 
-    background-color: #f0e3d9;
+    background-color: rgb(254 215 170 / var(--tw-bg-opacity, 1));
     overflow-x: hidden;
     font-family: custom-font, sans-serif !important;
     color: #bb5320;
