@@ -10,5 +10,6 @@ return [
     '/dev' => '/dev-test/home.php',
     '/userprofile' => 'create-account/userprofile.php',
     '/logout' => 'global/logout.php',
+    '/messaging' => 'messaging/messaging.php',
 ]
 ?>
