@@ -21,9 +21,11 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
 
     } else if(isset($_GET['method']) && $_GET['method'] === "getAllMessageForUsers"){
 
-        
-
         echo json_encode($messaging->getMessages([$_GET['userId'], $_GET['otherId']]));
+
+    } else if(isset($_GET['method']) && $_GET['method'] === "getAllConversations"){
+
+        echo json_encode($messaging->getConversations($_GET['userId']));
 
     } else {
 

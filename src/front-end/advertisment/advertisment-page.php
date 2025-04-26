@@ -8,9 +8,6 @@ include __DIR__ . '/../global/get-footer.php';
 $userType;
 print_r($_SESSION);
 
-
-
-
 $ad_data = null;
 $ad_services_data = null;
 $review_data = null;
@@ -129,6 +126,7 @@ if (!empty($_POST['Ad_ID'])) {
         else
             $review_data[0] = "empty";
     }
+
     /* retreive_user_data 
      * This method gets the rows in the user table with User_ID
      * matching user_ids in a review

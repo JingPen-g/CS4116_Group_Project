@@ -318,6 +318,58 @@ class Model {
         return $row;
     }
 
+    protected function findCustom($query, $values) {
+
+        //get types
+        $typesAndValues = [];
+        $typesAndValues[0] = "";
+        foreach ($values as $value) {
+
+            $typesAndValues[0] .= $this->decideType($value);
+            $typesAndValues[] = $value;
+        }
+
+        //Construct stamtent
+        $stmt = $this->conn->prepare($query);
+
+        
+        if (!$stmt) {
+            echo "<BR>Prepare failed: " . $this->conn->error . "<BR>";
+            throw new Exception("Prepare failed: " . $this->conn->error);
+        }
+
+        //echo "<BR>Statement type: " . gettype($stmt) . "<BR>";
+        if (is_object($stmt)) {
+            echo "Statement class: " . get_class($stmt) . "<BR>";
+        }
+
+
+        // Bind parameters - create references properly
+        if (!empty($typesAndValues)) {
+            $params = array();
+            $params[] = &$typesAndValues[0]; 
+            
+            // Create references for each value
+            for ($i = 1; $i < count($typesAndValues); $i++) {
+                $params[] = &$typesAndValues[$i];
+            }
+            
+            //Bind values to stamtent
+            call_user_func_array(array($stmt, 'bind_param'), $params);
+        }
+
+        if (!$stmt->execute()) {
+            throw new Exception("Query failed: " . $stmt->error);
+        }
+
+
+        //get result
+        $result = $stmt->get_result();
+        $row = $this->fetchDBResults($result);
+
+        return $row;
+    }
+
     protected function fetchAll() {
         $query = "SELECT * FROM $this->table";
         $result = $this->conn->query($query);

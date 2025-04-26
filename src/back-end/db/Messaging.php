@@ -26,6 +26,12 @@ class Messaging extends Model {
         return  $this->find([],[],$refs,$customWhere, "");
     }
 
+    public function getConversations($userId) {
+
+        $values = [$userId, $userId, $userId];
+        return  $this->findCustom("SELECT DISTINCT CASE WHEN Sender_ID = ? THEN Receiver_ID WHEN Receiver_ID = ? THEN Sender_ID END AS Other_ID FROM Messages WHERE ? IN (Sender_ID, Receiver_ID)",$values);
+    }
+
     public function getMessageCount($Sender_ID, $Receiver_ID){
 
         $criteriaForCount = ["Sender_ID" => $Sender_ID, "Receiver_ID" => $Receiver_ID];
