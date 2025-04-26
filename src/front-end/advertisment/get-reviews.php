@@ -1,5 +1,5 @@
 <?php
-function generate_review_elements($review_data) {
+function generate_review_elements($review_data, $userType) {
 
         echo '<!-- Title Row -->
         <div class="row" style="margin-top: 10vh !important">
@@ -38,9 +38,13 @@ function generate_review_elements($review_data) {
                             </div>
                             <!-- Message User -->
                             <div class="col-4 grey">
-                                <div class="review-message-user">
-                                    <button class="review-submit-message-request" type="button">Message</button>
-                                </div>
+                                <div class="review-message-user">';
+        if ($userType == "user")
+            echo                    '<button class="review-submit-message-request" type="button">Message User</button>';
+        else if ($userType == "business owner")
+            echo                    '<button class="review-submit-message-request" type="button" data-user-type="business" data-review-id="' . $row->Review_ID . '">Reply to review</button>';
+
+        echo                    '</div>
                             </div>
                         </div>
                     </div>

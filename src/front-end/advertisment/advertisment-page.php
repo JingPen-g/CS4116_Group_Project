@@ -5,6 +5,11 @@ include 'get-service-image-viewer.php';
 include 'get-reviews.php';
 include __DIR__ . '/../global/get-footer.php';
 
+$userType;
+print_r($_SESSION);
+
+
+
 
 $ad_data = null;
 $ad_services_data = null;
@@ -14,7 +19,22 @@ $business_data = null;
 $services_user_is_verifed_for = null;
 
 
+
 if (!empty($_POST['Ad_ID'])) {
+
+    if (empty($_SESSION['userType'])) 
+        $userType = "not logged in";
+    else if ($_SESSION['userType'] == "user")
+        $userType = "user";
+    else if ($_SESSION['userType'] == 'business')
+        if ($_SESSION['userData'][0]['Business_ID'] == $_POST['Ad_ID'])
+            $userType = "business owner";
+        else
+            $userType = "business";
+    else {
+        $userType = "error determining user type";
+        echo "error determining user type";
+    }
 
 
     /* retreive_ad_data 
@@ -254,6 +274,8 @@ if (!empty($_POST['Ad_ID'])) {
     <link rel="stylesheet" href="../front-end/advertisment/css/image-viewer.css">
     <link rel="stylesheet" href="../front-end/advertisment/css/transaction-popup.css">
     <link rel="stylesheet" href="../front-end/advertisment/css/review.css">
+    <link rel="stylesheet" href="../front-end/advertisment/css/review.css">
+    <link rel="stylesheet" href="../front-end/advertisment/css/review-reply.css">
 
 </head>
 <body>
@@ -282,7 +304,7 @@ if (!empty($_POST['Ad_ID'])) {
                 if ($review_data[0] == "empty")
                     generate_empty_review_section();
                 else
-                    generate_review_elements($review_data);
+                    generate_review_elements($review_data,$userType);
 
                 generate_add_review_section($ad_services_data, $services_user_is_verifed_for);
 
@@ -362,11 +384,30 @@ if (!empty($_POST['Ad_ID'])) {
         </div>
 
 
+        <!-- Reply to review dialog -->
+        <div id="reply-to-review-container" data-reviewId="null">
+
+            <div style="display: flex; flex-direction: row;width: 100%;justify-content: center;align-items: center;">
+                <h4 style="margin-right: 10%;color: black" id="reply-to-review-title">Respond to review</h4>
+                <button type="button" id="close-reply-review"><h4 style="margin-left: 3%;">X</h4></button>
+            </div>
+
+            <div id="reply-to-review-input-container">
+                <button type="button" style="height: 2rem" id="close-reply-review-second"><h4>X</h4></button>
+                <textArea id="reply-to-review-text-input" type="text" placeholder="Enter Response" rows="3" maxlength="255"></textarea>
+                <button id="reply-to-review-submit-button" type="button">Reply</button>
+            </div>
+
+            <h4 id="reply-to-review-error">&#8203;</h4>
+        </div>
+
+
     <!-- scripts -->
     <script src="../front-end/advertisment/js/image-viewer.js"></script>
     <script src="../front-end/global/js/global-margin.js"></script>
     <script src="../front-end/advertisment/js/transaction-popup.js"></script>
     <script src="../front-end/advertisment/js/review.js"></script>
+    <script src="../front-end/advertisment/js/review-reply.js"></script>
 
 </body>
 </html>

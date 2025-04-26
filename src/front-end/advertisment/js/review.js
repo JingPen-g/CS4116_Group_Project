@@ -1,6 +1,46 @@
+//Reply To Review Buttons
+const replyToReviewDialog = document.getElementById('reply-to-review');
+const replyToReviewButtons = Array.from(document.getElementsByClassName('review-submit-message-request'));
 
-//Add Review
+const replyToReview = document.getElementById('reply-to-review-container');
 
+replyToReviewButtons.forEach(function(btn){
+
+    btn.addEventListener('click',(event) => {
+
+        const userType = btn.dataset.userType;
+
+        if (userType == "business") {
+            
+            const allReviewsTop = Array.from(document.getElementsByClassName("review-border-top"));
+            const allReviewsBottom = Array.from(document.getElementsByClassName("review-border-bottom"));
+
+            allReviewsTop.forEach((reviewTopBorder) => {
+                //reviewTopBorder.style.backgroundColor = "#cccccc";
+                reviewTopBorder.style.opacity = "0.6";
+            });
+            allReviewsBottom.forEach((reviewBottomBorder) => {
+                //reviewBottomBorder.style.backgroundColor = "#cccccc";
+                reviewBottomBorder.style.opacity = "0.6";
+            });
+
+            const thisReviewTop = event.target.closest(".review-border-top");
+            const thisReviewBottom = allReviewsBottom[allReviewsTop.indexOf(thisReviewTop)];
+            //const thisReviewBottom = event.target.closest(".review-border-bottom");
+            thisReviewTop.style.opacity = "1";
+            thisReviewBottom.style.opacity = "1";
+
+            var scrollTop = window.pageYOffset + btn.getBoundingClientRect().top - 30;
+            window.scrollTo(0,scrollTop);
+            document.documentElement.style.overflow = "hidden";
+            replyToReviewRow.style.display = "flex";
+
+            replyToReview.dataset.reviewId = btn.dataset.reviewId;
+        }
+
+
+    });
+});
 
 //comment
 const submitReviewContainer = document.getElementById("add-review-container");
@@ -33,7 +73,7 @@ slider.value = slider.min;
 function post_review(commentValue, starsValue, user_id, service_id) {
 
     fetch('api/reviews.php', {
-        method: 'POST', // or 'GET' depending on your needs
+        method: 'POST', 
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
         },
@@ -41,13 +81,12 @@ function post_review(commentValue, starsValue, user_id, service_id) {
             action: 'insertReview', 
             comment: commentValue,
             stars: starsValue,
-            user: user_id,//!!!!!!!TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            user: user_id,
             service: service_id
         })
     })
     .then(response => response.json())
     .then(data => {
-      // Handle the response from your PHP function here
       console.log('Success:', data);
     })
     .catch(error => {

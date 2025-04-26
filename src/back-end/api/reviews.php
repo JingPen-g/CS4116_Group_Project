@@ -27,6 +27,10 @@ else if($_SERVER["REQUEST_METHOD"] == "POST"){
         $review_details = [$_POST['comment'], $_POST['stars'], $_POST['user'], $_POST['service']];
         echo json_encode($review->insertReview($review_details));
 
+    } else if(isset($_POST['action']) && $_POST['action'] === "insertResponseToReview"){
+
+        echo json_encode($review->insertResponse($_POST['reviewId'], $_POST['response']));
+
     } else {
         echo json_encode(['error' => 'Method not defined for POST in Review API']);
     }

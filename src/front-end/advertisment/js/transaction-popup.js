@@ -98,98 +98,99 @@ button.forEach(function(currentBtn){
         var payButton = document.getElementById('payment');
         var exitPaymentConfirmation = document.getElementById('exitTransactionComplete');
 
-//Close Transaction Overlay   
-exitButton.addEventListener('click', () => {
+        //Close Transaction Overlay   
+        exitButton.addEventListener('click', () => {
 
-    document.documentElement.style.overflow = "visible";
-    document.body.style.top = `0px`;
-    overlay.classList.toggle('visible');
-        button.forEach(function(btn){
-            btn.disabled = false;
+            document.documentElement.style.overflow = "visible";
+            document.body.style.top = `0px`;
+            overlay.classList.toggle('visible');
+                button.forEach(function(btn){
+                    btn.disabled = false;
+                });
+
         });
 
-});
-//Second Close Transaction Overlay   
-secondExitButton.addEventListener('click', () => {
+        //Second Close Transaction Overlay   
+        secondExitButton.addEventListener('click', () => {
 
-    document.documentElement.style.overflow = "visible";
-    document.body.style.top = `0px`;
-    overlay.classList.toggle('visible');
-        button.forEach(function(btn){
-            btn.disabled = false;
+            document.documentElement.style.overflow = "visible";
+            document.body.style.top = `0px`;
+            overlay.classList.toggle('visible');
+                button.forEach(function(btn){
+                    btn.disabled = false;
+                });
+
         });
+        //Pay 
+        payButton.addEventListener('click', () => {
 
-});
-//Pay 
-payButton.addEventListener('click', () => {
+            var transactionData = document.getElementById('transaction_data').dataset.value;
+            transactionData = transactionData.substring(transactionData.indexOf("(") + 1, transactionData.indexOf(")"));
+            transactionData = transactionData.split(",");
+            
+            const serviceAmount = transactionData[0];
+            const serviceId = transactionData[1];
+            const businessId = transactionData[2];
+            const userId = transactionData[3];
 
-    var transactionData = document.getElementById('transaction_data').dataset.value;
-    transactionData = transactionData.substring(transactionData.indexOf("(") + 1, transactionData.indexOf(")"));
-    transactionData = transactionData.split(",");
-    
-    const serviceAmount = transactionData[0];
-    const serviceId = transactionData[1];
-    const businessId = transactionData[2];
-    const userId = transactionData[3];
+            
+            //add transaction
+            fetch('api/transactions.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    action: "insertNewTransaction",
+                    user_id: userId,
+                    business_id: businessId,
+                    service_id: serviceId,
+                    amount: serviceAmount,
+                    status: 1 //transaction complete 
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+              console.log('Success:', data);
+            })
+            .catch(error => {
+              console.error('Error:', error);
+            });
 
-    
-    //add transaction
-    fetch('api/transactions.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams({
-            action: "insertNewTransaction",
-            user_id: userId,
-            business_id: businessId,
-            service_id: serviceId,
-            amount: serviceAmount,
-            status: 1 //transaction complete 
-        }),
-    })
-    .then(response => response.json())
-    .then(data => {
-      console.log('Success:', data);
-    })
-    .catch(error => {
-      console.error('Error:', error);
-    });
+            //add verified
+            fetch('api/verification.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    action: "insertNewVerifiedCustomer",
+                    user_id: userId,
+                    service_id: serviceId
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+              console.log('Success:', data);
+            })
+            .catch(error => {
+              console.error('Error:', error);
+            });
 
-    //add verified
-    fetch('api/verification.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams({
-            action: "insertNewVerifiedCustomer",
-            user_id: userId,
-            service_id: serviceId
-        }),
-    })
-    .then(response => response.json())
-    .then(data => {
-      console.log('Success:', data);
-    })
-    .catch(error => {
-      console.error('Error:', error);
-    });
+            overlay.classList.toggle('visible');
+            transactionComplete.classList.toggle('visible')
 
-    overlay.classList.toggle('visible');
-    transactionComplete.classList.toggle('visible')
-
-});
-//Exit Payment Confirmation 
-exitPaymentConfirmation.addEventListener('click', () => {
-
-    document.documentElement.style.overflow = "visible";
-    document.body.style.top = `0px`;
-    transactionComplete.classList.toggle('visible')
-        button.forEach(function(btn){
-            btn.disabled = false;
         });
-});
+        //Exit Payment Confirmation 
+        exitPaymentConfirmation.addEventListener('click', () => {
+
+            document.documentElement.style.overflow = "visible";
+            document.body.style.top = `0px`;
+            transactionComplete.classList.toggle('visible')
+                button.forEach(function(btn){
+                    btn.disabled = false;
+                });
+        });
 
         //Bring up pop up
         overlay.classList.toggle('visible');

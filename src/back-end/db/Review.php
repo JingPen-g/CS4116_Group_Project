@@ -37,5 +37,13 @@ class Review extends Model {
 
         return $this->insert($new_review);
     }
+
+    public function insertResponse($reviewId, $response) {
+
+        $update_row['Review_ID'] = $reviewId;
+        $with_data['Response'] = $response;
+
+        return $this->update($update_row, $with_data);
+    }
 }
 ?>

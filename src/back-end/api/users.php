@@ -66,11 +66,14 @@ else if($_SERVER["REQUEST_METHOD"] == "POST"){
         // search by username based on usertype, register -> login
         // todo: if user login first, search by username in both users table and business table, and administor?
         $userData = $user->getUser($username);
+        $_SESSION['userType'] = "user";
 
         if (!$userData) {
             // If not found in Users table, try the Business table
             $userData = $business->getBusiness($username);
+            $_SESSION['userType'] = "business";
         }
+
 
         $_SESSION['username'] = $username;
         // to do
