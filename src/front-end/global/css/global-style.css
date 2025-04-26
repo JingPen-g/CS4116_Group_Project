@@ -308,3 +308,9 @@ h1, h2 {
         height: 25%;
     }
 }
+    .sender {
+        text-align: left;
+    }
+    .reciever {
+        text-align: right;
+    }

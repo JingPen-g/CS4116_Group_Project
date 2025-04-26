@@ -1,10 +1,28 @@
 console.log("Hello, World login!");
 
-document.getElementById("exist_convo").addEventListener("click", openExisting);
 
 
+btns = document.getElementsByClassName("convo-button");
+for(var i = 0; i < btns; i++){
+    btns[i].addEventListener("click", function(){
+        alert("button works"); 
+    }) 
+
+    
+}
 
 document.getElementById("send_button").addEventListener("click", function(){
+    alert("button works")
+    const formData = new FormData(form);
+    fetch('/api/messages.php', {
+        method: 'POST',
+        body: formData
+    })
+    then
+
+})
+/*document.getElementById("button").addEventListener("click", function(){
+    alert("button works")
     if(input){
 
     }
@@ -26,7 +44,7 @@ document.getElementById("send_button").addEventListener("click", function(){
 
 
 });
-
+*/
 function openExisting(){
     alert("button works")
     window.location.href = "front-end/messaging/convo.php";
