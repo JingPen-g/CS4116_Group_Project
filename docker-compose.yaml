@@ -7,6 +7,7 @@ services:
     volumes:
       - ./src:/var/www/html
       - ./nginx.conf:/etc/nginx/nginx.conf  # Use custom Nginx config
+      - ./uploads:/var/www/html/uploads 
     depends_on:
       - php
     networks:
@@ -19,6 +20,7 @@ services:
     container_name: php
     volumes:
       - ./src:/var/www/html
+      - ./uploads:/var/www/html/uploads
     networks:
      - my_network
 

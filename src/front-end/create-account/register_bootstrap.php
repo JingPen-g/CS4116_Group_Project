@@ -90,11 +90,11 @@ crossorigin="anonymous">
                         <small id="error_message_re" class="text-danger"><?php if (!empty($re_password)) echo htmlspecialchars($re_password); ?></small>
                     </div>
                     <div class="form-floating mb-3 mt-3">
-                        <input type="email" class="form-control" id="email" placeholder="Enter email" name="email" required>
+                        <input type="email" class="form-control" id="email" placeholder="Enter email" name="email" id="email" required>
                         <label for="email" class="text-black-50">Enter email</label>
                     </div>
                     <div class="me-2">
-                        <small id="error_message_email" class="text-danger"><?php if (!empty($emailErr)) echo htmlspecialchars($emailErr); ?></small>
+                        <small id="emailErr" class="text-danger"><?php if (!empty($emailErr)) echo htmlspecialchars($emailErr); ?></small>
                     </div>
                     <div class="mb-3 mt-3">
                         <label class="text-dark mb-1 mt-1">Select User Type:</label>
@@ -110,7 +110,7 @@ crossorigin="anonymous">
                     <div class="me-2">
                         <small id="error_message_radio" class="text-danger"><?php if (!empty($userTypeErr)) echo htmlspecialchars($userTypeErr); ?></small>
                     </div>
-                    <button type="submit" class="btn btn-primary">Register</button>
+                    <button id="register" type="submit" class="btn btn-primary">Register</button>
                     <div class="form-floating mb-3 mt-3">
                         <a href="http://localhost:8080/login">Already have account? login</a>
                     </div>

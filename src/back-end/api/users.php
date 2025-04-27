@@ -13,13 +13,31 @@ $business = new Business();
 if($_SERVER["REQUEST_METHOD"] == "GET"){
     if (isset($_GET['username'])) {
         $userData = $user->getUser($_GET['username']);
-        
-        if ($userData !== null) {
-            echo json_encode($userData);
+        $businessData = $business->getBusiness($_GET['username']);
+        if ($userData || $businessData) {
+            echo json_encode([
+                'status' => 'success',
+                'message' => 'Username already exists'
+            ]);
+            exit;
         } else {
-            http_response_code(404);
-            echo json_encode(['error' => 'User not found']);
+            echo json_encode(['message' => 'User not found']);
         }
+    } else if (isset($_GET['email'])) {
+
+        $email = $_GET['email'];
+        $uniqueUserEmail = $user->getUserByEmail($email);
+        $uniqueBusinessEmail = $business->getBusinessByEmail($email);
+        if ($uniqueUserEmail || $uniqueBusinessEmail) {
+            echo json_encode([
+                'status' => 'success',
+                'message' => 'Email already exists'
+            ]);
+            exit;
+        } else {
+            echo json_encode(['error' => 'Email not found']);
+        }
+
     } else if(isset($_GET['usercount']) && $_GET['usercount'] == 1){
         $userData = $user->getUserCount();
     
@@ -49,42 +67,47 @@ else if($_SERVER["REQUEST_METHOD"] == "POST"){
             $_SESSION['error_message'] = "";        
         }
 
-        
-
-        // search by username based on usertype, register -> login
-        // todo: if user login first, search by username in both users table and business table, and administor?
         $userData = $user->getUser($username);
-
-        if (!$userData) {
-            // If not found in Users table, try the Business table
-            $userData = $business->getBusiness($username);
+        $businessData = $business->getBusiness($username);
+        if (!$userData && !$businessData) {
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Invalid username or password.' . $userData . $businessData
+            ]);
+            return;
+        }
+        if ($userData || $businessData) {
+            $_SESSION['username'] = $username;
+            $_SESSION['passwordDatabase'] = $userData[0]['Password'] ?? $businessData[0]['Password'] ?? ""; 
+            $_SESSION['nameDatabase'] = $userData[0]['Name'] ?? $businessData[0]['Name'] ?? ""; 
+            $_SESSION['userData'] = $userData;
+            $_SESSION['businessData'] = $businessData;
+            if ($userData) {
+                $_SESSION['userType'] = "customer";
+            } else {
+                $_SESSION['userId'] = "business owner";
+            }
         }
 
-        $_SESSION['username'] = $username;
-        // to do
-        $_SESSION['passwordDatabase'] = $userData[0]['Password']; 
-        $_SESSION['nameDatabase'] = $userData[0]['Name']; 
-        $_SESSION['userData'] = $userData;
-        
-        // !!!!!!!!!!for testing purpose only
-        if ($username == 'admin' && $password == 'adminPassword') {
+        if (!empty($userData) && password_verify($password, $userData[0]['Password']) && $userData[0]['Admin'] == 1) {
+            $_SESSION['admin_logged_in'] = true;
             $_SESSION['userType'] = 'admin';
-            $_SESSION['username'] = 'admin';
-            echo json_encode([
+            $_SESSION['username'] = $userData[0]['Name'];
+            echo json_encode([                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
                 'status' => 'success',
                 'message' => 'Login successful! Redirecting you to the admin page...',
-                'redirect' => 'http://localhost:8080/admins'
+                'redirect' => '/admins'
             ]);
             exit();
         }
 
-        // !!!!!!!!!!for testing purpose 
+
         if (!empty($userData) && password_verify($password, $userData[0]['Password'])) {
             $_SESSION['username'] = $username;
             echo json_encode([
                 'status' => 'success',
                 'message' => 'Login successful! Redirecting you to the search page...',
-                'redirect' => 'http://localhost:8080/search'
+                'redirect' => '/search'
             ]);
             
             exit();
@@ -114,8 +137,8 @@ else if($_SERVER["REQUEST_METHOD"] == "POST"){
             
             if (!preg_match("/^[a-zA-Z0-9]*$/",test_input($username))) {
                 $usernameErr = "Only letters and white space allowed";
-            }
-                
+            } 
+            test_input($username);  
         }
         if (empty($password)) {
             $_SESSION['passwordErr'] = "Password is required";
@@ -151,12 +174,14 @@ else if($_SERVER["REQUEST_METHOD"] == "POST"){
             $_SESSION['emailErr'] = "Email is required";
         } else {
             if (!filter_var(test_input($email), FILTER_VALIDATE_EMAIL)) {
+                echo "Invalid email format.";
                 $_SESSION['$emailErr'] = "Please enter a valid email address.";
+                exit;
             } else {
                 $_SESSION['emailErr'] = "";
             }
         }
-        
+
         if (empty($usertype)) {
             $_SESSION['userTypeErr'] = "UserType is required";
         } else {
@@ -179,16 +204,11 @@ else if($_SERVER["REQUEST_METHOD"] == "POST"){
         
         // If registration is successful (e.g., no errors in validation)
         if ($registration_success) {
-            if (headers_sent($file, $line)) {
-                die("Headers already sent in $file on line $line");
-            }
-
-            
             // to do - alert ("susccessful registration")
             echo json_encode([
                 'status' => 'success',
-                'message' => 'Registration successful! Redirecting you to the login page...',
-                'redirect' => 'http://localhost:8080/login'
+                'message' => 'Registration successful! Redirecting you to the search page...',
+                'redirect' => '/search'
             ]);
             exit();
         } else {
@@ -197,7 +217,7 @@ else if($_SERVER["REQUEST_METHOD"] == "POST"){
                 'message' => 'Failed to register user. Please try again.'
             ]);
         }
-            
+        exit();   
     }
 }
 else if($_SERVER["REQUEST_METHOD"] == "PUT"){
@@ -246,6 +266,7 @@ function test_input($data)  {
     $data = trim($data);
     $data = stripslashes($data);
     $data = htmlspecialchars($data);
+    $data = strip_tags($data);
     return $data;
 }
 

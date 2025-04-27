@@ -9,6 +9,31 @@ class Users extends Model {
         return $this->find(['Name' => $name]);
     }
 
+    public function getAllUsers($admin = false) {
+        return $this->find(['Admin' => $admin]);
+    }
+
+    public function getUsernameByUserId($userId) {
+        return $this->find(['Users_ID' => $userId]);
+    }
+
+    public function updateUserBanned($userId, $banned, $admin) {
+        $conditions = [
+            'Users_ID' => $userId,
+            'Admin' => $admin,
+        ];
+
+        $data = [
+            'Banned' => $banned,
+        ];
+
+        return $this->update($conditions, $data);
+    }
+
+    public function getUserByEmail($email) {
+        return $this->find(['Email' => $email]);
+    }
+
     public function getUserCount(){
         return $this->count();
     }
@@ -23,9 +48,9 @@ class Users extends Model {
         return $this->insert($insertableData);
     }
 
-    public function updatePassword($email, $new_password){
+    public function updatePassword($username, $new_password){
         $conditions = [
-            'Email' => $email,
+            'Name' => $username,
         ];
 
         $data = [
@@ -54,20 +79,20 @@ class Users extends Model {
 
         return $this->update($conditions, $data);
     }
-    public function updatePhone($phone, $description){
+    public function updatePhone($username, $phone){
         $conditions = [
-            'Phone' => $phone,
+            'Name' => $username,
         ];
 
         $data = [
-            'Description' => $description,
+            'Phone' => $phone,
         ];
 
         return $this->update($conditions, $data);
     }
     public function updateProfilePicture($username, $target_file){
         $conditions = [
-            'Username' => $username,
+            'Name' => $username,
         ];
 
         $data = [
