@@ -1,6 +1,14 @@
 <?php
-
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+    if (isset($_SESSION['username'])) {
+        // User is already logged in
+        header("http://localhost:8080/search"); 
+        exit();
+    }
     include __DIR__ . '/../global/get-footer.php';
+    include __DIR__ . '/../global/get-nav.php';
     // Check if there's an error message in the session and store it in a variable
     $usernameErr = isset($_SESSION['usernameErr']) ?? "";
     $passwordErr = isset($_SESSION["passwordErr"]) ??"";
@@ -28,8 +36,12 @@ crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="../front-end/global/css/global-style.css">
     <link rel="stylesheet" type="text/css" href="css/register_bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../front-end/global/css/nav.css">
     </head>
     <body>
+    <?php get_nav() ?>
+    
+
     <div class="invisible image-item"></div>
         <div id="main" class="container-fluid">       
     
@@ -41,7 +53,7 @@ crossorigin="anonymous">
         <div class="container-fluid p-5 my-5 border">
             <div class="row">
                 <div class="col">
-                    <img src="../front-end/create-account/images/cat.jpg" alt="logo" class="img-fluid">
+                    <img src="../front-end/create-account/images/cat2.png" alt="logo" class="img-fluid">
                 </div>
                 <div class="col">
                     <form action="/api/users.php" method="post" id="register_form" novalidate>
@@ -51,7 +63,7 @@ crossorigin="anonymous">
                         <input type="text" class="form-control" id="username" placeholder="Enter username" name="username" required>
                         <label for="username" class="text-black-50">Enter Username</label>
                     </div>
-                    <div class="me-2">
+                    <div class="me-2 mb-3 mt-3">
                         <small id="usernameErr" class="text-danger"><?php if (!empty($usernameErr)) echo htmlspecialchars($usernameErr); ?></small>
                     </div>
                     <div class="form-floating mb-3 mt-3">

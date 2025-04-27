@@ -1,0 +1,22 @@
+.nav > li {
+    margin-right: 20px;
+}
+
+a {
+    color: #000;
+    text-decoration: none;
+}
+
+nav {
+    background-color: #fad5a0;
+    padding: 10px;
+}
+
+.navbar-nav {
+    display: flex ;
+}
+
+div.navbar-header {
+    display: flex ;
+}
+

@@ -1,5 +1,5 @@
-let images = Array.from(document.getElementsByClassName("imgCarousel"))
-let mainPhoto = document.getElementById("mainPhoto")
+let allServiceImages = Array.from(document.getElementsByClassName("imgCarousel"))
+let mainPhoto = document.getElementById("imageViewerMain")
 
 function updateImage(event) {
 
@@ -7,6 +7,6 @@ function updateImage(event) {
     mainPhoto.src = image.src
 }
 
-images.forEach(function (image) {
+allServiceImages.forEach(function (image) {
     image.addEventListener("click", updateImage)
 });

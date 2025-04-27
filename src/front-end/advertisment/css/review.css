@@ -1,0 +1,166 @@
+/*Global Review System CSS*/
+.grey {
+    height: 10vh;
+}
+.grey-light {
+    height: 10vh;
+}
+.row {
+    margin: 0px !important;
+    padding: 0px !important;
+}
+.col {
+    margin: 0px !important;
+    padding: 0px !important;
+}
+.col-4 {
+    margin: 0px !important;
+    padding: 0px !important;
+}
+.col-6 {
+    margin: 0px !important;
+    padding: 0px !important;
+}
+.col-8 {
+    margin: 0px !important;
+    padding: 0px !important;
+}
+.col-12 {
+    margin: 0px !important;
+    padding: 0px !important;
+}
+.group-container {
+    margin: 0px !important;
+    padding: 0px !important;
+}
+
+/*Display Revies CSS*/
+.review-user-info {
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items:center;
+    margin: 0px;
+    padding: 0px;
+}
+.review-profile {
+    margin-right: 20px;
+    margin-left: 10px;
+    border: 3px solid black;
+    height: 80%;
+}
+.review-comment {
+    width: 100%;
+    margin: 0px;
+    padding: 20px;
+}
+.review-rating {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+    padding-right: 5vw;
+}
+.review-message-user {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+
+}
+.review-submit-message-request {
+    width: 50%;
+    height: 60%;
+    margin-right: 30px;
+}
+.review-header {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.review-border-bottom {
+    background-color: #a3cae7;
+    border-radius: 0px 0px 25px 25px ;
+    margin: 10px 10px 10px 10px;
+
+    border-bottom: 10px solid black;
+    border-left: 10px solid black;
+    border-right: 10px solid black;
+}
+.review-border-top {
+    background-color: #a3cae7;
+    border-radius: 25px 25px 0px 0px;
+    margin: 10px 10px 10px 10px;
+
+    border-top: 10px solid black;
+    border-left: 10px solid black;
+    border-right: 10px solid black;
+}
+
+/*Make Review CSS*/
+#add-review-container {
+    padding-left: 10%;
+}
+#add-review-input {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    outline: none;
+    border: none;
+    border-bottom: 3px solid grey;
+    resize: none;
+    margin-bottom: 10px;
+}
+
+#add-review-input:focus {
+    border: none;
+    border-bottom: 3px solid #555;
+}
+#add-review-submit {
+    width: 30%;
+    margin-left: 30%;
+}
+#add-review-stars-container {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    margin-left: 20%;
+    margin-bottom: 10px;
+    background-color: grey;
+    border-radius: 25px;
+    border: 5px solid black;
+}
+.star {
+    color: lightgrey;
+    font-size: 2rem;
+    opacity: 1;
+    padding: 0px;
+    margin: 0px;
+    height: 2rem;
+    width: 2rem;
+}
+.star-selected {
+    color: yellow !important;
+}
+#stars-slider-container {
+    position: absolute;
+    opacity: 0;
+}
+#add-review-service-selection-container {
+    text-align: center;
+    display:flex;
+    color: lightgrey;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    margin-left: 20%;
+    margin-bottom: 10px;
+    background-color: grey;
+    border-radius: 25px;
+    border: 5px solid black;
+}

@@ -1,5 +1,16 @@
 console.log("Hello, World login!");
 document.addEventListener('DOMContentLoaded', function() {
+    const loginButton = document.getElementById('login');
+
+    if (loginButton) {
+        loginButton.style.pointerEvents = "auto";
+        loginButton.style.opacity = "1";
+        loginButton.style.visibility = "visible";
+        loginButton.style.position = "relative";
+        loginButton.style.zIndex = "1000";
+        loginButton.disabled = false;
+    }
+
     const form = document.getElementById('login_form');
     form.addEventListener('submit', function(event) {
         // stop the form submission

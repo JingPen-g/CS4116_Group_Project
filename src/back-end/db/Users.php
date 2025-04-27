@@ -9,6 +9,10 @@ class Users extends Model {
         return $this->find(['Name' => $name]);
     }
 
+    public function getUserFromID($user_id) {
+        return $this->find(['Users_ID' => $user_id]);
+    }
+
     public function getUserCount(){
         return $this->count();
     }
@@ -45,6 +49,40 @@ class Users extends Model {
 
         return $this->delete($criteria);
     }
+
+    public function updateDescription($username, $description){
+        $conditions = [
+            'Name' => $username,
+        ];
+
+        $data = [
+            'Description' => $description,
+        ];
+
+        return $this->update($conditions, $data);
+    }
+    public function updatePhone($phone, $description){
+        $conditions = [
+            'Phone' => $phone,
+        ];
+
+        $data = [
+            'Description' => $description,
+        ];
+
+        return $this->update($conditions, $data);
+    }
+    public function updateProfilePicture($username, $target_file){
+        $conditions = [
+            'Username' => $username,
+        ];
+
+        $data = [
+            'ProfilePicturePath' => $target_file,
+        ];
+
+        return $this->update($conditions, $data);
+    }   
 }
 
 ?>

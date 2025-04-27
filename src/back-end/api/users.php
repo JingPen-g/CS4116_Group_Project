@@ -1,15 +1,17 @@
 <?php
-require_once("../db/Users.php");
-require_once("../db/Business.php");
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+require_once(__DIR__ . "/../db/Users.php");
+require_once(__DIR__ . "/../db/Business.php");
 
-header('Content-Type: application/json');
 
 $user = new Users();
 $business = new Business();
 
 if($_SERVER["REQUEST_METHOD"] == "GET"){
-    if (isset($_GET['name'])) {
-        $userData = $user->getUser($_GET['name']);
+    if (isset($_GET['username'])) {
+        $userData = $user->getUser($_GET['username']);
         
         if ($userData !== null) {
             echo json_encode($userData);
@@ -26,6 +28,19 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
             http_response_code(404);
             echo json_encode(['error' => 'User Count not found']);
         }
+
+    /*
+     * Gets all rows in the user table which contain a User_ID from the passed array of ID's
+     */
+    } else if(isset($_GET['method']) && $_GET['method'] === "getUsersOfID"){
+    
+        $user_ids = $_GET['user_ids'];
+        $user_rows = [];
+        foreach ($user_ids as $user_id) {
+            $user_rows[] = $user->getUserFromID($user_id);
+        }
+
+        echo json_encode($user_rows);
     }
 
 } 
@@ -51,21 +66,39 @@ else if($_SERVER["REQUEST_METHOD"] == "POST"){
         // search by username based on usertype, register -> login
         // todo: if user login first, search by username in both users table and business table, and administor?
         $userData = $user->getUser($username);
+        $_SESSION['userType'] = "user";
 
         if (!$userData) {
             // If not found in Users table, try the Business table
             $userData = $business->getBusiness($username);
+            $_SESSION['userType'] = "business";
         }
+
+
+        $_SESSION['username'] = $username;
         // to do
         $_SESSION['passwordDatabase'] = $userData[0]['Password']; 
         $_SESSION['nameDatabase'] = $userData[0]['Name']; 
         $_SESSION['userData'] = $userData;
         
-        if (!empty($userData) && password_verify($password, $userData[0]['Password'])) {
-
+        // !!!!!!!!!!for testing purpose only
+        if ($username == 'admin' && $password == 'adminPassword') {
+            $_SESSION['userType'] = 'admin';
+            $_SESSION['username'] = 'admin';
             echo json_encode([
                 'status' => 'success',
-                'message' => 'Login successful! Redirecting you to the home page...',
+                'message' => 'Login successful! Redirecting you to the admin page...',
+                'redirect' => 'http://localhost:8080/admins'
+            ]);
+            exit();
+        }
+
+        // !!!!!!!!!!for testing purpose 
+        if (!empty($userData) && password_verify($password, $userData[0]['Password'])) {
+            $_SESSION['username'] = $username;
+            echo json_encode([
+                'status' => 'success',
+                'message' => 'Login successful! Redirecting you to the search page...',
                 'redirect' => 'http://localhost:8080/search'
             ]);
             
@@ -159,7 +192,6 @@ else if($_SERVER["REQUEST_METHOD"] == "POST"){
         }
         $_SESSION['registration_success'] = $registration_success;
         
-
         // If registration is successful (e.g., no errors in validation)
         if ($registration_success) {
             if (headers_sent($file, $line)) {

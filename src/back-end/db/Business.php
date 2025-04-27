@@ -10,6 +10,10 @@ class Business extends Model {
         return $this->find(['Name' => $name]);
     }
 
+    public function getBusinessFromID($business_id) {
+        return $this->find(['Business_ID' => $business_id]);
+    }
+
     public function getBusinessCount(){
         return $this->count();
     }
