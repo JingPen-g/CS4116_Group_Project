@@ -3,13 +3,29 @@ console.log("Hello, World login!");
 
 
 btns = document.getElementsByClassName("convo-button");
+console.log(btns);
 for(var i = 0; i < btns; i++){
     btns[i].addEventListener("click", function(){
-        alert("button works"); 
+        alert("button works")
     }) 
 
     
 }
+acceptReject = document.getElementById("pending");
+document.getElementById("accept").addEventListener("click", function(){
+    alert("accepted")
+    acceptReject.getElementById('pending').style.display
+
+
+}
+)
+document.getElementById("reject").addEventListener("click", function(){
+    alert("rejected")
+
+
+
+}
+)
 
 document.getElementById("send_button").addEventListener("click", function(){
     alert("button works")
