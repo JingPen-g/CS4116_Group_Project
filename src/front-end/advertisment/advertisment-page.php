@@ -6,7 +6,7 @@ include 'get-reviews.php';
 include __DIR__ . '/../global/get-footer.php';
 
 $userType;
-print_r($_SESSION);
+//print_r($_SESSION);
 
 $ad_data = null;
 $ad_services_data = null;
@@ -50,12 +50,10 @@ if (!empty($_POST['Ad_ID'])) {
 
         //echo "<BR>RAW RESPONSE<BR>" . $response ."<BR><BR>RAW RESPONSE END<BR>";//testing
         //Ensures a json object is contained in output
-        if ( str_contains($response, ']') && str_contains($response, '[') && strrpos($response, ']',0) > strrpos($response, '[',0) ) {
 
-            $ad_data = substr($response, strrpos($response, '[', 0), ( strrpos($response, ']',0) - strrpos($response, '[', 0)) + 1 );
-            $ad_data = json_decode($ad_data);
-            //print_r($ad_data);//testing
-        }
+        $ad_data = substr($response, strpos($response,"[",0), strlen($response) - 1);
+        $ad_data = json_decode($ad_data);
+        //print_r($ad_data);//testing
     }
 
     /* retreive_ad_services_data 

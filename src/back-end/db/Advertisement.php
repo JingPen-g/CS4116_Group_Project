@@ -10,83 +10,201 @@ class Advertisement extends Model {
     }
 
     /*
-        Sample query:
-        SELECT *, MATCH(Name, Description) AGAINST(?) AS relevance
-        FROM Advertisement
-        WHERE 
-            JSON_CONTAINS(Label, ?) AND
-            UploadDate BETWEEN ? AND ?
-        ORDER BY relevance DESC
-        LIMIT ? OFFSET ?
+        (
+    SELECT 
+        a.*,
+        MATCH(a.Name, a.Description) AGAINST('' IN BOOLEAN MODE) AS relevance,
+        COALESCE(AVG(r.Stars), 0) AS avg_review_score,
+        1 AS is_relevant -- Flag to indicate matching ads
+    FROM 
+        Advertisement a
+    LEFT JOIN 
+        JSON_TABLE(a.Service_IDs, '$[*]' COLUMNS (id INT PATH '$')) AS jt
+            ON TRUE
+    LEFT JOIN 
+        Service s ON s.Service_ID = jt.id
+    LEFT JOIN 
+        Review r ON r.Service_ID = s.Service_ID
+    WHERE 
+        (
+            MATCH(a.Name, a.Description) AGAINST('' IN BOOLEAN MODE)
+            OR a.Label->'$.labels' LIKE '%Reptile%'
+        )
+        AND a.UploadDate BETWEEN '1960-01-01 00:00:00' AND '2025-04-28 19:56:27'
+    GROUP BY 
+        a.Ad_ID
+)
+UNION
+(
+    SELECT 
+        a.*,
+        0 AS relevance, -- No relevance for non-matching ads
+        COALESCE(AVG(r.Stars), 0) AS avg_review_score,
+        0 AS is_relevant -- Flag to indicate non-matching ads
+    FROM 
+        Advertisement a
+    LEFT JOIN 
+        JSON_TABLE(a.Service_IDs, '$[*]' COLUMNS (id INT PATH '$')) AS jt
+            ON TRUE
+    LEFT JOIN 
+        Service s ON s.Service_ID = jt.id
+    LEFT JOIN 
+        Review r ON r.Service_ID = s.Service_ID
+    WHERE 
+        (
+            NOT MATCH(a.Name, a.Description) AGAINST('' IN BOOLEAN MODE)
+            AND a.Label->'$.labels' NOT LIKE '%Reptile%'
+        )
+        AND a.UploadDate BETWEEN '1960-01-01 00:00:00' AND '2025-04-28 19:56:27'
+    GROUP BY 
+        a.Ad_ID
+)
+ORDER BY 
+    is_relevant DESC, -- Prioritize matching ads
+    relevance DESC,   -- Sort matching ads by relevance
+    avg_review_score DESC -- Fallback sorting by review score
+LIMIT 10 OFFSET 0;
     */
     public function getRecommendedAdvertisements(
-        string $searchTerm, 
+        string $searchTerm = "", 
         array $tags = [], 
-        ?string $before = "", 
-        ?string $after = "",
+        ?string $before = null, 
+        ?string $after = null,
         int $amount = 20,
         int $offset = 0
     ) {
-        //if(empty($searchTerm)) return $this->find();
-
         // Default date range
         $before = $before ? new DateTime($before) : new DateTime("1960-01-01 00:00:00");
         $after = $after ? new DateTime($after) : new DateTime();
-
-        // Initialize query components
-        $whereTerms = [];
-        $orderTerms = [];
-        $cols = ['*'];
+    
+        // Initialize values array for binding
         $values = [];
+    
+        // Base query components
+        $queryConditions = [];
+        $queryJoins = [];
+    
+        // Add search term condition
+        $wildSearchTerm = "";
+        $wildSearchTerm = $this->sanitizeInput($searchTerm);
+        if (!empty($wildSearchTerm)) {
+            $wildSearchTerm .= "*";
+        }
+        $values[] = $wildSearchTerm; // For MATCH in first subquery
+        $values[] = $wildSearchTerm; // For MATCH in second subquery
 
-        // Construct tag search
-        foreach ($tags as $tag) {
-            $whereTerms[] = "JSON_CONTAINS(Label, ?, '$.labels')";
-            $val = '"' . $tag . '"';
-            $values[] = &$val; // JSON tags must be encoded as strings
+        $tagPlaceholders = [];
+    
+        // Add tags condition (if needed)
+        if (!empty($tags)) {
+            foreach ($tags as $tag) {
+                $sanitizedTag = $this->sanitizeInput($tag);
+                $tagPlaceholders[] = "\"$sanitizedTag\"";
+            }
+        }
+    
+        // Add date range condition
+        $beforeDate = $this->sanitizeInput($before->format('Y-m-d H:i:s'));
+        $afterDate = $this->sanitizeInput($after->format('Y-m-d H:i:s'));
+        $queryConditions[] = ") AND a.UploadDate BETWEEN ? AND ?";
+        $values[] = $beforeDate;
+        $values[] = $afterDate;
+    
+        // Construct the base query
+        $query = "
+            (
+                SELECT 
+                    a.*,
+                    MATCH(a.Name, a.Description) AGAINST(? IN BOOLEAN MODE) AS relevance,
+                    COALESCE(AVG(r.Stars), 0) AS avg_review_score,
+                    1 AS is_relevant -- Flag to indicate matching ads
+                FROM 
+                    Advertisement a
+                LEFT JOIN 
+                    JSON_TABLE(a.Service_IDs, '$[*]' COLUMNS (id INT PATH '$')) AS jt
+                    ON TRUE
+                LEFT JOIN 
+                    Service s ON s.Service_ID = jt.id
+                LEFT JOIN 
+                    Review r ON r.Service_ID = s.Service_ID
+                WHERE
+            ";
+
+        $query .= " ( MATCH(a.Name, a.Description) AGAINST (? IN BOOLEAN MODE) ";
+        if(!empty($tags)){
+            $query .= " OR JSON_CONTAINS(a.Label->'$.labels', '[" . implode(", ", $tagPlaceholders) ."]') ";
         }
 
-        // Construct date search
-        $whereTerms[] = "UploadDate BETWEEN ? AND ?";
-        $beforeDate = $before->format('Y-m-d H:i:s');
-        $afterDate = $after->format('Y-m-d H:i:s');
-        $values[] = &$beforeDate;
-        $values[] = &$afterDate;
-
-        // Construct name search
-        if (!empty($searchTerm)) {
-            $whereTerms[] = "MATCH(Name, Description) AGAINST(? IN BOOLEAN MODE)";
-            $orderTerms[] = "ORDER BY relevance DESC";
-            $cols[] = "MATCH(Name, Description) AGAINST(? IN BOOLEAN MODE) AS relevance";
-            $wildSearchTerm = $searchTerm . '*';
-            array_unshift($values, null);
-            $values[0] = &$wildSearchTerm; 
-            $values[] = &$wildSearchTerm; 
+        // Append conditions for matching ads
+        if (!empty($queryConditions)) {
+            $query .= implode(" ", $queryConditions);
         }
 
-        // Add limit and offset
-        $orderTerms[] = " LIMIT ? OFFSET ? ";
-        $values[] = &$amount;
-        $values[] = &$offset;
+        //Repeat the values for the second select 
+        $values[] = $wildSearchTerm;
 
-        // Combine query components
-        $whereClause = !empty($whereTerms) ? implode(" AND ", $whereTerms) : " ";
-        $orderClause = !empty($orderTerms) ? implode(" ", $orderTerms) : " ";
-        // Execute query
-        return $this->find(
-            cols: $cols,
-            customValues: $values,
-            customWhere: $whereClause,
-            customExtra: $orderClause
-        );
+        $values[] = $beforeDate;
+        $values[] = $afterDate;
+
+        // Pagination
+        $values[] = $amount;
+        $values[] = $offset;
+    
+        $query .= "
+                GROUP BY 
+                    a.Ad_ID
+            )
+            UNION
+            (
+                SELECT 
+                    a.*,
+                    0 AS relevance, -- No relevance for non-matching ads
+                    COALESCE(AVG(r.Stars), 0) AS avg_review_score,
+                    0 AS is_relevant -- Flag to indicate non-matching ads
+                FROM 
+                    Advertisement a
+                LEFT JOIN 
+                    JSON_TABLE(a.Service_IDs, '$[*]' COLUMNS (id INT PATH '$')) AS jt
+                    ON TRUE
+                LEFT JOIN 
+                    Service s ON s.Service_ID = jt.id
+                LEFT JOIN 
+                    Review r ON r.Service_ID = s.Service_ID
+                WHERE
+            ";
+    
+        // Append conditions for non-matching ads
+        $query .= " ( NOT MATCH(a.Name, a.Description) AGAINST (? IN BOOLEAN MODE) ";
+        if(!empty($tags)){
+            $query .= " AND NOT JSON_CONTAINS(a.Label->'$.labels', '[" . implode(", ", $tagPlaceholders) ."]') ";
+        }
+    
+        if (!empty($queryConditions)) {
+            $query .= implode(" ", $queryConditions);
+        }
+        $query .= "
+                GROUP BY 
+                    a.Ad_ID
+            )
+            ORDER BY 
+                is_relevant DESC, -- Prioritize matching ads
+                relevance DESC,   -- Sort matching ads by relevance
+                avg_review_score DESC -- Fallback sorting by review score
+            LIMIT ? OFFSET ?
+        ";
+
+        // Execute the query
+        return $this->query($query, $values);
+    }
+    
+    protected function sanitizeInput($input) {
+        return htmlspecialchars(trim($input), ENT_QUOTES, 'UTF-8');
     }
 
 
     public function getAdvertInformation(string $Ad_ID){
 
-        return $this->find(
-            customWhere: "Ad_ID = " . $Ad_ID
-        );
+        return $this->find(["Ad_ID" => $Ad_ID]);
     }
 
 }
