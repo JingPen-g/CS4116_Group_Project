@@ -68,7 +68,7 @@ function displayAdvertisements(data) {
         const tags = JSON.parse(ad.Label)['labels'];
 
         const adItem = document.createElement('div');
-        adItem.className = 'ad-item bg-orange-400 shadow-md rounded-lg p-4 mb-4 flex flex-col items-center text-center max-w-sm mx-auto';
+        adItem.className = 'ad-item bg-orange-400 shadow-md rounded-lg p-4 mb-4 flex flex-col items-center text-center max-w-sm mx-auto cursor-pointer';
         adItem.style = 'color: black;';
         adItem.innerHTML = `
             <embed src="${ad.ImagePath}" class="w-full h-48 object-cover rounded-t-lg" />

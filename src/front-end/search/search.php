@@ -127,6 +127,14 @@ crossorigin="anonymous">
             justify-content: end !important;
         }
 
+        button {
+            cursor: pointer;
+        }
+
+        .pointer {
+            cursor: pointer;
+        }
+
     </style>
 </head>
 <body class="min-h-screen">
@@ -212,7 +220,7 @@ crossorigin="anonymous">
                     <span id="page-info" class="text-gray-700">Page 1</span>
                     <button
                         id="next-page"
-                        class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-300"
+                        class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 cursor-pointer transition duration-300 disabled:opacity-50"
                     >
                         Next
                     </button>

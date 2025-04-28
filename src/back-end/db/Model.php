@@ -388,6 +388,8 @@ class Model {
             $rows[] = $row;
         }
 
+        mysqli_free_result($result);
+
         return $rows;
     }  
 
@@ -407,6 +409,42 @@ class Model {
         } else {
             return 's'; // Default to string for all other types
         }
+    }
+
+    protected function query($query, $data) {
+        $values = [];
+        $types = "";
+
+        for ($i = 0; $i < count($data); $i++) {
+            $values[] = &$data[$i];
+            $types .= $this->decideType($data[$i]);
+        }
+
+        $stmt = $this->conn->prepare($query);
+
+        if (!$stmt) {
+            print("error");
+            throw new Exception("Prepare failed: " . $this->conn->error);
+        }
+
+        // Bind parameters
+        if (!empty($data)) {
+            $refs = array_merge([$stmt, $types], $values);
+            call_user_func_array('mysqli_stmt_bind_param', $refs);
+        }
+
+        $stmt->execute();
+
+        // Get result
+        $result = $stmt->get_result();
+        if (!$result) {
+            print("error");
+            throw new Exception("Execute failed: " . $query);
+        }
+
+        $rows = $this->fetchDBResults($result);
+
+        return $rows;
     }
 }
 ?>
