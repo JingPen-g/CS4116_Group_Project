@@ -135,6 +135,10 @@ crossorigin="anonymous">
             cursor: pointer;
         }
 
+        .tag-height {
+            max-height: 450px;
+        }
+
     </style>
 </head>
 <body class="min-h-screen">
@@ -177,7 +181,7 @@ crossorigin="anonymous">
                     </div>
                     <h1 class = "block text-lg font-medium text-gray-900">Tags:</h1>
                     <div class="w-full max-w-md mx-auto mt-8">
-                        <div class="w-[225px] bg-orange-400 flex flex-col border border-orange-400 rounded-lg shadow-lg overflow-y-auto p-4 space-y-2 custom-scrollbar" id="tagBox" style="height: 1200px">
+                        <div class="w-[225px] tag-height bg-orange-400 flex flex-col border border-orange-400 rounded-lg shadow-lg overflow-y-auto p-4 space-y-2 custom-scrollbar" id="tagBox" style="height: 1200px">
                             <!-- Tags will be dynamically inserted here -->
                         </div>
                     </div>
