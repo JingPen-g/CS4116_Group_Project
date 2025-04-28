@@ -1,5 +1,14 @@
-console.log("Hello, World!");
 document.addEventListener('DOMContentLoaded', function() {
+    const registerButton = document.getElementById('register');
+
+    if (registerButton) {
+        registerButton.style.pointerEvents = "auto";
+        registerButton.style.opacity = "1";
+        registerButton.style.visibility = "visible";
+        registerButton.style.position = "relative";
+        registerButton.style.zIndex = "1000";
+        registerButton.disabled = false;
+    }
     const usernameErr = document.getElementById('usernameErr');
     const passwordIn = document.getElementById('password');
     const re_passwordIn = document.getElementById('re_password');
@@ -7,44 +16,97 @@ document.addEventListener('DOMContentLoaded', function() {
     const passwordMeter = document.querySelectorAll('.meter-section');
     const passwordMeterText = document.getElementById('meter-text');
     const email = document.getElementById('email');
+    const emailErr = document.getElementById('emailErr');
     const form = document.getElementById('register_form');
     let strength = "";
     
-    async function checkUsernameAvalibility(_username) {
+    
+
+    async function checkUsernameAvalibility(username) {
+        if (usernameErr.textContent === 'HTML tags are not allowed') {
+            return;
+        }
         try {
-            let response = await fetch(`/api/users.php?username=${encodeURIComponent(_username)}`);
+            let response = await fetch(`/api/users.php?username=${encodeURIComponent(username)}`);
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
             let data = await response.json();
-            if (data.length > 0) {
-                usernameErr.textContent = 'Username is already taken.';
-            } else {
+            if (data.message === "Username already exists") {
+                usernameErr.textContent = 'Username is already taken';
+                usernameErr.style.setProperty('color', '#ff0000', 'important');
+                registerButton.disabled = true;
+            } else if (data.message === "User not found") {
                 usernameErr.style.setProperty('color', '#38CF63', 'important');
                 usernameErr.textContent = 'username is available';
+                registerButton.disabled = false;
             }
         } catch (error) {
             console.error('Error:', error);
         }
     }
 
+    async function checkEmailAvalibility(email) {
+        try {
+            let response = await fetch(`/api/users.php?email=${encodeURIComponent(email)}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            let data = await response.json();
+            if (data.message === "Email already exists") {
+                emailErr.textContent = 'You have already registered with this email.';
+                emailErr.style.setProperty('color', '#ff0000', 'important');
+                email.innerHTML = '';
+            } else {
+                emailErr.style.setProperty('color', '#38CF63', 'important');
+                emailErr.textContent = 'Email is available';
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    document.getElementById("email").addEventListener("input", function() {
+        let email = this.value;
+        console.log("email", email);
+        checkEmailAvalibility(email);
+    });
+
     document.getElementById("username").addEventListener("input", function() {
+        console.log("Input event triggered for username:", this.value);
         let username = this.value;
+        const sanitizedInput = username.replace(/<[^>]*>/g, '');
+        if (username !== sanitizedInput) {
+            usernameErr.textContent = 'HTML tags are not allowed';
+            usernameErr.style.setProperty('color', '#ff0000', 'important');
+            registerButton.disabled = true;
+            return;
+        }
+
+        if (username.length > 50) { 
+            usernameErr.textContent = 'Username cannot exceed 50 characters';
+            usernameErr.style.setProperty('color', '#ff0000', 'important');
+            registerButton.disabled = true;
+            return;
+        }
         if (username.length > 2) { // Avoid too many requests
             checkUsernameAvalibility(username);
+            
         }
     });
 
     email.addEventListener('input', function() {
         if (email.validity.typeMismatch) {
-            document.getElementById('error_message_email').textContent = 'Please enter a valid email address.';
+            emailErr.textContent = 'Please enter a valid email address.';
         } else {
-            document.getElementById('error_message_email').textContent = '';
+            emailErr.textContent = '';
         }
     });
 
+    console.log('Form element:', form);
     form.addEventListener('submit', function(event) {
         // stop the form submission
+        console.log('Form submitted');
         event.preventDefault();
 
         if (!form.checkValidity()) {
@@ -61,8 +123,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const userTypeSelected = document.querySelector('input[name="usertype"]:checked');
 
         if (!userTypeSelected) {
-            console.log("Please select!");
-            // If no radio button is selected, show an error message
             document.getElementById('error_message_radio').textContent = 'Please select a user type.';
             return; 
         } else {
@@ -79,7 +139,6 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
-                    // Show success message in a modal
                     const modalHtml = `
                         <div class="modal fade show" id="successModal" tabindex="-1" aria-hidden="true" style="display: block;">
                             <div class="modal-dialog">
@@ -95,13 +154,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         </div>
                     `;
                     document.body.insertAdjacentHTML('beforeend', modalHtml);
-
-                    // Redirect after 1 second
                     setTimeout(() => {
                         window.location.href = data.redirect;
-                    }, 1000);
+                    }, 500);
                 } else if (data.status === 'error') {
-                    // Reload the page to display session-based errors
                     window.location.reload();
                 }
             })
@@ -114,7 +170,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     passwordIn.addEventListener('input', function() {
         strength = getPasswordStrength(passwordIn.value);
-        console.log("strength", strength); // weak etc
         updateMeter(strength);
     });
 
@@ -211,4 +266,3 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
 });
-console.log("Hello, World again!");

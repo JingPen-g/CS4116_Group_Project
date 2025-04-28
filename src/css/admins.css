@@ -1,0 +1,33 @@
+body {
+    background-color: #f0e3d9;
+}
+
+.content-panel {
+    display: none;
+}
+.content-panel.active {
+    display: block;
+}
+
+.hover-lager {
+    background-color: #fad5a0; 
+    color: black;
+    padding: 1rem;
+    width: 250px;
+    transition: transform 0.3s ease;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+.hover-lager:hover {
+    background-color: #f8923c;
+    font-size: 1.2rem;
+    font-weight: bold;
+    
+}
+aside {
+    margin: 2rem;
+    padding: 1rem;
+    background-color: #f0e3d9;
+}
+

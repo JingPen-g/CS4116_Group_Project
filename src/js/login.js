@@ -1,6 +1,6 @@
-console.log("Hello, World login!");
 document.addEventListener('DOMContentLoaded', function() {
     const loginButton = document.getElementById('login');
+    const errorMessage = document.getElementById('error_message');
 
     if (loginButton) {
         loginButton.style.pointerEvents = "auto";
@@ -10,6 +10,17 @@ document.addEventListener('DOMContentLoaded', function() {
         loginButton.style.zIndex = "1000";
         loginButton.disabled = false;
     }
+
+    document.getElementById('username').addEventListener('input', function() {
+        const username = this.value;
+        const sanitizedInput = username.replace(/<[^>]*>/g, '');
+        if (username !== sanitizedInput) {
+            errorMessage.textContent = 'HTML tags are not allowed';
+            errorMessage.style.setProperty('color', '#ff0000', 'important');
+            loginButton.disabled = true;
+            return;
+        }
+    });
 
     const form = document.getElementById('login_form');
     form.addEventListener('submit', function(event) {
@@ -28,8 +39,8 @@ document.addEventListener('DOMContentLoaded', function() {
         })
             .then(response => response.json())
             .then(data => {
+                console.log('Response data:', data);
                 if (data.status === 'success') {
-                    // Show success message in a modal
                     const modalHtml = `
                         <div class="modal fade show" id="successModal" tabindex="-1" aria-hidden="true" style="display: block;">
                             <div class="modal-dialog">
@@ -46,17 +57,24 @@ document.addEventListener('DOMContentLoaded', function() {
                     `;
                     document.body.insertAdjacentHTML('beforeend', modalHtml);
 
-                    // Redirect after 1 second
                     setTimeout(() => {
                         window.location.href = data.redirect;
-                    }, 1000);
+                    }, 500);
                 } else if (data.status === 'error') {
-                    // Reload the page to display session-based errors
-                    window.location.reload();
+                    if (errorMessage) {
+                        console.log('Error message:', data.message);
+                        errorMessage.innerHTML = data.message;
+                    }
                 }
+                
             })
             .catch(error => {
                 console.error('Error:', error);
-            });
+                if (error.message.includes('504')) {
+                    errorMessage.innerHTML = 'The server took too long to respond. Please try again later.';
+        } else {
+            errorMessage.innerHTML = 'An unexpected error occurred. Please try again.';
+        }
+        });
     });
 });

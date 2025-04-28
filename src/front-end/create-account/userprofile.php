@@ -3,7 +3,14 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 include __DIR__ . '/../global/get-nav.php';
+include __DIR__ . '/../global/get-footer.php';
   
+$profilePic = '/front-end/create-account/images/userprofile.jpeg';
+
+if (!empty($_SESSION['profile_picture'])) {
+    $profilePic = $_SESSION['profile_picture'];
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -17,60 +24,74 @@ integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKm
 crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" type="text/css" href="css/userprofile.css">
+    <link rel="stylesheet" href="../front-end/global/css/global-style.css">
     <link rel="stylesheet" type="text/css" href="../front-end/global/css/nav.css">
     </head>
     <body>
 
     <?php get_nav() ?>
-    <div class="container-fluid p-5 border main-bgcolor">
-        <div class="row">
-            <!-- userprofile --- regular users -->
-            
-            <div class="p-4 border rounded-5 shadow custom-bd-color">
-                <div class="text-center">
-                    <h4 class="text-center">User Profile</h4>
-                    <img src="../front-end/create-account//images/userprofile.jpeg" class="card-img-top rounded-circle mx-auto mt-3" style="width: 120px;" alt="Profile Picture">
-                    <h5>Username: <span class="text-muted"><?php if (!empty($_SESSION['username'])) echo htmlspecialchars($_SESSION['username']); ?></span></h5>
-                </div>
-            </div>
+    <div class="invisible image-item"></div>
+        <div id="main" class="container-fluid">       
+    
+        <!-- Used to generate paw print margin -->
+        <div class="row">                         
+            <div class="col left-container"></div>
+            <div class="col rigth-container"></div>
         </div>
-
-        <div class="row" >
-            <!-- Editable Form -->
-            <div class="col-md-8 m-3 mx-auto">
-            <div class="card ">
-                <div class="card-header">
-                Edit Your Info
-                </div>
-                <div class="card-body">
-                <form action="/api/userprofile.php" method="POST" enctype="multipart/form-data">
-                    <div class="mb-3">
-                    <label for="description" class="form-label">Description</label>
-                    <textarea class="form-control" id="description" name="description" rows="3"></textarea>
-                    </div>
-
-                    <div class="mb-3">
-                    <label for="phone" class="form-label">Phone Number</label>
-                    <input type="text" class="form-control" id="phone" name="phone">
-                    </div>
-
-                    <div class="mb-3">
-                    <label for="profilePic" class="form-label">Profile Picture</label>
-                    <input class="form-control" type="file" id="profilePic" name="profile_picture">
-                    </div>
-
-                    <button type="submit" class="btn btn-primary">Update Profile</button>
-                </form>
-                </div>
+        <div class="invisible image-item"></div>
+            <div id="main" class="container-fluid">       
+        
+            <!-- Used to generate paw print margin -->
+            <div class="row">                         
+                <div class="col left-container"></div>
+                <div class="col rigth-container"></div>
             </div>
+
+            <div class="container-fluid p-5 my-5 border main-bgcolor">
+                <div class="row">
+                    <!-- userprofile --- regular users -->
+                    
+                    <div class="p-4 border rounded-5 shadow custom-bd-color">
+                        <div class="text-center">
+                            <h4 class="text-center">User Profile</h4>
+                            <img src="<?php echo htmlspecialchars($profilePic); ?>" class="card-img-top rounded-circle mx-auto mt-3" style="width: 120px;" alt="Profile Picture">
+                            <h5>Username: <span class="text-muted"><?php if (!empty($_SESSION['username'])) echo htmlspecialchars($_SESSION['username']); ?></span></h5>
+                        </div>
+                    </div>
+                </div>
+
+                    <div class="col-md-8 m-3 mx-auto">
+                    <div class="card ">
+                        <div class="card-header">
+                        Edit Your Info
+                        </div>
+                        <div class="card-body">
+                        <form action="/api/userprofile.php" method="POST" enctype="multipart/form-data">
+                            <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="3"><?php if (!empty($_SESSION['userData'][0]['Description']) || !empty($_SESSION['businessData'][0]['Description'])) echo htmlspecialchars($_SESSION['userData'][0]['Description'] ?? $_SESSION['businessData'][0]['Description'] ?? ""); ?></textarea>
+                            </div>
+
+                            <div class="mb-3">
+                            <label for="phone" class="form-label">Phone Number</label>
+                            <input type="text" class="form-control" id="phone" name="phone" value="<?php if (!empty($_SESSION['userData'][0]['Phone']) || !empty($_SESSION['businessData'][0]['Phone'])) echo htmlspecialchars($_SESSION['userData'][0]['Phone'] ?? $_SESSION['businessData'][0]['Phone'] ?? ""); ?>">
+                            </div>
+                            
+                            <div class="mb-3">
+                            <label for="profilePic" class="form-label">Profile Picture</label>
+                            <input class="form-control" type="file" id="profilePic" name="profile_picture">
+                            </div>
+                            <div class="me-2 mb-3 mt-3">
+                                <small id="ProfileErr" class="text-danger"><?php if (!empty($fileTypeError)) echo htmlspecialchars($fileTypeError); ?></small>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Update Profile</button>
+                        </form>
+                    </div>
+                </div>
+                
             </div>
+            <?php generate_footer() ?>
         </div>
-
-        <div class="row">
-            <!-- get either pet profile or business profile -->
-             
-        </div>
-    </div>
-
     </body>
+    <script src="../front-end/global/js/global-margin.js"></script>
 </html>

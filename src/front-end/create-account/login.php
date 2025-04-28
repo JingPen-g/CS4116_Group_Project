@@ -71,6 +71,9 @@ crossorigin="anonymous">
                         <input type="password" class="form-control" id="password" placeholder="Enter password" name="password" required>
                         <label for="password" class="text-black-50">Enter Password</label>
                     </div>
+                    <div class="me-2 mb-3 mt-3">
+                        <small id="error_message" class="text-danger"><?php if (!empty($usernameErr)) echo htmlspecialchars($usernameErr); ?></small>
+                    </div>
                     <button id="login" type="submit" class="btn btn-primary">Login</button>
                     <div class="form-floating mb-3 mt-3">
                         <a href="http://localhost:8080/register">Don't have account yet? register</a>

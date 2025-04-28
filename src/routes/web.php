@@ -12,6 +12,7 @@ return [
     '/conversation' => '/messaging/convo.php',
     //'/userprofile' => 'create-account/userprofile.php',
     '/logout' => 'global/logout.php',
+    '/admins' => 'admin-control/admins.php',
     '/messaging' => 'messaging/messaging.php',
 ]
 ?>

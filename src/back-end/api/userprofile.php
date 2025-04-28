@@ -19,42 +19,69 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
     $phone = trim($_POST["phone"] ?? "");
 
     $username = $_SESSION['username'];
-
-    // Handle file upload
-    if (isset($_FILES["profilePic"]) && $_FILES["profilePic"]["error"] == UPLOAD_ERR_OK) {
-        $target_dir = "uploads/";
-        $target_file = $target_dir . basename($_FILES["profilePic"]["name"]);
-        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-        
-        // Allow certain file formats
-        if (!in_array($imageFileType, ["jpg", "jpeg", "png", "gif"])) {
-            echo json_encode(["error" => "Sorry, only JPG, JPEG, PNG & GIF files are allowed."]);
-            exit();
-        }
-
-        if (move_uploaded_file($_FILES["profilePic"]["tmp_name"], $target_file)) {
-            // Update profile picture in the database
-            $user->updateProfilePicture($username, $target_file);
-        } else {
-            echo json_encode(["error" => "Sorry, there was an error uploading your file."]);
-            exit();
-        }
-    } 
-
-
     $description = test_input($description);
     $phone = test_input($phone);
 
     if (!empty($description)) {
-        // update description in the database
-        $user->updateDescription($username, $description);               
+        $_SESSION['description'] = $description;
+        if ($_SESSION['userType'] === "bussiness owner") {
+            $result = $business->updateDescription($username, $description);  
+        } else {
+            $result = $user->updateDescription($username, $description);  
+        }
     }
         
     if (!empty($phone)) {
-        // update phone number in the database
-        $user->updatePhone($username, $phone);
+        $_SESSION['phone'] = $phone;
+        if ($_SESSION['userType'] === "bussiness owner"){
+            $result = $business->updatePhone($username, $phone);  
+        } else {
+            $result = $user->updatePhone($username, $phone);
+
+        }
     }
-    header("Location: http://localhost:8080/userprofile");
+
+    // Handle file upload
+    if (isset($_FILES["profile_picture"]) && $_FILES["profile_picture"]["error"] == UPLOAD_ERR_OK) {
+        
+        $target_dir = "/var/www/html/uploads/";
+
+        if (is_writable('/var/www/html/uploads')) {
+            $_SESSION['file write'] = "Uploads dir is writable!";
+        } else {
+            $_SESSION['file write'] =  "Uploads dir is NOT writable!";
+        }
+
+        $target_file = $target_dir . basename($_FILES["profile_picture"]["name"]);
+        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+        $_SESSION['file name'] = "Uploaded file name: " . $_FILES["profile_picture"]["name"];
+        $_SESSION['extension'] = "Detected extension: " . $imageFileType;
+        if ($_FILES['profile_picture']['size'] > 5 * 1024 * 1024) {
+            $_SESSION['fileTypeError'] = "File is too large. Max size: 5MB.";
+        }
+        if (!in_array($imageFileType, ["jpg", "jpeg", "png", "gif"])) {
+            $_SESSION['fileTypeError'] = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+        } else {
+
+            $_SESSION['fileTypeError'] = "no type error";
+            $filename = uniqid("profile_", true) . "." . $imageFileType;
+            $target_file = $target_dir . $filename;
+            if (move_uploaded_file($_FILES["profile_picture"]["tmp_name"], $target_file)) {
+                $_SESSION['profile_picture'] = $_SESSION['profile_picture'] = "/uploads/" . $filename;
+                $_SESSION['target_file'] = $target_file;
+                $web_path = "/uploads/" . $filename;
+                if ($_SESSION['userType'] === "bussiness owner") {
+                    $result = $business->updateProfilePicture($username, $web_path);
+                } else {
+                    $result = $user->updateProfilePicture($username, $web_path);
+                }
+            } 
+        }
+
+        
+    } 
+
+    header("Location: /userprofile");
     exit();
     
 
@@ -72,6 +99,7 @@ function test_input($data)  {
     $data = trim($data);
     $data = stripslashes($data);
     $data = htmlspecialchars($data);
+    $data = strip_tags($data);
     return $data;
 }
 ?>
