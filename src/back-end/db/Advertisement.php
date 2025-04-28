@@ -204,9 +204,7 @@ LIMIT 10 OFFSET 0;
 
     public function getAdvertInformation(string $Ad_ID){
 
-        return $this->find(
-            customWhere: "Ad_ID = " . $Ad_ID
-        );
+        return $this->find(["Ad_ID" => $Ad_ID]);
     }
 
 }
