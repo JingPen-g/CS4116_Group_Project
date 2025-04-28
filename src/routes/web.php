@@ -8,7 +8,13 @@ return [
     '/advertisment' => '/advertisment/advertisment-page.php',
     '/index'=> 'index.php',
     '/dev' => '/dev-test/home.php',
+<<<<<<< Updated upstream
     '/userprofile' => 'create-account/userprofile.php',
+=======
+    '/message'=> '/messaging/messageing.php',
+    '/conversation' => '/messaging/convo.php'
+    //'/userprofile' => 'create-account/userprofile.php',
+>>>>>>> Stashed changes
     '/logout' => 'global/logout.php',
     '/messaging' => 'messaging/messaging.php',
 ]

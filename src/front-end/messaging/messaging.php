@@ -4,7 +4,10 @@
 $list_of_conversations = null; //[index => "Other_ID"]
 $current_conversation = null; //[[Message1],[Message2]] Note: Message contains all details from a row in TABLE Messaging
 $other_user_info = null;//Object represning a row
-
+include __DIR__ . '/../global/get-nav.php';
+$messages = ["Test to show this works", "Second Button"];
+$user = getUserId();
+$currentOther = null;
 /*
  * messaging.php
  * Functions:
@@ -60,6 +63,13 @@ function retreive_user_data($otherId){
  * @param userId - The current users id
  * @return nothing just sets global array $list_of_conversations which the [0] will be = empty if empty
  */
+function getUserId():string {
+    
+    $userId = isset($_SESSION['username']);
+    return isset($_SESSION['username']);
+    // this returns 1 right now
+
+}
 function getListOfConversations($userId) {
 
     global $list_of_conversations;
@@ -205,7 +215,7 @@ function insertNewMessage($userId, $otherId, $message) {
  */
 function inquire($userId, $otherId) {
 
-    if (getmessagecount($userid, $otherid) != 0) {
+    if (getmessagecount($userId, $otherId) != 0) {
         echo "Conversations already started";        
         return -1;
     }
@@ -220,7 +230,7 @@ function inquire($userId, $otherId) {
  */
 function responsdToInquiry($userId, $otherId, $response) {
 
-    if (getmessagecount($userid, $otherid) != 1) {
+    if (getMessageCount($userId, $otherId) != 1) {
         echo "Inquiry has not been sent yet";        
         return -1;
     }
@@ -258,5 +268,318 @@ function getMessageCount($userId, $otherId) {
     } else 
         return -1;
 
+}function generate_convo_elements() {
+    $userId = getUserId();
+    getListOfConversations($userId);
+    $convos = $GLOBALS['list_of_conversations'];
+    if($convos != null){
+        foreach ($convos as $row) {
+            echo "<div class=\"col-10 d-flex align-items-center justify-content-center\">" ;
+                echo "<div class=\"group-container\">";
+                    echo "<div class=\"Convo-btn\">";
+                        echo '<div style ="display: inline-block;>';
+                        echo '<img src="user1.png" class="msgimg" />';
+                        echo '<button class="convo-button"  onclick="openExisting(' . $userId ,htmlspecialchars($row) . ')" id=' . htmlspecialchars($row) .' style =" padding: 10px;">'  . htmlspecialchars($row) . "</button>"; 
+                        echo '</div>';
+                    echo "</div>";
+                echo "</div>";
+            echo "</div>";
+
+        }
+    }
+}   
+function generate_message($message, $timestamp, $sender){
+    echo "<div class='messageRow'>";
+       echo "<div class='col grey-light' style='background-color: lightgrey; opacity: 0.5;'> </div>";
+        echo '<div class="col-8">';
+          echo '<div class="group-container">';
+                echo '<div class="row message-border-top">';
+                    echo '<div class="col-8 grey">';
+                        echo '<div class="message">';
+                            acceptorReject("Jeff");
+                            //echo '<img class="user-profile" src="default_profile.jpg" alt="profile picture">';
+                            if($sender){
+                                one_message_sender($message, $timestamp);
+                            }else{
+                                one_message_recieve($message, $timestamp);
+                            }
+                            echo '<p>' ;
+                            echo '</p>';
+                            echo '</div>';
+                        echo '</div>';
+                    echo '</div>';
+                echo '</div>';
+            echo '</div>';
+            echo '</div>';
+            echo '<div class="col grey" style="background-color: grey; opacity: 0.5;"> </div>';
+        echo '</>';
+}
+function generate_pending(){
+    echo '<div class="pending" id="pending" >';
+        echo '<p> Awaiting Response </p>';
+        echo '</div>';
+    echo '</>';
+}
+
+function one_message_sender($message, $time){
+    echo '<div class="received">';
+        echo '<div class="received-chats-img">';
+            echo '</div>';
+            echo '<div class="received">';
+              echo '<div class="received-msg">';
+                echo'<p data-"">';
+                echo $message;
+                echo'</p>';
+                echo'<div style ="display: inline-block;">';
+                echo '<span class="time">';
+                echo $time ;
+                echo '</span>';
+                echo '<button onClick></button>';
+              echo'</div>';
+            echo'</div>';
+          echo'</div>';
+}
+function one_message_recieve($message, $time){
+    echo '<div class="outgoing">';
+        echo '<div class="outgoing-chats-img">';
+            echo '</div>';
+            echo '<div class="outgoing">';
+              echo '<div class="outgoing-msg">';
+                echo'<p>';
+                echo $message;
+                echo'</p>';
+                echo'<div style ="display: inline-block;">';
+                echo '<span class="time">';
+                echo $time ;
+                echo '</span>';
+                echo '<button onClick></button>';
+                echo '</div>';
+              echo'</div>';
+            echo'</div>';
+          echo'</div>';
+}
+
+function genereate_convo($convo){
+    $otherParty = $convo;
+    if($otherParty =!null){
+        $otherParty = "1";
+    }
+    if(getMessageCount(getUserId(), $otherParty) < 1){
+
+        insertNewMessage(getUserId(), $otherParty, "Making Convo message");
+        generate_new_convo($otherParty);
+
+    }else if(getMessageCount(getUserId(), $otherParty) < 2){
+        generate_pending_convo($otherParty);
+    }else{
+        generate_existing($otherParty);
+    }
+}
+function generate_new_convo($otherParty){
+    acceptorReject($otherParty);
+}
+function generate_pending_convo($otherParty){
+    acceptorReject($otherParty);
+}
+function generate_existing($userId, $otherUser){
+
+   
+    setCurrentConversation($userId, $otherUser);
+    
+    $convo = sortMessages($GLOBALS["current_conversation"]);
+    $sender = false;
+
+    foreach($convo as $message){
+        $sender = false;
+        if($message['Sender_ID'].hash_equals($userId)){
+            $sender = true;
+        }
+            generate_message($message['Message'], $message['Timestamp'], $sender);
+            
+    }
+
+}
+function acceptorReject($User){
+
+    echo '<div class="pending" id="pending" >';
+        echo '<p> Pending conversation from ' . $User .' Accept or Reject </p>';
+        echo '<div class="make-an-offer-accept-or-reject-choice">';
+        echo '<button type="button" id="accept" class="accept">Accept</button>';
+        echo '<button type="button" id="reject" class="reject">Reject</button>';
+        echo '</div>';
+    echo '</div>';
+
 }
 ?>
+
+
+<!DOCTYPE html>
+
+<html lang = "en">
+<head>  
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../front-end/global/css/global-style.css">
+
+    <style>
+        .messageRow{
+            visibility: visible;
+        }
+        .messageRow-hidden{
+            visibility: : hidden;
+        }
+        .navBar{
+            display: inline-block;
+            vertical-align: top;
+            text-align: center;
+        }
+        .Convo-btn {
+            border: 2px solid black;
+            background-color: lightskyblue;
+        }
+        .pending-hidden{
+            visibility: hidden;
+        }
+        .pending {
+            display: inline-block;
+            padding: 20px;
+            vertical-align: top;
+            width: 92%;
+            text-align: center 
+        }
+        .accept {
+            width: 20%;
+            color: black;
+            font-size: 1rem;
+            background-color: ;
+            background-color: #c3cf62;
+            margin-left: 20px;
+            margin-right: 20px;
+            margin-bottom: 10px;
+            border-radius: 30px;
+            border: solid 5px black;
+            box-shadow: 5px 5px #4c4949;
+        }
+        .accept:hover {
+            cursor: pointer;
+            background-color:  #8f9c30;
+        }
+        .reject {
+            width: 20%;
+            color: black;
+            font-size: 1rem;
+            background-color: ;
+            background-color:rgb(215, 145, 59);
+            margin-left: 20px;
+            margin-right: 20px;
+            margin-bottom: 10px;
+            border-radius: 30px;
+            border: solid 5px black;
+            box-shadow: 5px 5px #4c4949;
+        }
+        .reject:hover {
+            cursor: pointer;
+            background-color:  #8f9c30;
+        }
+        .convo-button {
+            font-size: 16px;
+            border-radius: 10px;
+            min-width: 100%;
+        }
+        .convo-button:hover{
+            cursor: pointer;
+            background-color:rgb(209, 212, 184);
+        }
+        received-chats-img {
+            display: inline-block;
+            width: 50px;
+            float: right;
+        }
+
+        .received {
+            display: inline-block;
+            padding: 0 0 0 10px;
+            vertical-align: top;
+            width: 92%;
+        }
+        .received-msg {
+            width: 57%;
+        }
+
+        .received-msg p {
+            background: #efefef none repeat scroll 0 0;
+            border-radius: 10px;
+            color: #646464;
+            font-size: 14px;
+            margin-left: 1rem;
+            padding: 1rem;
+            width: 100%;
+            box-shadow: rgb(0 0 0 / 25%) 0px 5px 5px 2px;
+        }
+            p {
+            overflow-wrap: break-word;
+        }
+
+        .time {
+            color: #777;
+            display: block;
+            font-size: 12px;
+            margin: 8px 0 0;
+        }
+        .outgoing{
+            display: inline-block;
+            padding: 0 0 0 10px;
+            vertical-align: top;
+            width: 92%;
+        }
+
+        .outgoing-msg p {
+            background: #efefef none repeat scroll 0 0;
+            border-radius: 10px;
+            color: #646464;
+            font-size: 14px;
+            margin-left: 1rem;
+            padding: 1rem;
+            width: 100%;
+            box-shadow: rgb(0 0 0 / 25%) 0px 5px 5px 2px;
+        }
+        .outgoing-msg {
+                float: right;
+                width: 46%;
+            }
+     
+    </style>
+
+</head>
+<div style ="height: 10vh; min-width: 100%; display: inline-block; float:left; margin-right: 10px; border: 1px solid blue">
+<?php get_nav() ?>
+</div>
+
+<div id="header"></div>
+    <div>
+    <div style="height: 100vh; min-width: 20%; display: inline-block; float:left; margin-right: 10px; border: 1px solid blue">
+        <div>
+            <?php generate_convo_elements($messages) ?>
+         </div>
+    </div>
+    <div style="height: 80vh;;width:50%;  display: inline-block; background-color: darkturquoise; border: 1px solid red">
+        <div  class = right>
+            <table class='conversation' >
+            <tbody style = image-item>
+                <?php
+                    genereate_convo($currentOther);
+                ?>
+                </tbody>
+            </table>
+            <div style="position: absolute; bottom: 20%; padding: 20px;">
+                <input type="message"  id="message" placeholder="Message" name="Message">
+                <button id="send_button">Send</button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<script type="application/javascript" src="js/messages.js"></script>
+
+</html>
+// data-service-id="'.MESSAGE ID .'"
