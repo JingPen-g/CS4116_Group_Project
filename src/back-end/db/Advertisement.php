@@ -10,53 +10,60 @@ class Advertisement extends Model {
     }
 
     /*
-        Sample query:
         (
-                SELECT 
-                    a.*,
-                    MATCH(a.Name, a.Description) AGAINST("" IN BOOLEAN MODE) AS relevance,
-                    COALESCE(AVG(r.Stars), 0) AS avg_review_score,
-                    1 AS is_relevant -- Flag to indicate matching ads
-                FROM 
-                    Advertisement a
-                LEFT JOIN 
-                    JSON_TABLE(a.Service_IDs, '$[*]' COLUMNS (id INT PATH '$')) AS jt
-                    ON TRUE
-                LEFT JOIN 
-                    Service s ON s.Service_ID = jt.id
-                LEFT JOIN 
-                    Review r ON r.Service_ID = s.Service_ID
-                WHERE 1=1
-             AND MATCH(a.Name, a.Description) AGAINST("" IN BOOLEAN MODE) AND a.UploadDate BETWEEN "1960-01-01 00:00:00" AND "2025-04-28 16:55:31"
-                GROUP BY 
-                    a.Ad_ID
-            )
-            UNION
-            (
-                SELECT 
-                    a.*,
-                    0 AS relevance, -- No relevance for non-matching ads
-                    COALESCE(AVG(r.Stars), 0) AS avg_review_score,
-                    0 AS is_relevant -- Flag to indicate non-matching ads
-                FROM 
-                    Advertisement a
-                LEFT JOIN 
-                    JSON_TABLE(a.Service_IDs, '$[*]' COLUMNS (id INT PATH '$')) AS jt
-                    ON TRUE
-                LEFT JOIN 
-                    Service s ON s.Service_ID = jt.id
-                LEFT JOIN 
-                    Review r ON r.Service_ID = s.Service_ID
-                WHERE 1=1
-             AND NOT MATCH(a.Name, a.Description) AGAINST("" IN BOOLEAN MODE) AND a.UploadDate BETWEEN "1960-01-01 00:00:00" AND "2025-04-28 16:55:31"
-                GROUP BY 
-                    a.Ad_ID
-            )
-            ORDER BY 
-                is_relevant DESC, -- Prioritize matching ads
-                relevance DESC,   -- Sort matching ads by relevance
-                avg_review_score DESC -- Fallback sorting by review score
-            LIMIT 10 OFFSET 0
+    SELECT 
+        a.*,
+        MATCH(a.Name, a.Description) AGAINST('' IN BOOLEAN MODE) AS relevance,
+        COALESCE(AVG(r.Stars), 0) AS avg_review_score,
+        1 AS is_relevant -- Flag to indicate matching ads
+    FROM 
+        Advertisement a
+    LEFT JOIN 
+        JSON_TABLE(a.Service_IDs, '$[*]' COLUMNS (id INT PATH '$')) AS jt
+            ON TRUE
+    LEFT JOIN 
+        Service s ON s.Service_ID = jt.id
+    LEFT JOIN 
+        Review r ON r.Service_ID = s.Service_ID
+    WHERE 
+        (
+            MATCH(a.Name, a.Description) AGAINST('' IN BOOLEAN MODE)
+            OR a.Label->'$.labels' LIKE '%Reptile%'
+        )
+        AND a.UploadDate BETWEEN '1960-01-01 00:00:00' AND '2025-04-28 19:56:27'
+    GROUP BY 
+        a.Ad_ID
+)
+UNION
+(
+    SELECT 
+        a.*,
+        0 AS relevance, -- No relevance for non-matching ads
+        COALESCE(AVG(r.Stars), 0) AS avg_review_score,
+        0 AS is_relevant -- Flag to indicate non-matching ads
+    FROM 
+        Advertisement a
+    LEFT JOIN 
+        JSON_TABLE(a.Service_IDs, '$[*]' COLUMNS (id INT PATH '$')) AS jt
+            ON TRUE
+    LEFT JOIN 
+        Service s ON s.Service_ID = jt.id
+    LEFT JOIN 
+        Review r ON r.Service_ID = s.Service_ID
+    WHERE 
+        (
+            NOT MATCH(a.Name, a.Description) AGAINST('' IN BOOLEAN MODE)
+            AND a.Label->'$.labels' NOT LIKE '%Reptile%'
+        )
+        AND a.UploadDate BETWEEN '1960-01-01 00:00:00' AND '2025-04-28 19:56:27'
+    GROUP BY 
+        a.Ad_ID
+)
+ORDER BY 
+    is_relevant DESC, -- Prioritize matching ads
+    relevance DESC,   -- Sort matching ads by relevance
+    avg_review_score DESC -- Fallback sorting by review score
+LIMIT 10 OFFSET 0;
     */
     public function getRecommendedAdvertisements(
         string $searchTerm = "", 
@@ -85,22 +92,21 @@ class Advertisement extends Model {
         }
         $values[] = $wildSearchTerm; // For MATCH in first subquery
         $values[] = $wildSearchTerm; // For MATCH in second subquery
+
+        $tagPlaceholders = [];
     
         // Add tags condition (if needed)
         if (!empty($tags)) {
-            $tagPlaceholders = [];
             foreach ($tags as $tag) {
                 $sanitizedTag = $this->sanitizeInput($tag);
-                $tagPlaceholders[] = "?";
-                $values[] = $sanitizedTag;
+                $tagPlaceholders[] = "\"$sanitizedTag\"";
             }
-            $queryConditions[] = "JSON_OVERLAPS(a.Label, JSON_ARRAY(" . implode(", ", $tagPlaceholders) . "))";
         }
     
         // Add date range condition
         $beforeDate = $this->sanitizeInput($before->format('Y-m-d H:i:s'));
         $afterDate = $this->sanitizeInput($after->format('Y-m-d H:i:s'));
-        $queryConditions[] = "a.UploadDate BETWEEN ? AND ?";
+        $queryConditions[] = ") AND a.UploadDate BETWEEN ? AND ?";
         $values[] = $beforeDate;
         $values[] = $afterDate;
     
@@ -121,25 +127,21 @@ class Advertisement extends Model {
                     Service s ON s.Service_ID = jt.id
                 LEFT JOIN 
                     Review r ON r.Service_ID = s.Service_ID
-                WHERE 1=1
+                WHERE
             ";
 
-        $query .= " AND MATCH(a.Name, a.Description) AGAINST(? IN BOOLEAN MODE)";
+        $query .= " ( MATCH(a.Name, a.Description) AGAINST (? IN BOOLEAN MODE) ";
+        if(!empty($tags)){
+            $query .= " OR JSON_CONTAINS(a.Label->'$.labels', '[" . implode(", ", $tagPlaceholders) ."]') ";
+        }
+
         // Append conditions for matching ads
         if (!empty($queryConditions)) {
-            $query .= " AND " . implode(" AND ", $queryConditions);
+            $query .= implode(" ", $queryConditions);
         }
 
         //Repeat the values for the second select 
         $values[] = $wildSearchTerm;
-
-        // Add tags condition (if needed)
-        if (!empty($tags)) {
-            foreach ($tags as $tag) {
-                $sanitizedTag = $this->sanitizeInput($tag);
-                $values[] = $sanitizedTag;
-            }
-        }
 
         $values[] = $beforeDate;
         $values[] = $afterDate;
@@ -168,15 +170,18 @@ class Advertisement extends Model {
                     Service s ON s.Service_ID = jt.id
                 LEFT JOIN 
                     Review r ON r.Service_ID = s.Service_ID
-                WHERE 1=1
+                WHERE
             ";
     
         // Append conditions for non-matching ads
-        $query .= " AND NOT MATCH(a.Name, a.Description) AGAINST(? IN BOOLEAN MODE)";
-        if (!empty($queryConditions)) {
-            $query .= " AND " . implode(" AND ", $queryConditions);
+        $query .= " ( NOT MATCH(a.Name, a.Description) AGAINST (? IN BOOLEAN MODE) ";
+        if(!empty($tags)){
+            $query .= " AND NOT JSON_CONTAINS(a.Label->'$.labels', '[" . implode(", ", $tagPlaceholders) ."]') ";
         }
     
+        if (!empty($queryConditions)) {
+            $query .= implode(" ", $queryConditions);
+        }
         $query .= "
                 GROUP BY 
                     a.Ad_ID
