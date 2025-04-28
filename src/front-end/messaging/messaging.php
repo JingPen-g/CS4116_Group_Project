@@ -5,9 +5,8 @@ $list_of_conversations = null; //[index => "Other_ID"]
 $current_conversation = null; //[[Message1],[Message2]] Note: Message contains all details from a row in TABLE Messaging
 $other_user_info = null;//Object represning a row
 include __DIR__ . '/../global/get-nav.php';
-$messages = ["Test to show this works", "Second Button"];
 $user = getUserId();
-$currentOther = null;
+$currentOther = 2;
 /*
  * messaging.php
  * Functions:
@@ -64,8 +63,13 @@ function retreive_user_data($otherId){
  * @return nothing just sets global array $list_of_conversations which the [0] will be = empty if empty
  */
 function getUserId():string {
-    
-    $userId = isset($_SESSION['username']);
+ /// THIS IS ThE PROBLEM 
+    $GLOBALS['user'] = isset($_SESSION['username']);
+    echo $GLOBALS['user'];
+    echo '<pre>';
+    //var_dump($_SESSION);
+    print_r($_SESSION);
+    echo '</pre>';
     return isset($_SESSION['username']);
     // this returns 1 right now
 
@@ -215,12 +219,15 @@ function insertNewMessage($userId, $otherId, $message) {
  */
 function inquire($userId, $otherId) {
 
-    if (getmessagecount($userId, $otherId) != 0) {
+    if (getmessagecount($userId, $otherId) > 2) {
         echo "Conversations already started";        
         return -1;
+    }else if(getmessagecount($userId, $otherId) == 0 ){
+        // Starting a convo
+        insertNewMessage($userId, $otherId, "PENDING");
+    }else if(getmessagecount($userId, $otherId) == 1 ){
+        acceptorReject($otherId);
     }
-
-    insertNewMessage($userId, $otherId, "PENDING");
 }
 
 /**
@@ -279,7 +286,7 @@ function getMessageCount($userId, $otherId) {
                     echo "<div class=\"Convo-btn\">";
                         echo '<div style ="display: inline-block;>';
                         echo '<img src="user1.png" class="msgimg" />';
-                        echo '<button class="convo-button"  onclick="openExisting(' . $userId ,htmlspecialchars($row) . ')" id=' . htmlspecialchars($row) .' style =" padding: 10px;">'  . htmlspecialchars($row) . "</button>"; 
+                        echo '<button class="convo-button"  onclick="openExisting(' . $userId ,$row . ')" id=' . htmlspecialchars($row) .' style =" padding: 10px;">'  . htmlspecialchars($row) . "</button>"; 
                         echo '</div>';
                     echo "</div>";
                 echo "</div>";
@@ -314,13 +321,6 @@ function generate_message($message, $timestamp, $sender){
             echo '<div class="col grey" style="background-color: grey; opacity: 0.5;"> </div>';
         echo '</>';
 }
-function generate_pending(){
-    echo '<div class="pending" id="pending" >';
-        echo '<p> Awaiting Response </p>';
-        echo '</div>';
-    echo '</>';
-}
-
 function one_message_sender($message, $time){
     echo '<div class="received">';
         echo '<div class="received-chats-img">';
@@ -360,20 +360,10 @@ function one_message_recieve($message, $time){
 }
 
 function genereate_convo($convo){
-    $otherParty = $convo;
-    if($otherParty =!null){
-        $otherParty = "1";
-    }
-    if(getMessageCount(getUserId(), $otherParty) < 1){
-
-        insertNewMessage(getUserId(), $otherParty, "Making Convo message");
-        generate_new_convo($otherParty);
-
-    }else if(getMessageCount(getUserId(), $otherParty) < 2){
-        generate_pending_convo($otherParty);
-    }else{
-        generate_existing($otherParty);
-    }
+    // called by side button
+    // needs to set everything else off
+    $GLOBALS['currentOther']=$convo;
+    inquire($GLOBALS['user'], $convo);
 }
 function generate_new_convo($otherParty){
     acceptorReject($otherParty);
@@ -382,7 +372,7 @@ function generate_pending_convo($otherParty){
     acceptorReject($otherParty);
 }
 function generate_existing($userId, $otherUser){
-
+/*
    
     setCurrentConversation($userId, $otherUser);
     
@@ -397,7 +387,7 @@ function generate_existing($userId, $otherUser){
             generate_message($message['Message'], $message['Timestamp'], $sender);
             
     }
-
+*/
 }
 function acceptorReject($User){
 
@@ -552,14 +542,14 @@ function acceptorReject($User){
 
 </head>
 <div style ="height: 10vh; min-width: 100%; display: inline-block; float:left; margin-right: 10px; border: 1px solid blue">
-<?php get_nav() ?>
+    <?php get_nav() ?>
 </div>
 
 <div id="header"></div>
     <div>
     <div style="height: 100vh; min-width: 20%; display: inline-block; float:left; margin-right: 10px; border: 1px solid blue">
         <div>
-            <?php generate_convo_elements($messages) ?>
+            <?php generate_convo_elements($list_of_conversations) ?>
          </div>
     </div>
     <div style="height: 80vh;;width:50%;  display: inline-block; background-color: darkturquoise; border: 1px solid red">
@@ -573,7 +563,12 @@ function acceptorReject($User){
             </table>
             <div style="position: absolute; bottom: 20%; padding: 20px;">
                 <input type="message"  id="message" placeholder="Message" name="Message">
-                <button id="send_button">Send</button>
+
+
+                <?php
+                 echo "<button id='send_button' onclick='send_button(\"{$GLOBALS['user']}\", \"{$GLOBALS['currentOther']}\")'>Send</button>";
+                ?>
+
             </div>
         </div>
     </div>
@@ -582,4 +577,3 @@ function acceptorReject($User){
 <script type="application/javascript" src="js/messages.js"></script>
 
 </html>
-// data-service-id="'.MESSAGE ID .'"
