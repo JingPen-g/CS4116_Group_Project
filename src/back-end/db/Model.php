@@ -287,9 +287,9 @@ class Model {
         }
 
         //echo "<BR>Statement type: " . gettype($stmt) . "<BR>";
-        if (is_object($stmt)) {
-            echo "Statement class: " . get_class($stmt) . "<BR>";
-        }
+        // if (is_object($stmt)) {
+        //     echo "Statement class: " . get_class($stmt) . "<BR>";
+        // }
 
 
         // Bind parameters - create references properly
@@ -339,9 +339,9 @@ class Model {
         }
 
         //echo "<BR>Statement type: " . gettype($stmt) . "<BR>";
-        if (is_object($stmt)) {
-            echo "Statement class: " . get_class($stmt) . "<BR>";
-        }
+        // if (is_object($stmt)) {
+        //     echo "Statement class: " . get_class($stmt) . "<BR>";
+        // }
 
 
         // Bind parameters - create references properly
