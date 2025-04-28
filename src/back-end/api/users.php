@@ -2,10 +2,9 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-require_once("../db/Users.php");
-require_once("../db/Business.php");
+require_once(__DIR__ . "/../db/Users.php");
+require_once(__DIR__ . "/../db/Business.php");
 
-header('Content-Type: application/json');
 
 $user = new Users();
 $business = new Business();
@@ -47,6 +46,19 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
             http_response_code(404);
             echo json_encode(['error' => 'User Count not found']);
         }
+
+    /*
+     * Gets all rows in the user table which contain a User_ID from the passed array of ID's
+     */
+    } else if(isset($_GET['method']) && $_GET['method'] === "getUsersOfID"){
+    
+        $user_ids = $_GET['user_ids'];
+        $user_rows = [];
+        foreach ($user_ids as $user_id) {
+            $user_rows[] = $user->getUserFromID($user_id);
+        }
+
+        echo json_encode($user_rows);
     }
 
 } 

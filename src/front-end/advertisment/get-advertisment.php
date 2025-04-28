@@ -9,5 +9,7 @@ function generate_advertisment_header($advertisement_title, $advertisement_descr
     echo "<h3 id=\"ad_description\">" . htmlspecialchars($advertisement_description) . "</h3>" ;
     echo "</div>" ;
 
+    //Add Gap Under Header
+    echo '<div class="row" style="margin: 25px"></div>';
 }
 ?>
