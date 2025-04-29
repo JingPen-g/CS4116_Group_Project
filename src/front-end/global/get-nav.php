@@ -9,7 +9,7 @@ function get_nav(){
     echo '</pre>';
     echo '<nav class="navbar navbar-expand-lg navbar-light">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/"><embed src = "/images/fursure.webp" width = "50" height = "50" /></a>
+            <a class="navbar-brand" href="/"><embed src = "/images/fursure.webp" width = "75" height = "75" /></a>
             <ul class="navbar-nav nav">
                 <li class="navbar-nav"><a href="search">Search</a></li>
             </ul>
