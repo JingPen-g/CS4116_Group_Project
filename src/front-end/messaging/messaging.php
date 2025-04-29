@@ -7,6 +7,8 @@ $other_user_info = null;//Object represning a row
 include __DIR__ . '/../global/get-nav.php';
 $user = getUserId();
 $currentOther = 65;
+
+
 /*
  * messaging.php
  * Functions:
@@ -26,7 +28,49 @@ $currentOther = 65;
  * matching user_ids in a review
  * @param: the user id of the other person 
  * @return: an object represnting the row in the table or string "empty"
- */
+ */function getJsonInput() {
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        http_response_code(405); // Method Not Allowed
+        echo json_encode(['error' => 'Only POST requests are allowed']);
+        exit;
+    }
+
+
+    if (!isset($_SERVER['CONTENT_TYPE']) || strpos($_SERVER['CONTENT_TYPE'], 'application/json') === false) {
+        http_response_code(400); // Bad Request
+        echo json_encode(['error' => 'Content-Type must be application/json']);
+        exit;
+    }
+
+    $json = file_get_contents('php://input');
+
+
+    $data = json_decode($json, true);
+
+
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        http_response_code(400); // Bad Request
+        echo json_encode(['error' => 'Invalid JSON input: ' . json_last_error_msg()]);
+        exit;
+    }
+    if (isset($data['method']) && $data['method'] === 'insertNewMessage') {
+        $userId = $data['userId'] ?? null;
+        $otherId = $data['otherId'] ?? null;
+        $message = $data['message'] ?? null;
+    
+        if ($userId && $otherId && $message) {
+            insertNewMessage($userId, $otherId, $message);
+        } else {
+            http_response_code(400);
+            echo json_encode(['error' => 'Missing required fields']);
+        }
+    } else {
+        http_response_code(400);
+        echo json_encode(['error' => 'Invalid method']);
+    }
+
+    return $data;
+}
 function retreive_user_data($otherId){
     global $other_user_info;
 
@@ -158,7 +202,6 @@ function setCurrentConversation($userId, $otherId) {
         $current_conversation = sortMessages($current_conversation);
     } else
         $current_conversation[0] = "empty";
-        echo "the convo is empty";
 }
 
 /**
@@ -191,12 +234,12 @@ function sortMessages($currentConversation) {
  * inserts a new row into Messaging table
  */
 function insertNewMessage($userId, $otherId, $message) {
+    //getJsonInput();
 
     /*if (getMessageCount($userId, $otherId) < 2) {
         echo "Conversation must be accepted before you can send a message";        
         return -1;
     }*/
-        
 
     $_SERVER["REQUEST_METHOD"] = "PUT";
     $_PUT['method'] = 'insertmessage';
@@ -215,9 +258,8 @@ function insertNewMessage($userId, $otherId, $message) {
  * Reach out to a user
  */
 function inquire($userId, $otherId, $message) {
-
-    if (getmessagecount($userId, $otherId) >= 2) {
-        echo "Conversations already started";        
+    
+    if (getmessagecount($userId, $otherId) >= 2) {      
         return -1;
     }else if(getmessagecount($userId, $otherId) == 0 ){
         // Starting a convo
@@ -226,6 +268,8 @@ function inquire($userId, $otherId, $message) {
 
     }else if(getmessagecount($userId, $otherId) == 1 ){
         insertNewMessage($userId, $otherId, $message );
+    }else{
+
     }
 }
 
@@ -306,7 +350,6 @@ function generate_message($message, $timestamp, $sender){
                 echo '<div class="row message-border-top">';
                     echo '<div class="col-8 grey">';
                         echo '<div class="message">';
-                            acceptorReject("Jeff");
                             //echo '<img class="user-profile" src="default_profile.jpg" alt="profile picture">';
                             if($sender){
                                 one_message_sender($message, $timestamp);
@@ -389,11 +432,10 @@ function generate_existing($userId, $otherUser){
     
     global $current_conversation;
     setCurrentConversation(64,65);
-    print_r($current_conversation);
     foreach($current_conversation as $message){
         $messageString =$message['Message']; 
         $time= $message['Timestamp'];
-        if(1>0){
+        if (strcmp($message['Sender_ID'], "64") === 0) {
             $sender = true;
         }else{
             $sender = false;
@@ -558,10 +600,11 @@ function acceptorReject($User){
 </div>
 
 <div id="header"></div>
-    <div>
     <div style="height: 100vh; min-width: 20%; float:left; margin-right: 10px;">
         <div>
             <?php generate_convo_elements($list_of_conversations) ?>
+         </div>
+         </div>
          </div>
     </div>
     <div style="height: 80vh;min-width: 50%;width:50%;  display: inline-block; background-color: darkturquoise;">

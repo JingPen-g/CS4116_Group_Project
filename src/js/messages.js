@@ -153,54 +153,55 @@ function openExisting(userId ,otherId) {
     });
 
 }
-function send_button(userId, otherId){
-    alert("button works");    
-    var message = document.getElementById("message").value;
-    console.log(message);
+    function send_button(userId, otherId) {
+        alert("button works");    
+        var message = document.getElementById("message").value;
+        console.log(message);
 
-    fetch('/messaging', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            method: 'insertNewMessage',
-            userId: userId,
-            otherId: otherId,
-            message: message
+        fetch('/messaging', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                method: 'insertNewMessage',
+                userId: 64,
+                otherId: 65,
+                message: message
+            })
         })
-    })
-    .then(response => response.text())
-    .then(data => {
-        console.log('Response from PHP:', data);
-        document.getElementById("message").value = "";
-
-        if (data.includes("Conversation must be accepted")) {
-            alert(data);
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-    ('/messaging', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            method: 'genereate_convo;',
-            convo: userId
+        .then(response => response.text())
+        .then(data => {
+            console.log('Response from PHP:', data);
+            document.getElementById("message").value = "";
+    
+            if (data.includes("Conversation must be accepted")) {
+                alert(data);
+            }
         })
-    })
-    .then(response => response.text())
-    .then(data => {
-        console.log('Response from PHP:', data);
-        
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-}
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    
+        // Second fetch call
+        fetch('/messaging', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                method: 'genereate_convo',
+                convo: userId
+            })
+        })
+        .then(response => response.text())
+        .then(data => {
+            console.log('Response from PHP:', data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
 function report(){
 
 }
