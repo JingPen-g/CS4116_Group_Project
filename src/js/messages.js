@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
     });
 });*/
-document.getElementById("reject").addEventListener("click", function(){
+/*document.getElementById("reject").addEventListener("click", function(){
     alert("rejected")
 
     fetch('/messaging', {
@@ -75,8 +75,7 @@ document.getElementById("reject").addEventListener("click", function(){
     fetch()
 
 
-}
-)
+}*/
 
 document.getElementById("send_button").addEventListener("click", function(){
     alert("button works");
@@ -170,20 +169,19 @@ function openExisting(userId ,otherId) {
                 message: message
             })
         })
-        .then(response => conaole.log(response.text()))
+        .then(response => console.log(response.text()))
         .then(data => {
             console.log('Response from PHP:', data);
             document.getElementById("message").value = "";
     
-            if (data.includes("Conversation must be accepted")) {
+            /*if (data.includes("Conversation must be accepted")) {
                 alert(data);
-            }
+            }*/
         })
         .catch(error => {
             console.error('Error:', error);
         });
     
-        // Second fetch call
         fetch('/messaging', {
             method: 'POST',
             headers: {
@@ -205,7 +203,7 @@ function openExisting(userId ,otherId) {
 function report(){
 
 }
-function accept(userId, otherId) {
+/*function accept(userId, otherId) {
     var acceptReject = document.getElementById("pending");
     var responseValue = 0; 
     //acceptReject.className = "pending-hidden";
@@ -262,4 +260,4 @@ function reject(userId, otherId) {
         console.error('Error:', error);
     });
     
-}
+}*/
