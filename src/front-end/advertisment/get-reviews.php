@@ -1,5 +1,5 @@
 <?php
-function generate_review_elements($review_data, $userType) {
+function generate_review_elements($review_data, $userType, $businessId) {
 
         echo '<!-- Title Row -->
         <div class="row" style="margin-top: 10vh !important">
@@ -76,7 +76,13 @@ function generate_review_elements($review_data, $userType) {
             </div>';
 
 
+<<<<<<< Updated upstream
+            //print_r($row);
+=======
+            print_r($row);
+>>>>>>> Stashed changes
             if ($row->Response)
+
                 echo '<!-- Business Response Container-->
                 <div class="row">
                     <div class="col" style="height: 30px;"></div>
@@ -91,8 +97,8 @@ function generate_review_elements($review_data, $userType) {
                                 <!-- Business Profile Picture and Name -->
                                 <div class="col grey">
                                     <div class="review-user-info">
-                                        <img class="review-profile" src="' . $row->Business_Profile . '" alt="profile picture">
-                                        <h3 style="color: black">' . $row->Business_Name . '</h3>
+                                        <img class="review-profile" src="' . $businessId[0]->Business_Profile . '" alt="profile picture">
+                                        <h3 style="color: black">' . $businessId[0]->Business_Name . '</h3>
                                     </div>
                                 </div>
                             </div>
@@ -109,7 +115,7 @@ function generate_review_elements($review_data, $userType) {
                                 <!-- Comment -->
                                 <div class="col">
                                     <div class="review-comment">
-                                        <p style="color: black">' . $row->Response . '</p>
+                                        <p style="color: black">' . $row[0]->Response . '</p>
                                     </div>
                                 </div>
                             </div>
@@ -172,8 +178,8 @@ function generate_add_review_section($services_data, $services_user_is_verifed_f
 
     foreach ($services_data as $row) {
         foreach ($services_user_is_verifed_for as $servicesUserIsVerifiedFor)
-            if ($row->Service_ID == $servicesUserIsVerifiedFor->Service_ID)
-                echo '<option value="' . $row->Service_ID . '">' . $row->Name . '</option>';
+            if ($row[0]->Service_ID == $servicesUserIsVerifiedFor->Service_ID)
+                echo '<option value="' . $row[0]->Service_ID . '">' . $row[0]->Name . '</option>';
     }
 
     echo '

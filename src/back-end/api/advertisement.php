@@ -46,17 +46,28 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
 } 
 else if($_SERVER["REQUEST_METHOD"] == "POST"){
 
-    if (isset($_POST['method']) && $_POST['method'] == "getAdvertInformation") {
+    if (isset($_POST['action']) && $_POST['action'] == "getAdvertInformation") {
 
         $ad_info = $ad->getAdvertInformation($_POST['Ad_ID']);
 
         echo json_encode($ad_info);
     }
-    else if (isset($_POST['method']) && $_POST['method'] == "getAdvertServicesInformation") {
+    else if (isset($_POST['action']) && $_POST['action'] == "getAdvertServicesInformation") {
 
+<<<<<<< Updated upstream
+        $serviceIds = json_decode($_POST['Service_IDs']);
+
+        $serviceInfo = [];
+        foreach ($serviceIds as $id) {
+
+            $serviceInfo[] = $service->getServiceId($id);
+
+        }
+        echo json_encode($serviceInfo);
+=======
         $ad_services_info = $service->getAdvertServicesInformation($_POST['Business_ID']);
-
         echo json_encode($ad_services_info);
+>>>>>>> Stashed changes
     }
 } 
 else if($_SERVER["REQUEST_METHOD"] == "PUT"){

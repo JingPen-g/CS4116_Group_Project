@@ -7,6 +7,8 @@ RUN docker-php-ext-install mysqli && docker-php-ext-enable mysqli
 # Set working directory
 WORKDIR /var/www/html
 
+#RUN chmod 777 uploads
+
 # Expose the PHP-FPM port (default 9000)
 EXPOSE 9000
 USER 0

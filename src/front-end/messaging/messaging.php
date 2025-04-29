@@ -108,11 +108,12 @@ function retreive_user_data($otherId){
  */
 function getUserId():string {
 
-    if($_SESSION['userData'][0]['Users_ID'] != null){
+    if(!empty($_SESSION['userData']) && $_SESSION['userData'][0]['Users_ID'] != null){
         $GLOBALS['user'] = $_SESSION['userData'][0]['Users_ID'];
         return isset($_SESSION['userData']['Users_ID']);
     }
-    return "noUser";    
+    return "noUser";
+    return 64;
 }
 function getListOfConversations($userId) {
 
@@ -149,9 +150,8 @@ function getListOfConversations($userId) {
             $response = substr($response, strpos($response,'}',0) + 1, strlen($response) - strpos($response,'}',0));
         }
 
-    } else
-        $current_conversation[0] = "empty";
-
+    } 
+        //echo "this is the problem";
 }
 
 //
@@ -271,7 +271,7 @@ function inquire($userId, $otherId, $message) {
     }else if(getmessagecount($userId, $otherId) == 0 ){
         // Starting a convo
         //insertNewMessage($userId, $otherId, "PENDING");
-        acceptorReject($otherId);
+        //acceptorReject($otherId);
 
     }else if(getmessagecount($userId, $otherId) == 1 ){
         return 0;
@@ -642,5 +642,6 @@ function acceptorReject($User){
 </div>
 </div>
 <script type="application/javascript" src="js/messages.js"></script>
+
 
 </html>
