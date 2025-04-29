@@ -156,14 +156,16 @@ function openExisting(userId ,otherId) {
         alert("button works");    
         var message = document.getElementById("message").value;
         console.log(message);
+        console.log(userId);
+        console.log(otherId);
 
         fetch('/api/messaging.php', {
             method: 'POST',
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: new URLSearchParams({
                 method: 'insertmessage',
-                userId: 64,
-                otherId: 65,
+                userId: userId,
+                otherId: otherId,
                 message: message
             }),
         })
@@ -183,9 +185,7 @@ function openExisting(userId ,otherId) {
         // Second fetch call
         fetch('/api/messaging.php', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: JSON.stringify({
                 method: 'genereate_convo',
                 convo: userId

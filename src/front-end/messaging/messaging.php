@@ -7,7 +7,7 @@ $other_user_info = null;//Object represning a row
 include __DIR__ . '/../global/get-nav.php';
 $user = getUserId();
 //$currentOther =57;
-$currentOther =65;
+$currentOther =64;
 
 /*
  * messaging.php
@@ -240,7 +240,6 @@ function sortMessages($currentConversation) {
 
 }*/
 function insertNewMessage($userId, $otherId, $message) {
-    getJsonInput();
 
     /*if (getMessageCount($userId, $otherId) < 2) {
         echo "Conversation must be accepted before you can send a message";        
@@ -275,7 +274,7 @@ function inquire($userId, $otherId, $message) {
         acceptorReject($otherId);
 
     }else if(getmessagecount($userId, $otherId) == 1 ){
-        insertNewMessage($userId, $otherId, $message );
+        return 0;
     }
 }
 
@@ -332,7 +331,6 @@ function getMessageCount($userId, $otherId) {
     global $user;
     getListOfConversations($user);
     global $current_conversations;
-    print_r($list_of_conversations);
     if($list_of_conversations != null){
         foreach ($list_of_conversations as $row) {
             $otherId = $row['Other_ID'];
@@ -416,10 +414,10 @@ function genereate_convo($convo){
     // called by side button
     // needs to set everything else off
     $GLOBALS['currentOther']=$convo;
-    inquire($GLOBALS['user'], $convo, "yes that would cost 90€");
+    inquire($GLOBALS['user'], $convo, "");
     setCurrentConversation($GLOBALS['user'],$convo);
 
-    if(inquire($GLOBALS['user'], $convo, "yes that would cost 90€") == -1){
+    if(inquire($GLOBALS['user'], $convo, "") == -1){
         generate_existing($GLOBALS['user'],$convo);
     }
 
