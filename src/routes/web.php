@@ -1,6 +1,6 @@
 <?php
 return [
-    '/' => 'messaging/messaging.php',
+    '/' => 'search/search.php',
     '/register' => 'create-account/register_bootstrap.php',
     '/login' => 'create-account/login.php',
     '/search' => 'search/search.php',
@@ -14,5 +14,6 @@ return [
     '/logout' => 'global/logout.php',
     '/admins' => 'admin-control/admins.php',
     '/messaging' => 'messaging/messaging.php',
+    '/newMessage'=> 'messaging/insertNewMessage.php'
 ]
 ?>

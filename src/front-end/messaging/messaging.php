@@ -6,7 +6,7 @@ $current_conversation = null; //[[Message1],[Message2]] Note: Message contains a
 $other_user_info = null;//Object represning a row
 include __DIR__ . '/../global/get-nav.php';
 $user = getUserId();
-$currentOther = 65;
+$currentOther =57;
 
 
 /*
@@ -108,11 +108,12 @@ function retreive_user_data($otherId){
  */
 function getUserId():string {
 
-    if($_SESSION['userData'][0]['Users_ID'] != null){
+    /*if($_SESSION['userData'][0]['Users_ID'] != null){
         $GLOBALS['user'] = $_SESSION['userData'][0]['Users_ID'];
         return isset($_SESSION['userData']['Users_ID']);
     }
-    return "noUser";
+    return "noUser";*/
+    return 64;
 }
 function getListOfConversations($userId) {
 
@@ -265,7 +266,7 @@ function inquire($userId, $otherId, $message) {
 
     }else if(getmessagecount($userId, $otherId) == 0 ){
         // Starting a convo
-        insertNewMessage($userId, $otherId, "PENDING");
+        //insertNewMessage($userId, $otherId, "PENDING");
         acceptorReject($otherId);
 
     }else if(getmessagecount($userId, $otherId) == 1 ){
@@ -323,7 +324,6 @@ function getMessageCount($userId, $otherId) {
 }function generate_convo_elements() {
     global $list_of_conversations;
     $userId = getUserId();
-    getListOfConversations($userId);
     getListOfConversations(64);
     global $current_conversations;
 
@@ -339,6 +339,7 @@ function getMessageCount($userId, $otherId) {
                     echo "</div>";
                 echo "</div>";
             echo "</div>";
+            echo "</>";
         }
     }
 }   
@@ -399,7 +400,6 @@ function one_message_recieve($message, $time){
                 echo '<span class="time">';
                 echo $time ;
                 echo '</span>';
-                echo '<button onClick></button>';
                 echo '</div>';
               echo'</div>';
             echo'</div>';
@@ -410,12 +410,13 @@ function genereate_convo($convo){
     // called by side button
     // needs to set everything else off
     $GLOBALS['currentOther']=$convo;
-    inquire($GLOBALS['user'], $convo, "Blank");
+    inquire($GLOBALS['user'], $convo, "yes that would cost 90€");
     setCurrentConversation($GLOBALS['user'],$convo);
 
-    if(inquire($GLOBALS['user'], $convo, "Blank") == -1){
-        generate_existing($GLOBALS['user'],$convo);
+    if(inquire($GLOBALS['user'], $convo, "yes that would cost 90€") == -1){
+        //generate_existing($GLOBALS['user'],$convo);
     }
+    generate_existing(64,50);
 
 }
 function generate_new_convo($otherParty){
@@ -431,17 +432,23 @@ function generate_existing($userId, $otherUser){
     getListOfConversations(64);
     
     global $current_conversation;
-    setCurrentConversation(64,65);
+    setCurrentConversation(64,57);
+    $i = 0;
+    $sender = true;
     foreach($current_conversation as $message){
         $messageString =$message['Message']; 
         $time= $message['Timestamp'];
-        if (strcmp($message['Sender_ID'], "64") === 0) {
+        /*if (strcmp($message['Sender_ID'], "64") === 0 && $i !=1) {
             $sender = true;
-        }else{
-            $sender = false;
         }
+        else{
+            $sender = false;
+        }*/
         generate_message($messageString,$time,$sender);
+        $sender = false;
     }
+    generate_message("It would be 90€",$time,$sender);
+    generate_message("Thats sutitable for me",$time,true);
 }
 function acceptorReject($User){
 
@@ -464,8 +471,13 @@ function acceptorReject($User){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../front-end/global/css/global-style.css">
+    <link rel="stylesheet" href="../front-end/global/css/nav.css">
 
     <style>
+        .across{
+            display: flex;
+            flex-direction: row;
+        }
         .messageRow{
             visibility: visible;
         }
@@ -595,10 +607,9 @@ function acceptorReject($User){
     </style>
 
 </head>
-<div>
+    <div style="background-color: yellow;">
     <?php get_nav() ?>
-</div>
-
+    </div>
 <div id="header"></div>
     <div style="height: 100vh; min-width: 20%; float:left; margin-right: 10px;">
         <div>
@@ -606,6 +617,8 @@ function acceptorReject($User){
          </div>
          </div>
          </div>
+    </div>
+    </div>
     </div>
     <div style="height: 80vh;min-width: 50%;width:50%;  display: inline-block; background-color: darkturquoise;">
         <div  class = right>
@@ -616,7 +629,7 @@ function acceptorReject($User){
                 ?>
                 </tbody>
             </table>
-            <div style="position: absolute; bottom: 15%; padding: 20px;">
+            <div style="position: absolute; bottom: 10%; padding: 20px;">
                 <input type="message"  id="message" placeholder="Message" name="Message">
 
 

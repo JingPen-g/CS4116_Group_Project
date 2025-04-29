@@ -158,19 +158,19 @@ function openExisting(userId ,otherId) {
         var message = document.getElementById("message").value;
         console.log(message);
 
-        fetch('/messaging', {
+        fetch('/newMessage', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
+            body: new URLSearchParams({
                 method: 'insertNewMessage',
                 userId: 64,
                 otherId: 65,
                 message: message
             })
         })
-        .then(response => response.text())
+        .then(response => conaole.log(response.text()))
         .then(data => {
             console.log('Response from PHP:', data);
             document.getElementById("message").value = "";
