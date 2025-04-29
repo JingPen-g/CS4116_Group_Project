@@ -70,10 +70,10 @@ else if($_SERVER["REQUEST_METHOD"] == "POST"){
 
         echo json_encode($serviceInfo);
     }
-    else if (isset($_POST['action'] && $_POST['action'] == "insertAdvert") {
-	if !isset($_POST['name']) {
-	    echo "Failed to add ad since no name given"
-	    return "";
+    else if (isset($_POST['action']) && $_POST['action'] == "insertAdvert") {
+	if (!isset($_POST['name'])) {
+	    echo "Failed to add ad since no name given";
+	    return;
 	}
 
     	$name = $_POST['name'];
