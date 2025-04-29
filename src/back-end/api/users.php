@@ -1,4 +1,4 @@
-
+<?php
 require_once(__DIR__ . "/../db/Users.php");
 require_once(__DIR__ . "/../db/Business.php");
 
