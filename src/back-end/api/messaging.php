@@ -34,11 +34,11 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
 } 
 else if($_SERVER["REQUEST_METHOD"] == "POST"){
 
-
+    print_r($_POST);
     if(isset($_POST['method']) && $_POST['method'] === "insertmessage"){
         echo json_encode($messaging->insertMessage($_POST['otherId'], $_POST['userId'], $_POST['message']));
     
-    }else if(isset($_POST['method']) && $_POST['method'] === "insertmessage"){
+    }else if(isset($_POST['method']) && $_POST['method'] === "gen_convo"){
         echo json_encode(genereate_convo($_POST['convo']));
     }else{
         echo json_encode(['error' => 'Method not defined this one' ]);
@@ -52,12 +52,10 @@ else if($_SERVER["REQUEST_METHOD"] == "PUT"){
 
         echo json_encode($messaging->insertMessage($_PUT['otherId'], $_PUT['userId'], $_PUT['message']));
 
-    }else if(isset($_PUT['method']) && $_PUT['method'] === "switchConvo"){
-
-        echo json_encode(setCurrentConversation($_PUT['userId'],$_PUT['otherId']));
-
-    }
-     else {
+    }else if(isset($_PUT['method']) && $_PUT['method'] === "gen_convo"){
+        echo json_encode(genereate_convo($_PUT['convo']));
+    
+    }else {
 
         echo json_encode(['error' => 'Method not defined for PUT in Messaging']);
     }

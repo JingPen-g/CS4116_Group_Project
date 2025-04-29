@@ -184,10 +184,10 @@ function openExisting(userId ,otherId) {
     
         // Second fetch call
         fetch('/api/messaging.php', {
-            method: 'POST',
+            method: 'PUT',
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: JSON.stringify({
-                method: 'genereate_convo',
+                method: 'gen_convo',
                 convo: userId
             })
         })

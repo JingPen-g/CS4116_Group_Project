@@ -7,7 +7,7 @@ $other_user_info = null;//Object represning a row
 include __DIR__ . '/../global/get-nav.php';
 $user = getUserId();
 //$currentOther =57;
-$currentOther =64;
+$currentOther =50;
 
 /*
  * messaging.php
@@ -175,7 +175,8 @@ function setCurrentConversation($userId, $otherId) {
     ob_start(); // read in data echoed from advertisement.php
     include __DIR__ . '/../../back-end/api/messaging.php'; 
     $response = ob_get_clean();
-
+    global $currentOther;
+    $currentOther = $otherId;
     //Testing
     //echo "<BR>RAW RESPONSE<BR>" . $response ."<BR><BR>RAW RESPONSE END<BR>";
     /*
@@ -272,6 +273,10 @@ function inquire($userId, $otherId, $message) {
         // Starting a convo
         //insertNewMessage($userId, $otherId, "PENDING");
         //acceptorReject($otherId);
+<<<<<<< Updated upstream
+=======
+        insertNewMessage($userId, $otherId, "The Begining of your Conversation");
+>>>>>>> Stashed changes
 
     }else if(getmessagecount($userId, $otherId) == 1 ){
         return 0;
@@ -606,7 +611,7 @@ function acceptorReject($User){
     </style>
 
 </head>
-    <div style="background-color: yellow; " >
+    <div style= >
         <?php get_nav() ?>
     </div>
 <div id="header"></div>
