@@ -205,7 +205,7 @@ function openExisting(userId ,otherId) {
 function report(){
 
 }
-function accept(userId, otherId) {
+/*function accept(userId, otherId) {
     var acceptReject = document.getElementById("pending");
     var responseValue = 0; 
     //acceptReject.className = "pending-hidden";
@@ -262,4 +262,4 @@ function reject(userId, otherId) {
         console.error('Error:', error);
     });
     
-}
+}*/

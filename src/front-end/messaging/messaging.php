@@ -6,8 +6,8 @@ $current_conversation = null; //[[Message1],[Message2]] Note: Message contains a
 $other_user_info = null;//Object represning a row
 include __DIR__ . '/../global/get-nav.php';
 $user = getUserId();
+//$currentOther =57;
 $currentOther =57;
-
 
 /*
  * messaging.php
@@ -108,12 +108,11 @@ function retreive_user_data($otherId){
  */
 function getUserId():string {
 
-    /*if($_SESSION['userData'][0]['Users_ID'] != null){
+    if($_SESSION['userData'][0]['Users_ID'] != null){
         $GLOBALS['user'] = $_SESSION['userData'][0]['Users_ID'];
         return isset($_SESSION['userData']['Users_ID']);
     }
-    return "noUser";*/
-    return 64;
+    return "noUser";    
 }
 function getListOfConversations($userId) {
 
@@ -235,7 +234,8 @@ function sortMessages($currentConversation) {
  * inserts a new row into Messaging table
  */
 function insertNewMessage($userId, $otherId, $message) {
-    //getJsonInput();
+    echo "IT REACHES HERE";
+    getJsonInput();
 
     /*if (getMessageCount($userId, $otherId) < 2) {
         echo "Conversation must be accepted before you can send a message";        
@@ -607,8 +607,8 @@ function acceptorReject($User){
     </style>
 
 </head>
-    <div style="background-color: yellow;">
-    <?php get_nav() ?>
+    <div style="background-color: yellow; " >
+        <?php get_nav() ?>
     </div>
 <div id="header"></div>
     <div style="height: 100vh; min-width: 20%; float:left; margin-right: 10px;">
