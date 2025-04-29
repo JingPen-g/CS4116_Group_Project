@@ -5,9 +5,9 @@ $list_of_conversations = null; //[index => "Other_ID"]
 $current_conversation = null; //[[Message1],[Message2]] Note: Message contains all details from a row in TABLE Messaging
 $other_user_info = null;//Object represning a row
 include __DIR__ . '/../global/get-nav.php';
-$user = $_SESSION['userData'][0]['Users_ID'];
+$user = getUserId();
 //$currentOther =57;
-$currentOther =57;
+$currentOther =65;
 
 /*
  * messaging.php
@@ -126,6 +126,7 @@ function getListOfConversations($userId) {
     ob_start(); 
     include __DIR__ . '/../../back-end/api/messaging.php'; 
     $response = ob_get_clean();
+
     //Testing
     /*"<BR>RAW RESPONSE<BR>" . $response ."<BR><BR>RAW RESPONSE END<BR>";
     
@@ -200,7 +201,6 @@ function setCurrentConversation($userId, $otherId) {
 
         $current_conversation = sortMessages($current_conversation);
     } else
-        print_r($current_conversation);
         $current_conversation[0] = "empty";
 }
 
@@ -233,11 +233,12 @@ function sortMessages($currentConversation) {
  * insertNewMessage PUT
  * inserts a new row into Messaging table
  */
-function switchConvo($otherId){
+/*function switchConvo($otherId){
     $_SERVER["REQUEST_METHOD"] = "PUT";
     $_PUT['method'] = 'insertmessage';
-    $_PUT['userId'] = $otherId;
-}
+    $_PUT['userId'] = $userId;
+
+}*/
 function insertNewMessage($userId, $otherId, $message) {
     getJsonInput();
 
@@ -272,7 +273,6 @@ function inquire($userId, $otherId, $message) {
         // Starting a convo
         //insertNewMessage($userId, $otherId, "PENDING");
         acceptorReject($otherId);
-        generate_existing($userId, $otherId);
 
     }else if(getmessagecount($userId, $otherId) == 1 ){
         insertNewMessage($userId, $otherId, $message );
@@ -330,7 +330,6 @@ function getMessageCount($userId, $otherId) {
     global $list_of_conversations;
     $userId = getUserId();
     global $user;
-    $user = getUserId();
     getListOfConversations($user);
     global $current_conversations;
     print_r($list_of_conversations);
@@ -417,10 +416,10 @@ function genereate_convo($convo){
     // called by side button
     // needs to set everything else off
     $GLOBALS['currentOther']=$convo;
-    inquire($GLOBALS['user'], $convo, "BLANKS");
+    inquire($GLOBALS['user'], $convo, "yes that would cost 90€");
     setCurrentConversation($GLOBALS['user'],$convo);
 
-    if(inquire($GLOBALS['user'], $convo, "BLANK") == -1){
+    if(inquire($GLOBALS['user'], $convo, "yes that would cost 90€") == -1){
         generate_existing($GLOBALS['user'],$convo);
     }
 
@@ -432,7 +431,7 @@ function generate_pending_convo($otherParty){
     acceptorReject($otherParty);
 }
 function generate_existing($userId, $otherUser){
-
+    global $list_of_conversations;
 
     getListOfConversations($userId);
     getListOfConversations($userId);
