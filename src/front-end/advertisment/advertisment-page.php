@@ -4,6 +4,7 @@ include 'get-services.php';
 include 'get-service-image-viewer.php';
 include 'get-reviews.php';
 include __DIR__ . '/../global/get-footer.php';
+include __DIR__ . '/../global/get-nav.php';
 
 $userType;
 //print_r($_SESSION);
@@ -21,8 +22,8 @@ if (!empty($_POST['Ad_ID'])) {
 
     if (empty($_SESSION['userType'])) 
         $userType = "not logged in";
-    else if ($_SESSION['userType'] == "user")
-        $userType = "user";
+    else if ($_SESSION['userType'] == "customer")
+        $userType = "customer";
     else if ($_SESSION['userType'] == 'business')
         if ($_SESSION['userData'][0]['Business_ID'] == $_POST['Ad_ID'])
             $userType = "business owner";
@@ -265,6 +266,7 @@ if (!empty($_POST['Ad_ID'])) {
     <title>advertisment</title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="../front-end/global/css/global-style.css">
     <link rel="stylesheet" href="../front-end/advertisment/css/service-listing.css">
     <link rel="stylesheet" href="../front-end/advertisment/css/image-viewer.css">
@@ -272,10 +274,10 @@ if (!empty($_POST['Ad_ID'])) {
     <link rel="stylesheet" href="../front-end/advertisment/css/review.css">
     <link rel="stylesheet" href="../front-end/advertisment/css/review.css">
     <link rel="stylesheet" href="../front-end/advertisment/css/review-reply.css">
-
+    <link rel="stylesheet" type="text/css" href="../front-end/global/css/nav.css">
 </head>
 <body>
-    
+    <?php get_nav() ?>
     <div class="invisible image-item"></div>
     <div id="main" class="container-fluid">
 
