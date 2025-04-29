@@ -139,6 +139,10 @@ crossorigin="anonymous">
             max-height: 450px;
         }
 
+        .justify-end { 
+            justify-content: flex-end; 
+        }
+
     </style>
 </head>
 <body class="min-h-screen">
@@ -193,12 +197,12 @@ crossorigin="anonymous">
             <section class="flex-1 bg-orange-200 p-6 rounded-lg shadow-md">
 
                 <!-- Search Bar -->
-                <section class="search-bar flex space-x-2 p-4">
+                <section class="search-bar flex justify-end space-x-2 p-4">
                     <input
                         type="text"
                         id="search-term"
                         placeholder="Search..."
-                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        class="w-100% px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                     <button
                         id="search-button"
