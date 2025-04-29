@@ -1,6 +1,6 @@
 <?php
 return [
-    '/' => 'messaging/messaging.php',
+    '/' => 'search/search.php',
     '/register' => 'create-account/register_bootstrap.php',
     '/login' => 'create-account/login.php',
     '/search' => 'search/search.php',
