@@ -24,18 +24,20 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
 
     if (!empty($description)) {
         $_SESSION['description'] = $description;
-        if ($_SESSION['usertype'] === "business owner") {
+        if ((isset($_SESSION['userId']) && $_SESSION['userId'] === "business owner") 
+        or (isset($_SESSION['usertype']) && $_SESSION['usertype'] === "business owner")) {
             $result = $business->updateDescription($username, $description);  
-        } else {
+        } else if (isset($_SESSION['userType']) && $_SESSION['userType'] === "customer"){
             $result = $user->updateDescription($username, $description);  
         }
     }
         
     if (!empty($phone)) {
         $_SESSION['phone'] = $phone;
-        if ($_SESSION['usertype'] === "business owner"){
+        if ((isset($_SESSION['userId']) && $_SESSION['userId'] === "business owner") 
+        or (isset($_SESSION['usertype']) && $_SESSION['usertype'] === "business owner")) {
             $result = $business->updatePhone($username, $phone);  
-        } else {
+        } else if (isset($_SESSION['userType']) && $_SESSION['userType'] === "customer"){
             $result = $user->updatePhone($username, $phone);
 
         }
@@ -70,9 +72,10 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
                 $_SESSION['profile_picture'] = $_SESSION['profile_picture'] = "/uploads/" . $filename;
                 $_SESSION['target_file'] = $target_file;
                 $web_path = "/uploads/" . $filename;
-                if ($_SESSION['usertype'] === "business owner") {
+                if ((isset($_SESSION['userId']) && $_SESSION['userId'] === "business owner") 
+                or (isset($_SESSION['usertype']) && $_SESSION['usertype'] === "business owner")) {
                     $result = $business->updateProfilePicture($username, $web_path);
-                } else {
+                } else if (isset($_SESSION['userType']) && $_SESSION['userType'] === "customer"){
                     $result = $user->updateProfilePicture($username, $web_path);
                 }
             } 

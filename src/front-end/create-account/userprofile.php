@@ -69,12 +69,12 @@ crossorigin="anonymous">
                         <form action="/api/userprofile.php" method="POST" enctype="multipart/form-data">
                             <div class="mb-3">
                             <label for="description" class="form-label">Description</label>
-                            <textarea class="form-control" id="description" name="description" rows="3"><?php if (!empty($_SESSION['userData'][0]['Description']) || !empty($_SESSION['businessData'][0]['Description'])) echo htmlspecialchars($_SESSION['userData'][0]['Description'] ?? $_SESSION['businessData'][0]['Description'] ?? ""); ?></textarea>
+                            <textarea class="form-control" id="description" name="description" rows="3"></textarea>
                             </div>
 
                             <div class="mb-3">
                             <label for="phone" class="form-label">Phone Number</label>
-                            <input type="text" class="form-control" id="phone" name="phone" value="<?php if (!empty($_SESSION['userData'][0]['Phone']) || !empty($_SESSION['businessData'][0]['Phone'])) echo htmlspecialchars($_SESSION['userData'][0]['Phone'] ?? $_SESSION['businessData'][0]['Phone'] ?? ""); ?>">
+                            <input type="text" class="form-control" id="phone" name="phone" value="">
                             </div>
                             
                             <div class="mb-3">
@@ -82,7 +82,7 @@ crossorigin="anonymous">
                             <input class="form-control" type="file" id="profilePic" name="profile_picture">
                             </div>
                             <div class="me-2 mb-3 mt-3">
-                                <small id="ProfileErr" class="text-danger"><?php if (!empty($fileTypeError)) echo htmlspecialchars($fileTypeError); ?></small>
+                                <small id="ProfileErr" class="text-danger"></small>
                             </div>
                             <button type="submit" class="btn btn-primary">Update Profile</button>
                         </form>
