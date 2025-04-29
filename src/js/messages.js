@@ -5,11 +5,15 @@ console.log("Hello, World login!");
 btns = document.getElementsByClassName("convo-button");
 console.log(btns);
 
-for (var i = 0; i < btns.length; i++) {
-    btns[i].addEventListener("click", function() {
-        openExisting(userId, otherId);
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.convo-button').forEach(function(button) {
+        button.addEventListener('click', function() {
+            const userId = this.getAttribute('data-user-id');
+            const otherId = this.getAttribute('data-other-id');
+            openExisting(userId, otherId);
+        });
     });
-}
+});
 
 
 /*document.addEventListener("DOMContentLoaded", function() {

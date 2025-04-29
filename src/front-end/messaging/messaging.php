@@ -106,9 +106,8 @@ function getListOfConversations($userId) {
         }
 
     } else
-        echo "this is the problem";
-        $list_of_conversations[0] = ["64"];
-        $list_of_conversations[1] = ["65"];
+        $current_conversation[0] = "empty";
+
 }
 
 //
@@ -278,19 +277,21 @@ function getMessageCount($userId, $otherId) {
         return -1;
 
 }function generate_convo_elements() {
+    global $list_of_conversations;
     $userId = getUserId();
-    $GLOBALS['list_of_conversations'] = getListOfConversations($userId);
-    echo ($GLOBALS['list_of_conversations']);
-    $convos = $GLOBALS['list_of_conversations'];
-    if($convos != null){
-        foreach ($convos as $row) {
+    getListOfConversations($userId);
+    getListOfConversations(64);
+    global $current_conversations;
+
+    if($list_of_conversations != null){
+        foreach ($list_of_conversations as $row) {
+            $otherId = $row['Other_ID'];
             echo "<div class=\"col-10 d-flex align-items-center justify-content-center\">" ;
                 echo "<div class=\"group-container\">";
                     echo "<div class=\"Convo-btn\">";
                         echo '<div style ="display: inline-block;>';
                         echo '<img src="user1.png" class="msgimg" />';
-                        echo '<button class="convo-button"  onclick="openExisting(' . $userId ,$row . ')" id=' . htmlspecialchars($row) .' style =" padding: 10px;">'  . htmlspecialchars($row) . "</button>"; 
-                        echo '</div>';
+                        echo '<button class="convo-button" data-user-id="' . htmlspecialchars($userId) . '" data-other-id="' . htmlspecialchars($otherId) . '" style="padding: 10px;">' . htmlspecialchars($otherId) . '</button>';
                     echo "</div>";
                 echo "</div>";
             echo "</div>";
@@ -381,12 +382,22 @@ function generate_pending_convo($otherParty){
     acceptorReject($otherParty);
 }
 function generate_existing($userId, $otherUser){
-    $current_conversation = 
-
-    foreach($GLOBALS['$current_conversation'] as $message){
-        $messageString ="tes"; 
-        $time= "2";
-        $sender =true ;
+    global $list_of_conversations;
+    $userId = getUserId();
+    getListOfConversations($userId);
+    getListOfConversations(64);
+    
+    global $current_conversation;
+    setCurrentConversation(64,65);
+    print_r($current_conversation);
+    foreach($current_conversation as $message){
+        $messageString =$message['Message']; 
+        $time= $message['Timestamp'];
+        if(1>0){
+            $sender = true;
+        }else{
+            $sender = false;
+        }
         generate_message($messageString,$time,$sender);
     }
 }
@@ -542,18 +553,18 @@ function acceptorReject($User){
     </style>
 
 </head>
-<div style ="height: 10vh; min-width: 100%; display: inline-block; float:left; margin-right: 10px; border: 1px solid blue">
+<div>
     <?php get_nav() ?>
 </div>
 
 <div id="header"></div>
     <div>
-    <div style="height: 100vh; min-width: 20%; display: inline-block; float:left; margin-right: 10px; border: 1px solid blue">
+    <div style="height: 100vh; min-width: 20%; float:left; margin-right: 10px;">
         <div>
             <?php generate_convo_elements($list_of_conversations) ?>
          </div>
     </div>
-    <div style="height: 80vh;;width:50%;  display: inline-block; background-color: darkturquoise; border: 1px solid red">
+    <div style="height: 80vh;min-width: 50%;width:50%;  display: inline-block; background-color: darkturquoise;">
         <div  class = right>
             <table class='conversation' >
             <tbody style = image-item>
