@@ -34,16 +34,27 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
 } 
 else if($_SERVER["REQUEST_METHOD"] == "POST"){
 
-    echo json_encode(['error' => 'Method not defined']);
+
+    if(isset($_POST['method']) && $_POST['method'] === "insertmessage"){
+        echo json_encode($messaging->insertMessage($_POST['otherId'], $_POST['userId'], $_POST['message']));
+    }else{
+        echo json_encode(['error' => 'Method not defined this one' ]);
+    }
+    
 } 
 else if($_SERVER["REQUEST_METHOD"] == "PUT"){
 
-
+    print_r($_PUT);
     if(isset($_PUT['method']) && $_PUT['method'] === "insertmessage"){
 
         echo json_encode($messaging->insertMessage($_PUT['otherId'], $_PUT['userId'], $_PUT['message']));
 
-    } else {
+    }else if(isset($_PUT['method']) && $_PUT['method'] === "switchConvo"){
+
+        echo json_encode(setCurrentConversation($_PUT['userId'],$_PUT['otherId']));
+
+    }
+     else {
 
         echo json_encode(['error' => 'Method not defined for PUT in Messaging']);
     }

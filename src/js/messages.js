@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const userId = this.getAttribute('data-user-id');
             const otherId = this.getAttribute('data-other-id');
             openExisting(userId, otherId);
+
         });
     });
 });
@@ -78,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // }
 // )
 
-document.getElementById("send_button").addEventListener("click", function(){
+/*document.getElementById("send_button").addEventListener("click", function(){
     alert("button works");
     var userId = 1; 
     var otherId = 2;      
@@ -127,16 +128,14 @@ document.getElementById("send_button").addEventListener("click", function(){
     .catch(error => {
         console.error('Error:', error);
     });
-})
+})*/
 
 function openExisting(userId ,otherId) {
     alert("Button clicked with otherId: " + otherId);
 
     fetch('/api/messaging.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
+        method: 'PUT',
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: JSON.stringify({
             method: 'setCurrentConversation',
             userId: userId,
@@ -158,17 +157,15 @@ function openExisting(userId ,otherId) {
         var message = document.getElementById("message").value;
         console.log(message);
 
-        fetch('/newMessage', {
+        fetch('/api/messaging.php', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: new URLSearchParams({
-                method: 'insertNewMessage',
+                method: 'insertmessage',
                 userId: 64,
                 otherId: 65,
                 message: message
-            })
+            }),
         })
         .then(response => console.log(response.text()))
         .then(data => {

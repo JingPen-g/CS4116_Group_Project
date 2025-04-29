@@ -5,7 +5,7 @@ $list_of_conversations = null; //[index => "Other_ID"]
 $current_conversation = null; //[[Message1],[Message2]] Note: Message contains all details from a row in TABLE Messaging
 $other_user_info = null;//Object represning a row
 include __DIR__ . '/../global/get-nav.php';
-$user = getUserId();
+$user = $_SESSION['userData'][0]['Users_ID'];
 //$currentOther =57;
 $currentOther =57;
 
@@ -126,7 +126,6 @@ function getListOfConversations($userId) {
     ob_start(); 
     include __DIR__ . '/../../back-end/api/messaging.php'; 
     $response = ob_get_clean();
-
     //Testing
     /*"<BR>RAW RESPONSE<BR>" . $response ."<BR><BR>RAW RESPONSE END<BR>";
     
@@ -201,6 +200,7 @@ function setCurrentConversation($userId, $otherId) {
 
         $current_conversation = sortMessages($current_conversation);
     } else
+        print_r($current_conversation);
         $current_conversation[0] = "empty";
 }
 
@@ -233,8 +233,12 @@ function sortMessages($currentConversation) {
  * insertNewMessage PUT
  * inserts a new row into Messaging table
  */
+function switchConvo($otherId){
+    $_SERVER["REQUEST_METHOD"] = "PUT";
+    $_PUT['method'] = 'insertmessage';
+    $_PUT['userId'] = $otherId;
+}
 function insertNewMessage($userId, $otherId, $message) {
-    echo "IT REACHES HERE";
     getJsonInput();
 
     /*if (getMessageCount($userId, $otherId) < 2) {
@@ -268,6 +272,7 @@ function inquire($userId, $otherId, $message) {
         // Starting a convo
         //insertNewMessage($userId, $otherId, "PENDING");
         acceptorReject($otherId);
+        generate_existing($userId, $otherId);
 
     }else if(getmessagecount($userId, $otherId) == 1 ){
         insertNewMessage($userId, $otherId, $message );
@@ -324,9 +329,11 @@ function getMessageCount($userId, $otherId) {
 }function generate_convo_elements() {
     global $list_of_conversations;
     $userId = getUserId();
-    getListOfConversations(64);
+    global $user;
+    $user = getUserId();
+    getListOfConversations($user);
     global $current_conversations;
-
+    print_r($list_of_conversations);
     if($list_of_conversations != null){
         foreach ($list_of_conversations as $row) {
             $otherId = $row['Other_ID'];
@@ -335,7 +342,7 @@ function getMessageCount($userId, $otherId) {
                     echo "<div class=\"Convo-btn\">";
                         echo '<div style ="display: inline-block;>';
                         echo '<img src="user1.png" class="msgimg" />';
-                        echo '<button class="convo-button" data-user-id="' . htmlspecialchars($userId) . '" data-other-id="' . htmlspecialchars($otherId) . '" style="padding: 10px;">' . htmlspecialchars($otherId) . '</button>';
+                        echo '<button class="convo-button" onclick=fun data-user-id="' . htmlspecialchars($userId) . '" data-other-id="' . htmlspecialchars($otherId) . '" style="padding: 10px;">' . htmlspecialchars($otherId) . '</button>';
                     echo "</div>";
                 echo "</div>";
             echo "</div>";
@@ -410,13 +417,12 @@ function genereate_convo($convo){
     // called by side button
     // needs to set everything else off
     $GLOBALS['currentOther']=$convo;
-    inquire($GLOBALS['user'], $convo, "yes that would cost 90€");
+    inquire($GLOBALS['user'], $convo, "BLANKS");
     setCurrentConversation($GLOBALS['user'],$convo);
 
-    if(inquire($GLOBALS['user'], $convo, "yes that would cost 90€") == -1){
-        //generate_existing($GLOBALS['user'],$convo);
+    if(inquire($GLOBALS['user'], $convo, "BLANK") == -1){
+        generate_existing($GLOBALS['user'],$convo);
     }
-    generate_existing(64,50);
 
 }
 function generate_new_convo($otherParty){
@@ -426,29 +432,25 @@ function generate_pending_convo($otherParty){
     acceptorReject($otherParty);
 }
 function generate_existing($userId, $otherUser){
-    global $list_of_conversations;
-    $userId = getUserId();
+
+
     getListOfConversations($userId);
-    getListOfConversations(64);
-    
+    getListOfConversations($userId);
+    global $currentOther;
     global $current_conversation;
-    setCurrentConversation(64,57);
-    $i = 0;
-    $sender = true;
+    setCurrentConversation($userId,$currentOther);
+
     foreach($current_conversation as $message){
         $messageString =$message['Message']; 
         $time= $message['Timestamp'];
-        /*if (strcmp($message['Sender_ID'], "64") === 0 && $i !=1) {
+        $user = $message['Sender_ID'];
+        if(strcmp($userId, $user) === 0){
             $sender = true;
-        }
-        else{
+        }else{
             $sender = false;
-        }*/
+        }
         generate_message($messageString,$time,$sender);
-        $sender = false;
     }
-    generate_message("It would be 90€",$time,$sender);
-    generate_message("Thats sutitable for me",$time,true);
 }
 function acceptorReject($User){
 
