@@ -259,8 +259,10 @@ function insertNewMessage($userId, $otherId, $message) {
  */
 function inquire($userId, $otherId, $message) {
     
-    if (getmessagecount($userId, $otherId) >= 2) {      
+    if (getmessagecount($userId, $otherId) >= 2) {   
         return -1;
+        
+
     }else if(getmessagecount($userId, $otherId) == 0 ){
         // Starting a convo
         insertNewMessage($userId, $otherId, "PENDING");
@@ -268,8 +270,6 @@ function inquire($userId, $otherId, $message) {
 
     }else if(getmessagecount($userId, $otherId) == 1 ){
         insertNewMessage($userId, $otherId, $message );
-    }else{
-
     }
 }
 
@@ -616,7 +616,7 @@ function acceptorReject($User){
                 ?>
                 </tbody>
             </table>
-            <div style="position: absolute; bottom: 20%; padding: 20px;">
+            <div style="position: absolute; bottom: 15%; padding: 20px;">
                 <input type="message"  id="message" placeholder="Message" name="Message">
 
 
