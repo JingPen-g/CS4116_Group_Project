@@ -75,14 +75,9 @@ if (!empty($_POST['Ad_ID'])) {
         $serviceIds = array_map('intval', $serviceIds);
 
         //Get Information on posted Ad_ID 
-<<<<<<< Updated upstream
         $_SERVER["REQUEST_METHOD"] = "POST";
         $_POST['action'] = 'getAdvertServicesInformation';
         $_POST['Service_IDs'] = json_encode($serviceIds);
-=======
-        $_POST['action'] = 'getAdvertServicesInformation';
-        $_POST['Business_ID'] = $ad_data[0]->Business_ID; 
->>>>>>> Stashed changes
         ob_start(); // read in data echoed from advertisement.php
         include __DIR__ . '/../../back-end/api/advertisement.php';
         $response = ob_get_clean();

@@ -205,7 +205,7 @@ crossorigin="anonymous">
 
                                             //Get Information on posted Ad_ID 
                                             $_SERVER["REQUEST_METHOD"] = "POST";
-                                            $_POST['action'] = 'getAdvertServicesInformation';
+                                            $_POST['action'] = 'getAdvertServicesInformationBusiness';
                                             $_POST['Business_ID'] = $_SESSION['businessData'][0]['Business_ID']; 
                                             ob_start(); // read in data echoed from advertisement.php
                                             include __DIR__ . '/../../back-end/api/advertisement.php';
@@ -222,6 +222,7 @@ crossorigin="anonymous">
                                         }
 
                                         retreive_ad_services_data();
+                                        print_r($ad_services_data);
                                         foreach ($ad_services_data as $row) {
                                             echo '<option value="' . $row->Service_ID . '">' . $row->Name . '</option>';
                                         }

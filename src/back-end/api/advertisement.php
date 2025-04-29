@@ -54,7 +54,6 @@ else if($_SERVER["REQUEST_METHOD"] == "POST"){
     }
     else if (isset($_POST['action']) && $_POST['action'] == "getAdvertServicesInformation") {
 
-<<<<<<< Updated upstream
         $serviceIds = json_decode($_POST['Service_IDs']);
 
         $serviceInfo = [];
@@ -64,10 +63,12 @@ else if($_SERVER["REQUEST_METHOD"] == "POST"){
 
         }
         echo json_encode($serviceInfo);
-=======
-        $ad_services_info = $service->getAdvertServicesInformation($_POST['Business_ID']);
-        echo json_encode($ad_services_info);
->>>>>>> Stashed changes
+    }
+    else if (isset($_POST['action']) && $_POST['action'] == "getAdvertServicesInformationBusiness") {
+
+        $ad->getAdvertServicesInformation($_POST['Business_ID']); 
+
+        echo json_encode($serviceInfo);
     }
 } 
 else if($_SERVER["REQUEST_METHOD"] == "PUT"){

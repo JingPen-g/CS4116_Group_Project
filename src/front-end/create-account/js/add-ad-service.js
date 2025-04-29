@@ -6,7 +6,7 @@ var labelsAdded = new Array();
 const labelContainer = document.getElementById("label-container");
 
 addServiceLabelDropdown.addEventListener('change', () => {
-    console.log()
+    console.log("hit");
     var labelExists = false;
     labelsAdded.forEach((label) => {
 
@@ -66,9 +66,6 @@ addServiceSubmitButton.addEventListener('click', () => {
     labelString = labelString.substring(0,labelString.length - 2);
     console.log("labelString: " + labelString);
 
-    //image
-    const formData = new FormData();
-    formData.append('file', file);
 
     //FETCH
     fetch('api/create-service.php', {
@@ -82,7 +79,6 @@ addServiceSubmitButton.addEventListener('click', () => {
             price: addServicePrice.value,
             labelString: labelString
         }),
-        formData
     })
     .then(response => response.json())
     .then(data => {
@@ -96,14 +92,3 @@ addServiceSubmitButton.addEventListener('click', () => {
 
 
 });
-<<<<<<< Updated upstream
-=======
-
-// HTML: <input type="file" id="fileInput">
-const fileInput = document.getElementById('image');
-
-var file;
-fileInput.addEventListener('change', function(event) {
-  file = event.target.files[0];
-});
->>>>>>> Stashed changes
