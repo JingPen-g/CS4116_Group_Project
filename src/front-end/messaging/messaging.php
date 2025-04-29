@@ -63,8 +63,12 @@ function retreive_user_data($otherId){
  * @return nothing just sets global array $list_of_conversations which the [0] will be = empty if empty
  */
 function getUserId():string {
-    $GLOBALS['user'] = $_SESSION['userData'][0]['Users_ID'];
-    return isset($_SESSION['userData']['Users_ID']);
+
+    if($_SESSION['userData'][0]['Users_ID'] != null){
+        $GLOBALS['user'] = $_SESSION['userData'][0]['Users_ID'];
+        return isset($_SESSION['userData']['Users_ID']);
+    }
+    return "noUser";
 }
 function getListOfConversations($userId) {
 
@@ -103,8 +107,8 @@ function getListOfConversations($userId) {
 
     } else
         echo "this is the problem";
-        $list_of_conversations[0] = ["64,65"];
-
+        $list_of_conversations[0] = ["64"];
+        $list_of_conversations[1] = ["65"];
 }
 
 //
@@ -155,6 +159,7 @@ function setCurrentConversation($userId, $otherId) {
         $current_conversation = sortMessages($current_conversation);
     } else
         $current_conversation[0] = "empty";
+        echo "the convo is empty";
 }
 
 /**
@@ -210,9 +215,9 @@ function insertNewMessage($userId, $otherId, $message) {
  * inquire PUT
  * Reach out to a user
  */
-function inquire($userId, $otherId) {
+function inquire($userId, $otherId, $message) {
 
-    if (getmessagecount($userId, $otherId) > 2) {
+    if (getmessagecount($userId, $otherId) >= 2) {
         echo "Conversations already started";        
         return -1;
     }else if(getmessagecount($userId, $otherId) == 0 ){
@@ -221,7 +226,7 @@ function inquire($userId, $otherId) {
         acceptorReject($otherId);
 
     }else if(getmessagecount($userId, $otherId) == 1 ){
-        acceptorReject($otherId);
+        insertNewMessage($userId, $otherId, $message );
     }
 }
 
@@ -275,6 +280,7 @@ function getMessageCount($userId, $otherId) {
 }function generate_convo_elements() {
     $userId = getUserId();
     $GLOBALS['list_of_conversations'] = getListOfConversations($userId);
+    echo ($GLOBALS['list_of_conversations']);
     $convos = $GLOBALS['list_of_conversations'];
     if($convos != null){
         foreach ($convos as $row) {
@@ -288,7 +294,6 @@ function getMessageCount($userId, $otherId) {
                     echo "</div>";
                 echo "</div>";
             echo "</div>";
-
         }
     }
 }   
@@ -319,6 +324,8 @@ function generate_message($message, $timestamp, $sender){
         echo '</>';
 }
 function one_message_sender($message, $time){
+
+    
     echo '<div class="received">';
         echo '<div class="received-chats-img">';
             echo '</div>';
@@ -331,7 +338,6 @@ function one_message_sender($message, $time){
                 echo '<span class="time">';
                 echo $time ;
                 echo '</span>';
-                echo '<button onClick></button>';
               echo'</div>';
             echo'</div>';
           echo'</div>';
@@ -360,7 +366,13 @@ function genereate_convo($convo){
     // called by side button
     // needs to set everything else off
     $GLOBALS['currentOther']=$convo;
-    inquire($GLOBALS['user'], $convo);
+    inquire($GLOBALS['user'], $convo, "Blank");
+    setCurrentConversation($GLOBALS['user'],$convo);
+
+    if(inquire($GLOBALS['user'], $convo, "Blank") == -1){
+        generate_existing($GLOBALS['user'],$convo);
+    }
+
 }
 function generate_new_convo($otherParty){
     acceptorReject($otherParty);
@@ -369,22 +381,14 @@ function generate_pending_convo($otherParty){
     acceptorReject($otherParty);
 }
 function generate_existing($userId, $otherUser){
-/*
-   
-    setCurrentConversation($userId, $otherUser);
-    
-    $convo = sortMessages($GLOBALS["current_conversation"]);
-    $sender = false;
+    $current_conversation = 
 
-    foreach($convo as $message){
-        $sender = false;
-        if($message['Sender_ID'].hash_equals($userId)){
-            $sender = true;
-        }
-            generate_message($message['Message'], $message['Timestamp'], $sender);
-            
+    foreach($GLOBALS['$current_conversation'] as $message){
+        $messageString ="tes"; 
+        $time= "2";
+        $sender =true ;
+        generate_message($messageString,$time,$sender);
     }
-*/
 }
 function acceptorReject($User){
 

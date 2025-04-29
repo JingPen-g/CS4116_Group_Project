@@ -202,24 +202,56 @@ function report(){
 }
 function accept(userId, otherId) {
     var acceptReject = document.getElementById("pending");
-    var message = "ACCEPTED";
-    alert("accepted");
-    acceptReject.className = "pending-hidden";
-    fetch('/messaging', {
+    var responseValue = 0; 
+    //acceptReject.className = "pending-hidden";
+
+    fetch('/messaging.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            method: 'insertNewMessage',
+            method: 'responsdToInquiry',
             userId: userId,
             otherId: otherId,
-            message: message
+            response: responseValue
         })
     })
     .then(response => response.text())
     .then(data => {
         console.log('Response from PHP:', data);
+        if (data.includes("Inquiry has not been sent yet")) {
+            alert(data);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+    
+}
+function reject(userId, otherId) {
+    var acceptReject = document.getElementById("pending");
+    var responseValue = 1; 
+    acceptReject.className = "pending-hidden";
+
+    fetch('/messaging.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            method: 'responsdToInquiry',
+            userId: userId,
+            otherId: otherId,
+            response: responseValue
+        })
+    })
+    .then(response => response.text())
+    .then(data => {
+        console.log('Response from PHP:', data);
+        if (data.includes("Inquiry has not been sent yet")) {
+            alert(data);
+        }
     })
     .catch(error => {
         console.error('Error:', error);
