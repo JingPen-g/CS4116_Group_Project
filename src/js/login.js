@@ -72,9 +72,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.error('Error:', error);
                 if (error.message.includes('504')) {
                     errorMessage.innerHTML = 'The server took too long to respond. Please try again later.';
-        } else {
-            errorMessage.innerHTML = 'An unexpected error occurred. Please try again.';
-        }
+                }
         });
     });
 });

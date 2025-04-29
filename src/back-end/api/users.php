@@ -1,4 +1,10 @@
 <?php
+<<<<<<< Updated upstream
+=======
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+>>>>>>> Stashed changes
 require_once(__DIR__ . "/../db/Users.php");
 require_once(__DIR__ . "/../db/Business.php");
 
@@ -78,13 +84,13 @@ else if($_SERVER["REQUEST_METHOD"] == "POST"){
 
         $userData = $user->getUser($username);
         $businessData = $business->getBusiness($username);
-        if (!$userData && !$businessData) {
-            echo json_encode([
-                'status' => 'error',
-                'message' => 'Invalid username or password.' . $userData . $businessData
-            ]);
-            return;
-        }
+        // if (empty($userData) && empty($businessData)) {
+        //     echo json_encode([
+        //         'status' => 'error',
+        //         'message' => 'Invalid username or password.' . $userData . $businessData
+        //     ]);
+        //     return;
+        // }
         if ($userData || $businessData) {
             $_SESSION['username'] = $username;
             $_SESSION['passwordDatabase'] = $userData[0]['Password'] ?? $businessData[0]['Password'] ?? ""; 
@@ -110,6 +116,14 @@ else if($_SERVER["REQUEST_METHOD"] == "POST"){
             exit();
         }
 
+        if (!empty($businessData) && password_verify($password, $businessData[0]['Password'])) {
+            echo json_encode([
+                'status' => 'success',
+                'message' => 'Login successful! Redirecting you to the search page...',
+                'redirect' => '/search'
+            ]);
+            exit();
+        }
 
         if (!empty($userData) && password_verify($password, $userData[0]['Password'])) {
             $_SESSION['username'] = $username;
