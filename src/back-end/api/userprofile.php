@@ -24,7 +24,7 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
 
     if (!empty($description)) {
         $_SESSION['description'] = $description;
-        if ($_SESSION['userType'] === "bussiness owner") {
+        if ($_SESSION['usertype'] === "business owner") {
             $result = $business->updateDescription($username, $description);  
         } else {
             $result = $user->updateDescription($username, $description);  
@@ -33,7 +33,7 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
         
     if (!empty($phone)) {
         $_SESSION['phone'] = $phone;
-        if ($_SESSION['userType'] === "bussiness owner"){
+        if ($_SESSION['usertype'] === "business owner"){
             $result = $business->updatePhone($username, $phone);  
         } else {
             $result = $user->updatePhone($username, $phone);
@@ -70,7 +70,7 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
                 $_SESSION['profile_picture'] = $_SESSION['profile_picture'] = "/uploads/" . $filename;
                 $_SESSION['target_file'] = $target_file;
                 $web_path = "/uploads/" . $filename;
-                if ($_SESSION['userType'] === "bussiness owner") {
+                if ($_SESSION['usertype'] === "business owner") {
                     $result = $business->updateProfilePicture($username, $web_path);
                 } else {
                     $result = $user->updateProfilePicture($username, $web_path);
