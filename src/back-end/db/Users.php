@@ -13,6 +13,10 @@ class Users extends Model {
         return $this->find(['Admin' => $admin]);
     }
 
+    public function getUserFromId($id) {
+        return $this->find(['Users_ID' => $id]);
+    }
+
     public function getUsernameByUserId($userId) {
         return $this->find(['Users_ID' => $userId]);
     }
