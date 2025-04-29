@@ -8,6 +8,7 @@ include __DIR__ . '/../global/get-nav.php';
 $user = getUserId();
 //$currentOther =57;
 $currentOther =50;
+$type = 'customer';
 
 /*
  * messaging.php
@@ -28,49 +29,7 @@ $currentOther =50;
  * matching user_ids in a review
  * @param: the user id of the other person 
  * @return: an object represnting the row in the table or string "empty"
- */function getJsonInput() {
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-        http_response_code(405); // Method Not Allowed
-        echo json_encode(['error' => 'Only POST requests are allowed']);
-        exit;
-    }
-
-
-    if (!isset($_SERVER['CONTENT_TYPE']) || strpos($_SERVER['CONTENT_TYPE'], 'application/json') === false) {
-        http_response_code(400); // Bad Request
-        echo json_encode(['error' => 'Content-Type must be application/json']);
-        exit;
-    }
-
-    $json = file_get_contents('php://input');
-
-
-    $data = json_decode($json, true);
-
-
-    if (json_last_error() !== JSON_ERROR_NONE) {
-        http_response_code(400); // Bad Request
-        echo json_encode(['error' => 'Invalid JSON input: ' . json_last_error_msg()]);
-        exit;
-    }
-    if (isset($data['method']) && $data['method'] === 'insertNewMessage') {
-        $userId = $data['userId'] ?? null;
-        $otherId = $data['otherId'] ?? null;
-        $message = $data['message'] ?? null;
-    
-        if ($userId && $otherId && $message) {
-            insertNewMessage($userId, $otherId, $message);
-        } else {
-            http_response_code(400);
-            echo json_encode(['error' => 'Missing required fields']);
-        }
-    } else {
-        http_response_code(400);
-        echo json_encode(['error' => 'Invalid method']);
-    }
-
-    return $data;
-}
+ */
 function retreive_user_data($otherId){
     global $other_user_info;
 
@@ -107,10 +66,21 @@ function retreive_user_data($otherId){
  * @return nothing just sets global array $list_of_conversations which the [0] will be = empty if empty
  */
 function getUserId():string {
+        if(!empty($_SESSION['userData']) && $_SESSION['userData'][0]['Users_ID'] != null){
+            $GLOBALS['user'] = $_SESSION['userData'][0]['Users_ID'];
+            return isset($_SESSION['userData']['Users_ID']);
+        }
+        else if(empty($_SESSION['userData'])){
+            global $type;
+            echo $type;
+            $type = "business";
+            echo $type;
+            if(empty($_SESSION['userData']) && $_SESSION['businessData'][0]['Business_ID'] != null){
+                $GLOBALS['user'] = $_SESSION['businessData'][0]['Business_ID'];
 
-    if(!empty($_SESSION['userData']) && $_SESSION['userData'][0]['Users_ID'] != null){
-        $GLOBALS['user'] = $_SESSION['userData'][0]['Users_ID'];
-        return isset($_SESSION['userData']['Users_ID']);
+                print_r($_SESSION['businessData'][0]['Business_ID']);
+                return isset($_SESSION['businessData'][0]['Business_ID']);
+            }
     }
     return "noUser";
     return 64;
@@ -267,16 +237,18 @@ function inquire($userId, $otherId, $message) {
     
     if (getmessagecount($userId, $otherId) >= 2) {   
         return -1;
-        
+        // NORMA: OPERATIONS
 
     }else if(getmessagecount($userId, $otherId) == 0 ){
         // Starting a convo
         //insertNewMessage($userId, $otherId, "PENDING");
         //acceptorReject($otherId);
-        insertNewMessage($userId, $otherId, "The Begining of your conversation");
+        insertNewMessage($userId, $otherId, "PENDING");
+        return 1;
 
     }else if(getmessagecount($userId, $otherId) == 1 ){
         return 0;
+        //ACCEPT OR REJECT
     }
 }
 
@@ -297,7 +269,6 @@ function responsdToInquiry($userId, $otherId, $response) {
 
     else if ($response == 1)
         insertNewMessage($userId, $otherId, "REJECTED");
-
     else
         return -1;
 }
@@ -347,6 +318,8 @@ function getMessageCount($userId, $otherId) {
             echo "</div>";
             echo "</>";
         }
+    }else {
+        echo "no current convos";
     }
 }   
 function generate_message($message, $timestamp, $sender){
@@ -416,27 +389,43 @@ function genereate_convo($convo){
     // called by side button
     // needs to set everything else off
     $GLOBALS['currentOther']=$convo;
-    inquire($GLOBALS['user'], $convo, "");
+    global $type;
+    $thisType = $type;
     setCurrentConversation($GLOBALS['user'],$convo);
 
     if(inquire($GLOBALS['user'], $convo, "") == -1){
         generate_existing($GLOBALS['user'],$convo);
+        // "Normal Convo";
     }
-    if(inquire($GLOBALS['user'], $convo, "") == -0){
+    else if(inquire($GLOBALS['user'], $convo, "") == 0){
+        // pending in the CONVO
         generate_new_convo($convo);
-    }
 
+    }else if(inquire($GLOBALS['user'], $convo, "") == 1){
+
+    }
 }
 function generate_new_convo($otherParty){
     //acceptorReject($otherParty);
     global $list_of_conversations;
     global $user;
+    
     $userId = $user;
+    
     getListOfConversations($userId);
-    getListOfConversations($userId);
+    
     global $currentOther;
     global $current_conversation;
     setCurrentConversation($userId,$currentOther);
+    echo "TEST VALUE current-convo LINE 418";
+    print_r($current_conversation);
+    acceptorReject($otherParty);
+
+  // 0 messages We send a PENDING inquiry
+  // 1 we need accept or Reject;
+  // more than 2 Normal function like now
+  // 2 we need to check the 2nd message for "REJECT123"
+
 }
 function generate_pending_convo($otherParty){
     acceptorReject($otherParty);
@@ -461,7 +450,9 @@ function generate_existing($userId, $otherUser){
         }else{
             $sender = false;
         }
-        generate_message($messageString,$time,$sender);
+        if(strcmp($messageString, "PENDING") != 0 || strcmp($messageString, "ACCEPT123") != 0|| strcmp($messageString, "ACCEPT123") != 0){
+            generate_message($messageString,$time,$sender);
+        }
     }
 }
 function acceptorReject($User){
@@ -648,7 +639,7 @@ function acceptorReject($User){
 
 
                 <?php
-                 echo "<a href='messaging'><button id='send_button' onclick='send_button(\"{$GLOBALS['user']}\", \"{$GLOBALS['currentOther']}\")'>Send</button></a>";
+                 echo "<button id='send_button' onclick='send_button(\"{$GLOBALS['user']}\", \"{$GLOBALS['currentOther']}\")'>Send</button>";
                 ?>
 
             </div>
@@ -660,3 +651,4 @@ function acceptorReject($User){
 
 
 </html>
+
