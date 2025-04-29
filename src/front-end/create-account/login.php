@@ -34,6 +34,11 @@ crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="../front-end/global/css/global-style.css">
     <link rel="stylesheet" type="text/css" href="../front-end/global/css/nav.css">
+    <style>
+        html, body {
+            background-color: rgb(240, 227, 217) !important;
+        }
+    </style>
     </head>
     <body>
     <?php get_nav() ?>

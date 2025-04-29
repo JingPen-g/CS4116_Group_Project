@@ -12,15 +12,39 @@ for (var i = 0; i < btns.length; i++) {
 }
 
 
-document.addEventListener("DOMContentLoaded", function() {
+/*document.addEventListener("DOMContentLoaded", function() {
     var acceptReject = document.getElementById("pending");
-    document.getElementById("accept").addEventListener("click", function() {
+    document.getElementById("accept").addEventListener("click", function(userId, otherId) {
+        var message = "ACCEPTED";
         alert("accepted");
         acceptReject.className = "pending-hidden";
-
+        fetch('/messaging', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                method: 'insertNewMessage',
+                userId: userId,
+                otherId: otherId,
+                message: message
+            })
+        })
+        .then(response => response.text())
+        .then(data => {
+            console.log('Response from PHP:', data);
+            document.getElementById("message").value = "";
+    
+            if (data.includes("Conversation must be accepted")) {
+                alert(data);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
         
     });
-});
+});*/
 document.getElementById("reject").addEventListener("click", function(){
     alert("rejected")
 
@@ -125,6 +149,80 @@ function openExisting(userId ,otherId) {
     });
 
 }
+function send_button(userId, otherId){
+    alert("button works");    
+    var message = document.getElementById("message").value;
+    console.log(message);
+
+    fetch('/messaging', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            method: 'insertNewMessage',
+            userId: userId,
+            otherId: otherId,
+            message: message
+        })
+    })
+    .then(response => response.text())
+    .then(data => {
+        console.log('Response from PHP:', data);
+        document.getElementById("message").value = "";
+
+        if (data.includes("Conversation must be accepted")) {
+            alert(data);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+    ('/messaging', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            method: 'genereate_convo;',
+            convo: userId
+        })
+    })
+    .then(response => response.text())
+    .then(data => {
+        console.log('Response from PHP:', data);
+        
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
 function report(){
 
+}
+function accept(userId, otherId) {
+    var acceptReject = document.getElementById("pending");
+    var message = "ACCEPTED";
+    alert("accepted");
+    acceptReject.className = "pending-hidden";
+    fetch('/messaging', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            method: 'insertNewMessage',
+            userId: userId,
+            otherId: otherId,
+            message: message
+        })
+    })
+    .then(response => response.text())
+    .then(data => {
+        console.log('Response from PHP:', data);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+    
 }
