@@ -145,13 +145,12 @@ async function displayUsers(data) {
 
         button.textContent = 'Ban User';
         if (Number(user.Banned) === 1) {
-            button.disabled = true;
-            button.classList.remove('btn-danger');
-            button.classList.add('btn-secondary');
-            button.textContent = 'Banned';
-        }
-        if (user.Users_ID) {
-            button.addEventListener('click', () => banRegularUser(button, user.Users_ID, 1));
+            button.textContent = 'Unban User';
+            button.onclick = () => banRegularUser(button, user.Users_ID, 0);
+        } else {
+            button.textContent = 'Ban User';
+            button.classList.add('btn-danger');
+            button.onclick = () => banRegularUser(button, user.Users_ID, 1);
         }
 
         row.querySelector('td:last-child').appendChild(button);
@@ -200,10 +199,17 @@ async function banRegularUser(button, userId, banned) {
     .then(response => response.json())
     .then(data => {
         if (data.status === 'success') {
-            button.disabled = true;
-            button.classList.remove('btn-danger');
-            button.classList.add('btn-secondary');
-            button.textContent = 'Banned';
+            const userId = data.Users_ID;
+            if (data.message === 'User banned successfully') {
+                button.textContent = 'Unban User';
+                button.style.backgroundColor = 'green';
+                button.onclick = () => banRegularUser(button, userId, 0);
+            } else if (data.message === 'User unbanned successfully') {
+                button.textContent = 'Ban User';
+                button.style.backgroundColor = '#dc3545';
+                button.onclick = () => banRegularUser(button, userId, 1);
+            }
+
         } else {
             alert('Failed to ban user.');
         }

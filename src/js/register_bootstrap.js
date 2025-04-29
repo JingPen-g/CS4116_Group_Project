@@ -57,7 +57,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 emailErr.textContent = 'You have already registered with this email.';
                 emailErr.style.setProperty('color', '#ff0000', 'important');
                 email.innerHTML = '';
-            } else {
+            } else if (data.message === "Invalid email format") {
+                emailErr.style.setProperty('color', '#ff0000', 'important');
+                emailErr.textContent = 'Invalid email format';
+            } else if (data.message === "Email not found") {
                 emailErr.style.setProperty('color', '#38CF63', 'important');
                 emailErr.textContent = 'Email is available';
             }

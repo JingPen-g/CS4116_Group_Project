@@ -115,13 +115,23 @@ if($_SERVER["REQUEST_METHOD"] == "GET") {
     }  elseif ($action === "banRegularUser") {
         $input = json_decode(file_get_contents("php://input"), true);
         $userId = $input['Users_ID'] ?? null;
-        $banned = 1;
+        $banned = $input['Banned'] ?? null;;
         $admin = 0;
         try {
             if ($userId) {
-                $user->updateUserBanned($userId, $banned, $admin);
-                echo json_encode(['status' => 'success']);
-                exit;
+                if ($banned == 1) {
+                    $user->updateUserBanned($userId, $banned, $admin);
+                    echo json_encode(['status' => 'success',
+                                            'message' => 'User banned successfully',
+                                            'Users_ID' => $userId]);
+                    exit;
+                } else {
+                    $user->updateUserBanned($userId, $banned, $admin);
+                    echo json_encode(['status' => 'success',
+                                            'message' => 'User unbanned successfully',
+                                            'Users_ID' => $userId]);
+                    exit;
+                }
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Invalid Message ID']);
                 exit;
