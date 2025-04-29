@@ -11,8 +11,11 @@ function get_nav(){
             <ul class="navbar-nav nav">
                 <li class="navbar-nav"><a href="search">Search</a></li>
             </ul>
+            <ul class="navbar-nav nav">
+                <li><a href="messaging"><span class="glyphicon glyphicon-log-out"></span> Messages</a></li>
+            </ul>
             <ul class="nav navbar-nav navbar-right">';
-
+            
             if (isset($_SESSION['username']) && !empty($_SESSION['username'])) {
                 echo '<li><a href="userprofile"><span class="glyphicon glyphicon-user"></span> ' . htmlspecialchars($_SESSION['username']) . '</a></li>';
                 echo '<li><a href="logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>';
