@@ -79,31 +79,30 @@ else if($_SERVER["REQUEST_METHOD"] == "POST"){
             $_SESSION['error_message'] = "";        
         }
 
-        $userData = $user->getUser($username);
+        $customerData = $user->getUser($username);
         $businessData = $business->getBusiness($username);
-        // if (empty($userData) && empty($businessData)) {
-        //     echo json_encode([
-        //         'status' => 'error',
-        //         'message' => 'Invalid username or password.' . $userData . $businessData
-        //     ]);
-        //     return;
-        // }
-        if ($userData || $businessData) {
-            $_SESSION['username'] = $username;
-            $_SESSION['passwordDatabase'] = $userData[0]['Password'] ?? $businessData[0]['Password'] ?? ""; 
-            $_SESSION['nameDatabase'] = $userData[0]['Name'] ?? $businessData[0]['Name'] ?? ""; 
-            $_SESSION['userData'] = $userData;
-            $_SESSION['businessData'] = $businessData;
-            if ($userData) {
-                $_SESSION['userType'] = "customer";
-            } else {
-                $_SESSION['userId'] = "business owner";
-            }
+
+        // Determine which one was found
+        if (!empty($customerData)) {
+            $userData = $customerData;
+            $userData[0]['usertype'] = 'customer';
+        } elseif (!empty($businessData)) {
+            $userData = $businessData;
+            $userData[0]['usertype'] = 'business owner';
+        } else {
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Invalid username or password.'
+            ]);
+            return;
         }
 
-        if (!empty($userData) && password_verify($password, $userData[0]['Password']) && $userData[0]['Admin'] == 1) {
+        // Store only one user array in the session
+        $_SESSION['userData'] = $userData;
+
+        if (!empty($userData) && password_verify($password, $userData[0]['Password']) && isset($userData[0]['Admin']) && $userData[0]['Admin'] == 1) {
             $_SESSION['admin_logged_in'] = true;
-            $_SESSION['userType'] = 'admin';
+            $_SESSION['usertype'] = 'admin';
             $_SESSION['username'] = $userData[0]['Name'];
             echo json_encode([                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
                 'status' => 'success',
@@ -113,24 +112,15 @@ else if($_SERVER["REQUEST_METHOD"] == "POST"){
             exit();
         }
 
-        if (!empty($businessData) && password_verify($password, $businessData[0]['Password'])) {
-            echo json_encode([
-                'status' => 'success',
-                'message' => 'Login successful! Redirecting you to the search page...',
-                'redirect' => '/search'
-            ]);
-            exit();
-        }
 
         if (!empty($userData) && password_verify($password, $userData[0]['Password'])) {
-            $_SESSION['username'] = $username;
             echo json_encode([
                 'status' => 'success',
                 'message' => 'Login successful! Redirecting you to the search page...',
                 'redirect' => '/search'
             ]);
             
-            exit();
+        exit();
             
         } else {
             echo json_encode([
@@ -203,28 +193,34 @@ else if($_SERVER["REQUEST_METHOD"] == "POST"){
         }
 
         if (empty($usertype)) {
-            $_SESSION['userTypeErr'] = "UserType is required";
+            $_SESSION['userTypeErr'] = "Usertype is required";
         } else {
             $_SESSION['userTypeErr'] = "";
         }
 
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-        $_SESSION['username'] = $username;
-        $_SESSION['password'] = $password;
-        $_SESSION['hashedpassword'] = $hashedPassword;
-        $_SESSION['usertype'] = $usertype;
 
         if ($usertype === "customer") {
             $registration_success = $user->insertUser($username, $email, $hashedPassword);
+            $customerData = $user->getUser($username);
         } else {
             $registration_success = $business->insertBusiness($username, $email, $hashedPassword);
+            $businessData = $business->getBusiness($username);
+        }
+        if (!empty($customerData)) {
+            $userData = $customerData;
+            $userData[0]['usertype'] = 'customer';
+        } elseif (!empty($businessData)) {
+            $userData = $businessData;
+            $userData[0]['usertype'] = 'business owner';
         }
         $_SESSION['registration_success'] = $registration_success;
         
         // If registration is successful (e.g., no errors in validation)
         if ($registration_success) {
             // to do - alert ("susccessful registration")
+            $_SESSION['userData'] = $userData;
             echo json_encode([
                 'status' => 'success',
                 'message' => 'Registration successful! Redirecting you to the search page...',

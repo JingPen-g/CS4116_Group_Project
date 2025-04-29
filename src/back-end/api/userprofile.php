@@ -18,29 +18,27 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
     $description = trim($_POST["description"] ?? "");
     $phone = trim($_POST["phone"] ?? "");
 
-    $username = $_SESSION['username'];
+    $username = $_SESSION['userData'][0]['Name'];
+    $_SESSION['I want to see username'] = $username;
     $description = test_input($description);
     $phone = test_input($phone);
 
     if (!empty($description)) {
-        $_SESSION['description'] = $description;
-        if ((isset($_SESSION['userId']) && $_SESSION['userId'] === "business owner") 
-        or (isset($_SESSION['usertype']) && $_SESSION['usertype'] === "business owner")) {
+        if (isset($_SESSION['userData'][0]) && $_SESSION['userData'][0]['usertype'] === "business owner") {
             $result = $business->updateDescription($username, $description);  
-        } else if (isset($_SESSION['userType']) && $_SESSION['userType'] === "customer"){
+        } else {
             $result = $user->updateDescription($username, $description);  
         }
+        $_SESSION['userData'][0]['Description'] = $description;
     }
         
     if (!empty($phone)) {
-        $_SESSION['phone'] = $phone;
-        if ((isset($_SESSION['userId']) && $_SESSION['userId'] === "business owner") 
-        or (isset($_SESSION['usertype']) && $_SESSION['usertype'] === "business owner")) {
+        if (isset($_SESSION['userData'][0]) && $_SESSION['userData'][0]['usertype'] === "business owner") {
             $result = $business->updatePhone($username, $phone);  
-        } else if (isset($_SESSION['userType']) && $_SESSION['userType'] === "customer"){
+        } else {
             $result = $user->updatePhone($username, $phone);
-
         }
+        $_SESSION['userData'][0]['Phone'] = $phone;
     }
 
     // Handle file upload
@@ -72,12 +70,13 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
                 $_SESSION['profile_picture'] = $_SESSION['profile_picture'] = "/uploads/" . $filename;
                 $_SESSION['target_file'] = $target_file;
                 $web_path = "/uploads/" . $filename;
-                if ((isset($_SESSION['userId']) && $_SESSION['userId'] === "business owner") 
-                or (isset($_SESSION['usertype']) && $_SESSION['usertype'] === "business owner")) {
+                if (isset($_SESSION['userData'][0]) && $_SESSION['userData'][0]['usertype'] === "business owner") {
                     $result = $business->updateProfilePicture($username, $web_path);
-                } else if (isset($_SESSION['userType']) && $_SESSION['userType'] === "customer"){
+                    $_SESSION['uploaded'] = $result;
+                } else {
                     $result = $user->updateProfilePicture($username, $web_path);
                 }
+                $_SESSION['userData'][0]['ProfilePicturePath'] = $web_path;
             } 
         }
 

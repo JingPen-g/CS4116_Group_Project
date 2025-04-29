@@ -24,6 +24,11 @@ crossorigin="anonymous">
 
     <?php 
        get_nav();
+
+       $profilePicture = isset($_SESSION['userData'][0]['ProfilePicturePath']) && !empty($_SESSION['userData'][0]['ProfilePicturePath'])
+        ? $_SESSION['userData'][0]['ProfilePicturePath']
+        : '../front-end/create-account/images/userprofile.jpeg';
+?>
     ?>
     <div class="container-fluid p-5 border main-bgcolor">
         <div class="row">
@@ -32,8 +37,8 @@ crossorigin="anonymous">
             <div class="p-4 border rounded-5 shadow custom-bd-color">
                 <div class="text-center">
                     <h4 class="text-center">User Profile</h4>
-                    <img src="../front-end/create-account//images/userprofile.jpeg" class="card-img-top rounded-circle mx-auto mt-3" style="width: 120px;" alt="Profile Picture">
-                    <h5>Username: <span class="text-muted"><?php if (!empty($_SESSION['username'])) echo htmlspecialchars($_SESSION['username']); ?></span></h5>
+                    <img src="<?php echo htmlspecialchars($profilePicture); ?>" class="card-img-top rounded-circle mx-auto mt-3" style="width: 120px;" alt="Profile Picture">
+                    <h5>Username: <span class="text-muted"><?php if (!empty($_SESSION['userData'])) echo htmlspecialchars($_SESSION['userData'][0]['Name']);?></span></h5>
                 </div>
             </div>
         </div>
@@ -49,12 +54,12 @@ crossorigin="anonymous">
                 <form action="/api/userprofile.php" method="POST" enctype="multipart/form-data">
                     <div class="mb-3">
                     <label for="description" class="form-label">Description</label>
-                    <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                    <textarea class="form-control" id="description" name="description" rows="3" ><?php if (!empty($_SESSION['userData'][0])) echo htmlspecialchars($_SESSION['userData'][0]['Description']);?></textarea>
                     </div>
 
                     <div class="mb-3">
                     <label for="phone" class="form-label">Phone Number</label>
-                    <input type="text" class="form-control" id="phone" name="phone">
+                    <input type="text" class="form-control" id="phone" name="phone" value="<?php if (!empty($_SESSION['userData'][0])) echo htmlspecialchars($_SESSION['userData'][0]['Phone']);?>">
                     </div>
 
                     <div class="mb-3">

@@ -18,8 +18,8 @@ function get_nav(){
             </ul>
             <ul class="nav navbar-nav navbar-right">';
             
-            if (isset($_SESSION['username']) && !empty($_SESSION['username'])) {
-                echo '<li><a href="userprofile"><span class="glyphicon glyphicon-user"></span> ' . htmlspecialchars($_SESSION['username']) . '</a></li>';
+            if (isset($_SESSION['userData'][0]['Name']) && !empty($_SESSION['userData'][0]['Name'])) {
+                echo '<li><a href="userprofile"><span class="glyphicon glyphicon-user"></span> ' . htmlspecialchars($_SESSION['userData'][0]['Name']) . '</a></li>';
                 echo '<li><a href="logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>';
             } else {
                 echo '<li><a href="register"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>';
