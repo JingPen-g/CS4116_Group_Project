@@ -49,34 +49,34 @@ document.addEventListener('DOMContentLoaded', function() {
         
     });
 });*/
-document.getElementById("reject").addEventListener("click", function(){
-    alert("rejected")
+// document.getElementById("reject").addEventListener("click", function(){
+//     alert("rejected")
 
-    fetch('/messaging', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            method: 'insertmessage',
-            userId: userId,
-            otherId: otherId,
-            message: message
-        })
-    })
-    .then(response => response.text())
-    .then(data => {
-        console.log('Response from PHP:', data);
+//     fetch('/messaging', {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json'
+//         },
+//         body: JSON.stringify({
+//             method: 'insertmessage',
+//             userId: userId,
+//             otherId: otherId,
+//             message: message
+//         })
+//     })
+//     .then(response => response.text())
+//     .then(data => {
+//         console.log('Response from PHP:', data);
         
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-    fetch()
+//     })
+//     .catch(error => {
+//         console.error('Error:', error);
+//     });
+//     fetch()
 
 
-}
-)
+// }
+// )
 
 document.getElementById("send_button").addEventListener("click", function(){
     alert("button works");
@@ -85,7 +85,7 @@ document.getElementById("send_button").addEventListener("click", function(){
     var message = document.getElementById("message").value;
     console.log(message);
 
-    fetch('/messaging', {
+    fetch('/api/messaging.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -109,7 +109,7 @@ document.getElementById("send_button").addEventListener("click", function(){
     .catch(error => {
         console.error('Error:', error);
     });
-    ('/messaging', {
+    fetch('/api/messaging.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -132,7 +132,7 @@ document.getElementById("send_button").addEventListener("click", function(){
 function openExisting(userId ,otherId) {
     alert("Button clicked with otherId: " + otherId);
 
-    fetch('/messaging', {
+    fetch('/api/messaging.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -170,21 +170,21 @@ function openExisting(userId ,otherId) {
                 message: message
             })
         })
-        .then(response => conaole.log(response.text()))
+        .then(response => console.log(response.text()))
         .then(data => {
             console.log('Response from PHP:', data);
             document.getElementById("message").value = "";
     
-            if (data.includes("Conversation must be accepted")) {
-                alert(data);
-            }
+            // if (data.includes("Conversation must be accepted")) {
+            //     alert(data);
+            // }
         })
         .catch(error => {
             console.error('Error:', error);
         });
     
         // Second fetch call
-        fetch('/messaging', {
+        fetch('/api/messaging.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -205,12 +205,12 @@ function openExisting(userId ,otherId) {
 function report(){
 
 }
-function accept(userId, otherId) {
+/*function accept(userId, otherId) {
     var acceptReject = document.getElementById("pending");
     var responseValue = 0; 
     //acceptReject.className = "pending-hidden";
 
-    fetch('/messaging.php', {
+    fetch('/api/messaging.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -239,7 +239,7 @@ function reject(userId, otherId) {
     var responseValue = 1; 
     acceptReject.className = "pending-hidden";
 
-    fetch('/messaging.php', {
+    fetch('/api/.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -262,4 +262,4 @@ function reject(userId, otherId) {
         console.error('Error:', error);
     });
     
-}
+}*/

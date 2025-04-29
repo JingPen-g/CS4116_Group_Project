@@ -57,6 +57,7 @@ class Model {
         }
 
         $query .= $customExtra;
+
         $stmt = $this->conn->prepare($query);
 
         if (!$stmt) {
