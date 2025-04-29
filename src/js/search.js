@@ -90,7 +90,12 @@ function displayAdvertisements(data) {
         input.type = 'hidden';
         input.name = 'Ad_ID';
         input.value = `${ad.Ad_ID}`;
+        const businessId = document.createElement('input');
+        businessId.type = 'hidden';
+        businessId.name = 'Business_ID';
+        businessId.value = `${ad.Business_ID}`;
         form.appendChild(input);
+        form.appendChild(businessId);
 
         adItem.appendChild(form);
 

@@ -10,35 +10,31 @@ replyToReviewButtons.forEach(function(btn){
 
         const userType = btn.dataset.userType;
 
-        if (userType == "business") {
             
-            const allReviewsTop = Array.from(document.getElementsByClassName("review-border-top"));
-            const allReviewsBottom = Array.from(document.getElementsByClassName("review-border-bottom"));
+        const allReviewsTop = Array.from(document.getElementsByClassName("review-border-top"));
+        const allReviewsBottom = Array.from(document.getElementsByClassName("review-border-bottom"));
 
-            allReviewsTop.forEach((reviewTopBorder) => {
-                //reviewTopBorder.style.backgroundColor = "#cccccc";
-                reviewTopBorder.style.opacity = "0.6";
-            });
-            allReviewsBottom.forEach((reviewBottomBorder) => {
-                //reviewBottomBorder.style.backgroundColor = "#cccccc";
-                reviewBottomBorder.style.opacity = "0.6";
-            });
+        allReviewsTop.forEach((reviewTopBorder) => {
+            //reviewTopBorder.style.backgroundColor = "#cccccc";
+            reviewTopBorder.style.opacity = "0.6";
+        });
+        allReviewsBottom.forEach((reviewBottomBorder) => {
+            //reviewBottomBorder.style.backgroundColor = "#cccccc";
+            reviewBottomBorder.style.opacity = "0.6";
+        });
 
-            const thisReviewTop = event.target.closest(".review-border-top");
-            const thisReviewBottom = allReviewsBottom[allReviewsTop.indexOf(thisReviewTop)];
-            //const thisReviewBottom = event.target.closest(".review-border-bottom");
-            thisReviewTop.style.opacity = "1";
-            thisReviewBottom.style.opacity = "1";
+        const thisReviewTop = event.target.closest(".review-border-top");
+        const thisReviewBottom = allReviewsBottom[allReviewsTop.indexOf(thisReviewTop)];
+        //const thisReviewBottom = event.target.closest(".review-border-bottom");
+        thisReviewTop.style.opacity = "1";
+        thisReviewBottom.style.opacity = "1";
 
-            var scrollTop = window.pageYOffset + btn.getBoundingClientRect().top - 30;
-            window.scrollTo(0,scrollTop);
-            document.documentElement.style.overflow = "hidden";
-            replyToReviewRow.style.display = "flex";
+        var scrollTop = window.pageYOffset + btn.getBoundingClientRect().top - 30;
+        window.scrollTo(0,scrollTop);
+        document.documentElement.style.overflow = "hidden";
+        replyToReviewRow.style.display = "flex";
 
-            replyToReview.dataset.reviewId = btn.dataset.reviewId;
-        }
-
-
+        replyToReview.dataset.reviewId = btn.dataset.reviewId;
     });
 });
 

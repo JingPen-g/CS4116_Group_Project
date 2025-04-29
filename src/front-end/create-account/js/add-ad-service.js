@@ -4,6 +4,7 @@ const addServiceLabelDropdown = document.getElementById('labels');
 
 var labelsAdded = new Array();
 const labelContainer = document.getElementById("label-container");
+const adLabelContainer = document.getElementById("ad-label-container");
 
 addServiceLabelDropdown.addEventListener('change', () => {
     console.log("hit");
@@ -91,4 +92,41 @@ addServiceSubmitButton.addEventListener('click', () => {
 
 
 
+});
+
+
+const addAdLabelDropdown = document.getElementById('adServices');
+addAdLabelDropdown.addEventListener('change', () => {
+    console.log("hit");
+    var labelExists = false;
+    labelsAdded.forEach((label) => {
+
+        if (addAdLabelDropdown.value == label || addAdLabelDropdown.value == "")
+            labelExists = true;
+    });
+
+    console.log(labelExists)
+    if (!labelExists) {
+        if (labelsAdded.length % 2 == 0) {
+
+            adLabelContainer.innerHTML += ' <div class="service-label-row"> <div class="service-label"> <h3 class="service-label-text">' + addAdLabelDropdown.value + '</h3> <button data-label="' + addAdLabelDropdown.value + '"class="add-service-remove-label" style="margin-left:10px">X</button> </div> </div>';
+        }else {
+            const labelRows = Array.from(adLabelContainer.querySelectorAll('div.service-label-row')); 
+            const lastRow = labelRows[labelRows.length - 1];
+            lastRow.innerHTML += '<div class="service-label"> <h3 class="service-label-text">' + addAdLabelDropdown.value + '</h3> <button data-label="' + addAdLabelDropdown.value + '"class="add-service-remove-label" style="margin-left:10px">X</button></div>';
+
+        }
+        console.log("hit: " + addAdLabelDropdown.value);
+        labelsAdded.push(addAdLabelDropdown.value);
+
+        const allCloseLableButtons = Array.from(document.querySelectorAll('button.add-service-remove-label'));
+        allCloseLableButtons.forEach((btn) => {
+            btn.addEventListener('click', () => {
+                btn.parentElement.remove();
+                labelsAdded = labelsAdded.filter(element => element !== btn.dataset.label); 
+
+            });
+        });
+    }
+    console.log(labelsAdded);
 });

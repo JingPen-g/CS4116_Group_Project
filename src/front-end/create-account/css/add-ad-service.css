@@ -67,6 +67,17 @@
 
 }
 
+#ad-label-container {
+    background-color: rgb(254 215 170 / var(--tw-bg-opacity, 1));
+    border: black 10px solid;
+    border-radius: 25px;
+    min-height: 10vh;
+    width: 100%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+
+}
+
 #add-service-submit-container {
 }
 

@@ -649,6 +649,5 @@ function acceptorReject($User){
 </div>
 <script type="application/javascript" src="js/messages.js"></script>
 
-
 </html>
 

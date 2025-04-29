@@ -128,6 +128,39 @@ crossorigin="anonymous">
                             </div>
                         </div>
 
+                        </div>
+
+                        <!-- Input Row 1 -->
+                        <div class="row">
+                            <!-- Labels -->
+                            <div class="col-4 form-col">
+
+                                <label for="text1">Service Name:</label>
+                                <label for="text2">Service Description:</label>
+                                <label for="number">Price:</label>
+                                <label for="dropdown">Labels:</label>
+                            </div>
+
+                            <!-- Values -->
+                            <div class="col-8 form-col">
+                                <!-- Service Name -->
+                                <input type="text" id="serviceName" name="serviceName" placeholder="Enter text here" required>
+
+                                <!-- Service Description -->
+                                <input type="text" id="serviceDescription" name="serviceDescription" placeholder="Enter more text" required>
+
+                                <!-- Price -->
+                                <input type="number" id="price" name="price" placeholder="Enter a number" min="0" required>
+
+                                <!-- Labels -->
+                                <select id="labels" name="labels" required>
+                                    <option value="" disabled selected>Select an option</option>
+                                    <option value="Giraffe">Giraffe</option>
+                                    <option value="Grooming">Grooming</option>
+                                </select>
+                            </div>
+                        </div>
+
                         
 
                         <!-- Label Container -->
@@ -169,6 +202,16 @@ crossorigin="anonymous">
                 <div class="col-8">
                     <div class="group-container" id="add-ad-service" style="padding-left: 10%; padding-right: 10%;">
 
+            </div>
+
+
+            <div class="row" style="height: 60vh; margin-top: 50px; margin-bottom: 50px">
+
+                <div class="col-2"></div>
+
+                <div class="col-8">
+                    <div class="group-container" id="add-ad-service" style="padding-left: 10%; padding-right: 10%;">
+
                     <!--<form action="/api/create-service.php" method="POST" enctype="multipart/form-data">-->
 
                          <!-- Add a Service -->
@@ -198,46 +241,48 @@ crossorigin="anonymous">
 
                                 <!-- Labels -->
                                 <select id="adServices" name="adServices" required>
-                                    <option value="" disabled selected>Select an option</option>';}
+				    <option value="" disabled selected>Select an option</option>';
+		}
         ?>
-                                    <?php 
+        <?php 
 
-        if (!empty($_SESSION['businessData'])) {
-                                        $ad_services_data = null;
-                                        function retreive_ad_services_data(){
+	if (!empty($_SESSION['businessData'])) {
+
+		$ad_services_data = null;
+
+                function retreive_ad_services_data(){
                                             
-                                            global $ad_services_data;
+			global $ad_services_data;
 
-                                            //Get Information on posted Ad_ID 
-                                            $_SERVER["REQUEST_METHOD"] = "POST";
-                                            $_POST['action'] = 'getAdvertServicesInformationBusiness';
-                                            $_POST['Business_ID'] = $_SESSION['businessData'][0]['Business_ID']; 
-                                            ob_start(); // read in data echoed from advertisement.php
-                                            include __DIR__ . '/../../back-end/api/advertisement.php';
-                                            $response = ob_get_clean();
+                       	//Get Information on posted Ad_ID 
+			$_SERVER["REQUEST_METHOD"] = "POST";
+			$_POST['action'] = 'getAdvertServicesInformationBusiness';
+			$_POST['Business_ID'] = $_SESSION['businessData'][0]['Business_ID']; 
+			ob_start(); // read in data echoed from advertisement.php
+			include __DIR__ . '/../../back-end/api/advertisement.php';
+			$response = ob_get_clean();
 
-                                            echo "<BR>RAW RESPONSE<BR>" . $response ."<BR><BR>RAW RESPONSE END<BR>";//testing
-                                            //Ensures a json object is contained in output
-                                            if ( str_contains($response, ']') && str_contains($response, '[') && strrpos($response, ']',0) > strrpos($response, '[',0) ) {
+			//echo "<BR>RAW RESPONSE<BR>" . $response ."<BR><BR>RAW RESPONSE END<BR>";//testing
+			//Ensures a json object is contained in output
+			if ( str_contains($response, ']') && str_contains($response, '[') && strrpos($response, ']',0) > strrpos($response, '[',0) ) {
 
-                                                $ad_services_data = substr($response, strrpos($response, '[', 0), ( strrpos($response, ']',0) - strrpos($response, '[', 0)) + 1 );
-                                                $ad_services_data = json_decode($ad_services_data);
-                                                //print_r($ad_services_data);//testing
-                                            }
-                                        }
+				$ad_services_data = substr($response, strrpos($response, '[', 0), ( strrpos($response, ']',0) - strrpos($response, '[', 0)) + 1 );
+				$ad_services_data = json_decode($ad_services_data);
+				//print_r($ad_services_data);//TESTING
+			}
+		}
 
-                                        retreive_ad_services_data();
-                                        print_r($ad_services_data);
-                                        foreach ($ad_services_data as $row) {
-                                            echo '<option value="' . $row->Service_ID . '">' . $row->Name . '</option>';
-                                        }
+		retreive_ad_services_data();
+		//print_r($ad_services_data); //TESTING
+		foreach ($ad_services_data as $row) {
+		    echo '<option value="' . $row->Service_ID . '">' . $row->Name . '</option>';
+		}
         }
-                                    ?>
+	?>
 
-<?php
-        if (!empty($_SESSION['businessData'])) {
-                                            echo ' 
-
+	<?php
+	if (!empty($_SESSION['businessData'])) {
+ 		echo '
                                 </select>
                             </div>
                         </div>
@@ -264,11 +309,8 @@ crossorigin="anonymous">
                 <div class="col-2"></div>
             </div>
             ';
-                                        }
-                                    ?>
-
-
-            
+      }
+      ?>
 
     </div>
 
