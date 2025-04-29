@@ -62,7 +62,7 @@ class Business extends Model {
     }
 
     public function getBusinessFromID($id) {
-        $this->find(["Business_ID" => $id]);
+        return $this->find(["Business_ID" => $id]);
     }
 
     public function getBusinessByEmail($email) {

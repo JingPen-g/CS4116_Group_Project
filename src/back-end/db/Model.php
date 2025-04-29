@@ -29,9 +29,11 @@ class Model {
         $values = [];
         $types = "";
 
+
         foreach ($criteria as $column => $value) {
             $conditions[] = "$column = ?";
             $values[] = &$criteria[$column];
+
 
             $types .= $this->decideType($value);
         }
@@ -111,10 +113,10 @@ class Model {
             throw new Exception("Prepare failed: " . $this->conn->error);
         }
 
-        // //echo "<BR>Statement type: " . gettype($stmt) . "<BR>";
-        // if (is_object($stmt)) {
-        //     echo "Statement class: " . get_class($stmt) . "<BR>";
-        // }
+        //echo "<BR>Statement type: " . gettype($stmt) . "<BR>";
+        //if (is_object($stmt)) {
+            //echo "Statement class: " . get_class($stmt) . "<BR>";
+        //}
 
         // Bind parameters
         if (!empty($values)) {

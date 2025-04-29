@@ -52,6 +52,8 @@ submitReview.addEventListener('click', () => {
 
     if (isValidUser())
         post_review(submitReviewComment.value, slider.value, '1', submitReviewServiceId.value);
+
+    window.location.reload();
 });
 
 //stars

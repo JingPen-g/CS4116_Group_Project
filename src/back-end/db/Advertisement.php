@@ -207,4 +207,8 @@ LIMIT 10 OFFSET 0;
         return $this->find(["Ad_ID" => $Ad_ID]);
     }
 
+    public function insertAd($serviceDetails){
+
+        return $this->insert($serviceDetails);
+    }
 }

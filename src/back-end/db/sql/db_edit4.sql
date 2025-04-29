@@ -1,0 +1,2 @@
+ALTER TABLE Review
+ADD Response VARCHAR(255);

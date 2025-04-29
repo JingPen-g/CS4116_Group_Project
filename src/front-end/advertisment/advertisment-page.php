@@ -46,7 +46,7 @@ if (!empty($_POST['Ad_ID'])) {
         global $ad_data;
 
         //Get Information on posted Ad_ID 
-        $_POST['method'] = 'getAdvertInformation';
+        $_POST['action'] = 'getAdvertInformation';
         ob_start(); // read in data echoed from advertisement.php
         include __DIR__ . '/../../back-end/api/advertisement.php';
         $response = ob_get_clean();
@@ -56,7 +56,6 @@ if (!empty($_POST['Ad_ID'])) {
 
         $ad_data = substr($response, strpos($response,"[",0), strlen($response) - 1);
         $ad_data = json_decode($ad_data);
-        //print_r($ad_data);//testing
     }
 
     /* retreive_ad_services_data 
@@ -70,21 +69,30 @@ if (!empty($_POST['Ad_ID'])) {
         global $ad_services_data;
         global $ad_data;
 
+        $serviceIds = $ad_data[0]->Service_IDs;
+        $serviceIds = substr($serviceIds, 1, strlen($serviceIds) -2);
+        $serviceIds = array_map('trim', explode(',', $serviceIds));
+        $serviceIds = array_map('intval', $serviceIds);
+
         //Get Information on posted Ad_ID 
-        $_POST['method'] = 'getAdvertServicesInformation';
+<<<<<<< Updated upstream
+        $_SERVER["REQUEST_METHOD"] = "POST";
+        $_POST['action'] = 'getAdvertServicesInformation';
+        $_POST['Service_IDs'] = json_encode($serviceIds);
+=======
+        $_POST['action'] = 'getAdvertServicesInformation';
         $_POST['Business_ID'] = $ad_data[0]->Business_ID; 
+>>>>>>> Stashed changes
         ob_start(); // read in data echoed from advertisement.php
         include __DIR__ . '/../../back-end/api/advertisement.php';
         $response = ob_get_clean();
 
         //echo "<BR>RAW RESPONSE<BR>" . $response ."<BR><BR>RAW RESPONSE END<BR>";//testing
         //Ensures a json object is contained in output
-        if ( str_contains($response, ']') && str_contains($response, '[') && strrpos($response, ']',0) > strrpos($response, '[',0) ) {
 
-            $ad_services_data = substr($response, strrpos($response, '[', 0), ( strrpos($response, ']',0) - strrpos($response, '[', 0)) + 1 );
-            $ad_services_data = json_decode($ad_services_data);
-            //print_r($ad_services_data);//testing
-        }
+        $ad_services_data = substr($response, strrpos($response, '[[', 0) , strrpos($response, ']]', 0) - strrpos($response, '[[', 0) + 2) ;
+
+        $ad_services_data = json_decode($ad_services_data);
     }
 
     retreive_ad_data();
@@ -101,7 +109,7 @@ if (!empty($_POST['Ad_ID'])) {
 
         $service_ids = [];
         foreach ($ad_services_data as $service) 
-            $service_ids[] = $service->Service_ID;
+            $service_ids[] = $service[0]->Service_ID;
         //print_r($service_ids);
 
         //Get Information on posted Ad_ID 
@@ -184,13 +192,14 @@ if (!empty($_POST['Ad_ID'])) {
         $response = ob_get_clean();
 
         //echo "<BR>RAW RESPONSE<BR>" . $response ."<BR><BR>RAW RESPONSE END<BR>";//testing
+
         //Ensures a json object is contained in output
         if ( str_contains($response, ']') && str_contains($response, '[') && strrpos($response, ']',0) > strrpos($response, '[',0) ) {
 
             $raw_business_data = substr($response, strrpos($response, '[', 0), ( strrpos($response, ']',0) - strrpos($response, '[', 0)) + 1 );
             $business_data = json_decode($raw_business_data);
-            //print_r($business_data);//testing
         }
+            //print_r($business_data);//testing
     }
     retreive_owning_business_data($ad_data);
 
@@ -234,7 +243,7 @@ if (!empty($_POST['Ad_ID'])) {
         $services_user_is_verifed_for = [];
 
         foreach ($ad_services_data as $service) {
-            $service_ids[] = $service->Service_ID;
+            $service_ids[] = $service[0]->Service_ID;
         }
         if (count($ad_services_data) == 0)
             $service_ids[0] = "empty";
@@ -294,8 +303,9 @@ if (!empty($_POST['Ad_ID'])) {
             if (!empty($_POST['Ad_ID'])) { //If ad was navigated to from the search page
                 //Headder
                 generate_advertisment_header($ad_data[0]->Name, $ad_data[0]->Description) ;
+
                 //Image Viewer
-                generate_service_image_viewer() ;
+                //generate_service_image_viewer() ;
 
                 //Display Services
                 generate_service_elements($ad_services_data);
@@ -304,7 +314,7 @@ if (!empty($_POST['Ad_ID'])) {
                 if ($review_data[0] == "empty")
                     generate_empty_review_section();
                 else
-                    generate_review_elements($review_data,$userType);
+                    generate_review_elements($review_data,$userType, $business_data);
 
                 generate_add_review_section($ad_services_data, $services_user_is_verifed_for);
 
@@ -333,7 +343,7 @@ if (!empty($_POST['Ad_ID'])) {
             <div id="overlayInner" class="transaction-container">
          
             <!-- Service Title And Price-->
-            <div id="titleAndPriceContainer">
+            <div id="titleAndPriceContainer" style="display: flex; flex-direction: row;">
                 <p id="serviceTitle">Service Name Name Name Namea more and more words and or words god damn this is a very long title for a service</p>
                 <h1 id="servicePrice">€10</h1>
                 <button class="tag-container" type="button" id="closeOverlayButton"><b><h3>X</h3></b></button>

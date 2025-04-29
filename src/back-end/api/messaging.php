@@ -37,6 +37,9 @@ else if($_SERVER["REQUEST_METHOD"] == "POST"){
 
     if(isset($_POST['method']) && $_POST['method'] === "insertmessage"){
         echo json_encode($messaging->insertMessage($_POST['otherId'], $_POST['userId'], $_POST['message']));
+    
+    }else if(isset($_POST['method']) && $_POST['method'] === "insertmessage"){
+        echo json_encode(genereate_convo($_POST['convo']));
     }else{
         echo json_encode(['error' => 'Method not defined this one' ]);
     }

@@ -13,7 +13,10 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
     if(isset($_GET['method']) && $_GET['method'] === "getBusniessOfId"){
 
         $business_id = $_GET['Business_ID'];
+        echo "here: " . $business_id;
         $business_row_data = $business->getBusinessFromID($business_id);
+
+        echo "<BR>here: " . $business_row_data . "<BR>";
 
         echo json_encode($business_row_data);
 

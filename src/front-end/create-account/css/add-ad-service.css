@@ -1,0 +1,89 @@
+#add-service {
+    border: 10px black solid;
+    border-radius: 25px;
+    background-color: rgb(251 146 60 / var(--tw-bg-opacity, 1));
+}
+
+#add-ad-service {
+    border: 10px black solid;
+    border-radius: 25px;
+    background-color: rgb(251 146 60 / var(--tw-bg-opacity, 1)) ;
+}
+
+.input {
+
+    margin-bottom: 10px;
+}
+
+#ad-service-submit-button {
+
+    background-color: rgb(96 165 250 / var(--tw-bg-opacity, 1));
+    border-radius: 25px;
+    width: 80%;
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    display: flex; 
+    justify-content: center; 
+    margin-bottom: 30px;
+}
+
+#ad-ad-submit-button {
+
+    background-color: rgb(96 165 250 / var(--tw-bg-opacity, 1));
+    border-radius: 25px;
+    width: 80%;
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    display: flex; 
+    justify-content: center; 
+    margin-bottom: 30px;
+}
+
+#ad-service-submit-button:hover {
+    background-color: rgb(37 99 235 / var(--tw-bg-opacity, 1));
+}
+
+.form-col {
+    display: flex;
+    flex-direction: column;
+}
+.form-col > input, label, select{
+    margin-bottom: 10px;
+    height: 30%;
+}
+
+#label-container {
+    background-color: rgb(254 215 170 / var(--tw-bg-opacity, 1));
+    border: black 10px solid;
+    border-radius: 25px;
+    min-height: 10vh;
+    width: 100%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+
+}
+
+#add-service-submit-container {
+}
+
+.service-label {
+    border: 10px black solid;
+    border-radius: 25px;
+    background-color: rgb(251 146 60 / var(--tw-bg-opacity, 1));
+    width: 45%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 2.5%;
+}
+
+.service-label-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
