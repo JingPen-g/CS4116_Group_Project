@@ -70,6 +70,21 @@ else if($_SERVER["REQUEST_METHOD"] == "POST"){
 
         echo json_encode($serviceInfo);
     }
+    else if (isset($_POST['action'] && $_POST['action'] == "insertAdvert") {
+	if !isset($_POST['name']) {
+	    echo "Failed to add ad since no name given"
+	    return "";
+	}
+
+    	$name = $_POST['name'];
+	$description = isset($_POST['description']) ? $_POST['description'] : "";
+	$service_ids = isset($_POST['service_ids']) ? $_POST['service_ids'] : "[]";
+	$business_id = isset($_SESSION["Business_ID"]) ? $_SESSION["Business_ID"] : 0; //From session
+	
+	$serviceDetails = ["Name" => $name, "Description" => $description, "Business_ID" => $business_id, "Label" => "{\"labels\": []}", "Service_IDs" => $service_ids];
+
+	$ad->insertAd($serviceDetails);
+    }
 } 
 else if($_SERVER["REQUEST_METHOD"] == "PUT"){
 
