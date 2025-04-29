@@ -6,7 +6,7 @@ $current_conversation = null; //[[Message1],[Message2]] Note: Message contains a
 $other_user_info = null;//Object represning a row
 include __DIR__ . '/../global/get-nav.php';
 $user = getUserId();
-$currentOther = 2;
+$currentOther = 65;
 /*
  * messaging.php
  * Functions:
@@ -63,16 +63,8 @@ function retreive_user_data($otherId){
  * @return nothing just sets global array $list_of_conversations which the [0] will be = empty if empty
  */
 function getUserId():string {
- /// THIS IS ThE PROBLEM 
-    $GLOBALS['user'] = isset($_SESSION['username']);
-    echo $GLOBALS['user'];
-    echo '<pre>';
-    //var_dump($_SESSION);
-    print_r($_SESSION);
-    echo '</pre>';
-    return isset($_SESSION['username']);
-    // this returns 1 right now
-
+    $GLOBALS['user'] = $_SESSION['userData'][0]['Users_ID'];
+    return isset($_SESSION['userData']['Users_ID']);
 }
 function getListOfConversations($userId) {
 
@@ -88,15 +80,15 @@ function getListOfConversations($userId) {
     $response = ob_get_clean();
 
     //Testing
-    //echo "<BR>RAW RESPONSE<BR>" . $response ."<BR><BR>RAW RESPONSE END<BR>";
-    /*
+    /*"<BR>RAW RESPONSE<BR>" . $response ."<BR><BR>RAW RESPONSE END<BR>";
+    
     $debug = explode("}",$response);
     foreach ($debug as $messagingRow) {
         echo "<BR>";
         print_r($messagingRow);
     }
-    echo "<BR>";
-     */
+    echo "<BR>";*/
+     
 
     //parse response
     if (str_contains(substr($response, strpos($response,'}',0), strlen($response) - strpos($response,'}',0)), "{")) {
@@ -110,7 +102,8 @@ function getListOfConversations($userId) {
         }
 
     } else
-        $list_of_conversations[0] = "empty";
+        echo "this is the problem";
+        $list_of_conversations[0] = ["64,65"];
 
 }
 
@@ -195,10 +188,10 @@ function sortMessages($currentConversation) {
  */
 function insertNewMessage($userId, $otherId, $message) {
 
-    if (getMessageCount($userId, $otherId) < 2) {
+    /*if (getMessageCount($userId, $otherId) < 2) {
         echo "Conversation must be accepted before you can send a message";        
         return -1;
-    }
+    }*/
         
 
     $_SERVER["REQUEST_METHOD"] = "PUT";
@@ -209,7 +202,7 @@ function insertNewMessage($userId, $otherId, $message) {
     ob_start(); // read in data echoed from advertisement.php
     include __dir__ . '/../../back-end/api/messaging.php';
     $response = ob_get_clean();
-
+    echo $response;
     //echo "<br>raw response<br>" . $response ."<br><br>raw response end<br>";//testing
 }
 
@@ -225,6 +218,8 @@ function inquire($userId, $otherId) {
     }else if(getmessagecount($userId, $otherId) == 0 ){
         // Starting a convo
         insertNewMessage($userId, $otherId, "PENDING");
+        acceptorReject($otherId);
+
     }else if(getmessagecount($userId, $otherId) == 1 ){
         acceptorReject($otherId);
     }
@@ -244,8 +239,10 @@ function responsdToInquiry($userId, $otherId, $response) {
 
     if ($response == 0)
         insertNewMessage($userId, $otherId, "ACCPETED");
+
     else if ($response == 1)
         insertNewMessage($userId, $otherId, "REJECTED");
+
     else
         return -1;
 }
@@ -277,7 +274,7 @@ function getMessageCount($userId, $otherId) {
 
 }function generate_convo_elements() {
     $userId = getUserId();
-    getListOfConversations($userId);
+    $GLOBALS['list_of_conversations'] = getListOfConversations($userId);
     $convos = $GLOBALS['list_of_conversations'];
     if($convos != null){
         foreach ($convos as $row) {
@@ -394,8 +391,8 @@ function acceptorReject($User){
     echo '<div class="pending" id="pending" >';
         echo '<p> Pending conversation from ' . $User .' Accept or Reject </p>';
         echo '<div class="make-an-offer-accept-or-reject-choice">';
-        echo '<button type="button" id="accept" class="accept">Accept</button>';
-        echo '<button type="button" id="reject" class="reject">Reject</button>';
+        echo "<button type='button' id='accept' onclick='accept(\"{$GLOBALS['user']}\", \"{$GLOBALS['currentOther']}\")'class='accept'>Accept</button>";
+        echo "<button type='button' id='reject' onclick='reject(\"{$GLOBALS['user']}\", \"{$GLOBALS['currentOther']}\")' class='reject'>Reject</button>";
         echo '</div>';
     echo '</div>';
 
