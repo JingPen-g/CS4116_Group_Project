@@ -7,7 +7,7 @@ include __DIR__ . '/../global/get-footer.php';
 include __DIR__ . '/../global/get-nav.php';
 
 $userType;
-//print_r($_SESSION);
+// print_r($_SESSION);
 
 $ad_data = null;
 $ad_services_data = null;
@@ -24,6 +24,8 @@ if (!empty($_POST['Ad_ID'])) {
         $userType = "not logged in";
     else if ($_SESSION['userType'] == "customer")
         $userType = "customer";
+    else if ($_SESSION['userType'] == "admin")
+        $userType = "admin";
     else if ($_SESSION['userType'] == 'business')
         if ($_SESSION['userData'][0]['Business_ID'] == $_POST['Ad_ID'])
             $userType = "business owner";
