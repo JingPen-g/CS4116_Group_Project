@@ -67,10 +67,13 @@ if($_SERVER["REQUEST_METHOD"] == "GET") {
 
         try {
             if ($reviewId) {
+                $_SESSION['reviewId'] = $reviewId;
                 $admins->updateReviewBanned($reviewId,$banned);
                 echo json_encode(['status' => 'success']);
+                exit;
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Invalid Review ID']);
+                exit;
             }
         } catch (Exception $e) {
             error_log('updateReviewBanned failed: ' . $e->getMessage());

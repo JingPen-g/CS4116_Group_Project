@@ -1,10 +1,7 @@
 <?php
-<<<<<<< Updated upstream
-=======
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
->>>>>>> Stashed changes
 require_once(__DIR__ . "/../db/Users.php");
 require_once(__DIR__ . "/../db/Business.php");
 

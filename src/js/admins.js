@@ -334,7 +334,7 @@ async function displayReviews(data) {
                 button.textContent = 'Removed';
             }
             
-            button.addEventListener('click', () => RemoveReview(button, message.Message_ID, 1));
+            button.addEventListener('click', () => RemoveReview(button, review.Review_ID, 1));
 
             row.querySelector('td:last-child').appendChild(button);
             tbody.appendChild(row);
