@@ -273,10 +273,7 @@ function inquire($userId, $otherId, $message) {
         // Starting a convo
         //insertNewMessage($userId, $otherId, "PENDING");
         //acceptorReject($otherId);
-<<<<<<< Updated upstream
-=======
-        insertNewMessage($userId, $otherId, "The Begining of your Conversation");
->>>>>>> Stashed changes
+        insertNewMessage($userId, $otherId, "The Begining of your conversation");
 
     }else if(getmessagecount($userId, $otherId) == 1 ){
         return 0;
@@ -425,13 +422,26 @@ function genereate_convo($convo){
     if(inquire($GLOBALS['user'], $convo, "") == -1){
         generate_existing($GLOBALS['user'],$convo);
     }
+    if(inquire($GLOBALS['user'], $convo, "") == -0){
+        generate_new_convo($convo);
+    }
 
 }
 function generate_new_convo($otherParty){
-    acceptorReject($otherParty);
+    //acceptorReject($otherParty);
+    global $list_of_conversations;
+    global $user;
+    $userId = $user;
+    getListOfConversations($userId);
+    getListOfConversations($userId);
+    global $currentOther;
+    global $current_conversation;
+    setCurrentConversation($userId,$currentOther);
 }
 function generate_pending_convo($otherParty){
     acceptorReject($otherParty);
+    
+    
 }
 function generate_existing($userId, $otherUser){
     global $list_of_conversations;
@@ -638,7 +648,7 @@ function acceptorReject($User){
 
 
                 <?php
-                 echo "<button id='send_button' onclick='send_button(\"{$GLOBALS['user']}\", \"{$GLOBALS['currentOther']}\")'>Send</button>";
+                 echo "<a href='messaging'><button id='send_button' onclick='send_button(\"{$GLOBALS['user']}\", \"{$GLOBALS['currentOther']}\")'>Send</button></a>";
                 ?>
 
             </div>
