@@ -148,6 +148,7 @@ function openExisting(userId ,otherId) {
         console.error('Error:', error);
     });
     console.log(otherId);
+    window.location.reload();
 }
 
 }
@@ -179,6 +180,7 @@ function openExisting(userId ,otherId) {
         .catch(error => {
             console.error('Error:', error);
         });
+        window.location.reload();
     }
 function report(){
 
@@ -210,6 +212,7 @@ function accept(userId, otherId) {
     .catch(error => {
         console.error('Error:', error);
     });
+    window.location.reload();
     
 }
 function reject(userId, otherId) {
@@ -239,5 +242,6 @@ function reject(userId, otherId) {
     .catch(error => {
         console.error('Error:', error);
     });
+    window.location.reload();
     
 }
