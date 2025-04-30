@@ -7,7 +7,7 @@ $other_user_info = null;//Object represning a row
 include __DIR__ . '/../global/get-nav.php';
 $user = getUserId();
 //$currentOther =57;
-$currentOther =50;
+$currentOther =64;
 $type = 'customer';
 
 /*
@@ -71,7 +71,7 @@ function getUserId():string {
         
         if (isset($_SESSION['userData'][0]['Users_ID'])) {
             $GLOBALS['user'] = $_SESSION['userData'][0]['Users_ID'];
-            return $_SESSION['userData']['Users_ID'];
+            return $_SESSION['userData'][0]['Users_ID'];
         }
         else if(isset($_SESSION['userData'][0]['Business_ID'])){
             global $type;
@@ -241,7 +241,6 @@ function inquire($userId, $otherId, $message) {
         // Starting a convo
         //insertNewMessage($userId, $otherId, "PENDING");
         //acceptorReject($otherId);
-        insertNewMessage($userId, $otherId, "PENDING");
         return 1;
 
     }else if(getmessagecount($userId, $otherId) == 1 ){
@@ -397,6 +396,8 @@ function genereate_convo($convo){
     }
     else if(inquire($GLOBALS['user'], $convo, "") == 0){
         // pending in the CONVO
+        echo "Test That its getting Here";
+        insertNewMessage($GLOBALS['user'], $convo, "PENDING");
         generate_new_convo($convo);
 
     }else if(inquire($GLOBALS['user'], $convo, "") == 1){
@@ -418,8 +419,16 @@ function generate_new_convo($otherParty){
     setCurrentConversation($userId,$currentOther);
     echo "TEST VALUE current-convo LINE 418";
     print_r($current_conversation);
-    acceptorReject($otherParty);
 
+
+    $sender = $current_conversation[0]['Sender_ID'];
+    if(strcmp($sender, string2: $userId) != 0){
+        acceptorReject($otherParty);
+    }
+    
+    else {
+        echo "Waiting for  \"$otherParty \"  to Respond";   
+    }
   // 0 messages We send a PENDING inquiry
   // 1 we need accept or Reject;
   // more than 2 Normal function like now
@@ -427,7 +436,7 @@ function generate_new_convo($otherParty){
 
 }
 function generate_pending_convo($otherParty){
-    acceptorReject($otherParty);
+    
     
     
 }
