@@ -1,7 +1,4 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
 
 //Global varriables 
 //Note: They must be set with the appropriate method call first
@@ -10,8 +7,6 @@ $current_conversation = null; //[[Message1],[Message2]] Note: Message contains a
 $other_user_info = null;//Object represning a row
 include __DIR__ . '/../global/get-nav.php';
 $user = getUserId();
-//$currentOther =57;
-$currentOther;
 $type = 'customer';
 
 /*
@@ -147,8 +142,6 @@ function setCurrentConversation($userId, $otherId) {
     ob_start(); // read in data echoed from advertisement.php
     include __DIR__ . '/../../back-end/api/messaging.php'; 
     $response = ob_get_clean();
-    global $currentOther;
-    $currentOther = $otherId;
     //Testing
     //echo "<BR>RAW RESPONSE<BR>" . $response ."<BR><BR>RAW RESPONSE END<BR>";
     /*
@@ -318,7 +311,7 @@ function getMessageCount($userId, $otherId) {
                     echo "</div>";
                 echo "</div>";
             echo "</div>";
-            echo "</>";
+        echo "</div>";
         }
     }else {
         echo "no current convos";
@@ -390,7 +383,9 @@ function one_message_recieve($message, $time){
 function genereate_convo($convo){
     // called by side button
     // needs to set everything else off
-    $GLOBALS['currentOther']=$convo;
+    if(isset($_SESSION['currentOther'])){
+
+    $_SESSION['currentOther']= $convo;
     global $type;
     $thisType = $type;
     setCurrentConversation($GLOBALS['user'],$convo);
@@ -413,6 +408,7 @@ function genereate_convo($convo){
         // accept / reject
         generate_pending_convo($convo);
     }
+    }
 }
 function generate_rejected(){
     
@@ -429,19 +425,19 @@ function generate_new_convo($otherParty){
     
     global $currentOther;
     global $current_conversation;
-    setCurrentConversation($userId,$currentOther);
+    setCurrentConversation($userId,$_SESSION['currentOther']);
 
 
-    $sender = $current_conversation[0]['Sender_ID'];
-    print_r($sender);
-    if(strcmp($sender, string2: $userId) != 0){
+    //$sender = $current_conversation[0]['Sender_ID'];
+    //print_r($sender);
+    /*if(strcmp($sender, string2: $userId) != 0){
         
         acceptorReject($otherParty);
     }
     
     else {
         echo "<div class='pending'> Waiting for  \"$otherParty \"  to Respond</div>";   
-    }
+    }*/
   // 0 messages We send a PENDING inquiry
   // 1 we need accept or Reject;
   // more than 2 Normal function like now
@@ -459,7 +455,7 @@ function generate_pending_convo($otherParty){
     
     global $currentOther;
     global $current_conversation;
-    setCurrentConversation($userId,$currentOther);
+    setCurrentConversation($userId,$_SESSION['currentOther']);
     print_r($current_conversation);
     $sender = ""; 
     /*foreach($current_conversation as $message){
@@ -483,7 +479,7 @@ function generate_existing($userId, $otherUser){
     getListOfConversations($userId);
     global $currentOther;
     global $current_conversation;
-    setCurrentConversation($userId,$currentOther);
+    setCurrentConversation($userId,$_SESSION['currentOther']);
 
     foreach($current_conversation as $message){
         $messageString =$message['Message']; 
@@ -504,8 +500,8 @@ function acceptorReject($User){
     echo '<div class="pending" id="pending" >';
         echo '<p> Pending conversation from ' . $User .' Accept or Reject </p>';
         echo '<div class="make-an-offer-accept-or-reject-choice">';
-        echo "<button type='button' id='accept' onclick='accept(\"{$GLOBALS['user']}\", \"{$GLOBALS['currentOther']}\")'class='accept'>Accept</button>";
-        echo "<button type='button' id='reject' onclick='reject(\"{$GLOBALS['user']}\", \"{$GLOBALS['currentOther']}\")' class='reject'>Reject</button>";
+        echo "<button type='button' id='accept' onclick='accept(\"{$GLOBALS['user']}\", \"{$_SESSION['currentOther']}\")'class='accept'>Accept</button>";
+        echo "<button type='button' id='reject' onclick='reject(\"{$GLOBALS['user']}\", \"{$_SESSION['currentOther']}\")' class='reject'>Reject</button>";
         echo '</div>';
     echo '</div>';
 
@@ -679,7 +675,7 @@ function acceptorReject($User){
             <table class='conversation' >
             <tbody style = image-item>
                 <?php
-                    genereate_convo($currentOther);
+                    genereate_convo($_SESSION['currentOther']);
                 ?>
                 </tbody>
             </table>
@@ -695,8 +691,7 @@ function acceptorReject($User){
         </div>
     </div>
 </div>
-</div>
 <script type="application/javascript" src="js/messages.js"></script>
-
+</div>
 </html>
 
