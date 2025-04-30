@@ -298,7 +298,6 @@ function getMessageCount($userId, $otherId) {
     global $user;
     getListOfConversations($user);
     global $current_conversations;
-    print_r($list_of_conversations);
     if($list_of_conversations != null){
         foreach ($list_of_conversations as $row) {
             $otherId = $row['Other_ID'];
@@ -307,7 +306,7 @@ function getMessageCount($userId, $otherId) {
                     echo "<div class=\"Convo-btn\">";
                         echo '<div style ="display: inline-block;>';
                         echo '<img src="user1.png" class="msgimg" />';
-                        echo '<button class="convo-button" onclick="openExisting(' . htmlspecialchars($userId) . ', ' . htmlspecialchars($otherId) . ')" style="padding: 10px;">' . htmlspecialchars($otherId) . '</button>';
+                        echo '<a href="messaging"><button class="convo-button" onclick="openExisting(' . htmlspecialchars($userId) . ', ' . htmlspecialchars($otherId) . ')" style="padding: 10px;">' . htmlspecialchars($otherId) . '</button></a>';
                     echo "</div>";
                 echo "</div>";
             echo "</div>";
@@ -683,8 +682,10 @@ function acceptorReject($User){
 
 
                 <?php
+                    if(isset($_SESSION['currentOther'])){
                     echo '<input type="message"  id="message" placeholder="Message" name="Message">';
-                    echo "<button id='send_button' onclick='send_button(\"{$GLOBALS['user']}\", \"{$_SESSION['currentOther']}\")'>Send</button>";
+                    echo "<a href='messaging'><button id='send_button' onclick='send_button(\"{$GLOBALS['user']}\", \"{$_SESSION['currentOther']}\")'>Send</button></a>";
+                    }
                 ?>
 
             </div>

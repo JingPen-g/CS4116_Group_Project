@@ -130,7 +130,6 @@ document.addEventListener('DOMContentLoaded', function() {
 })*/
 
 function openExisting(userId ,otherId) {
-    alert("Button clicked with otherId: " + otherId);
     if(otherId != null){
     fetch('/api/messaging.php', {
         method: 'PUT',
@@ -153,7 +152,6 @@ function openExisting(userId ,otherId) {
 
 }
     function send_button(userId, otherId) {
-        alert("button works");    
         var message = document.getElementById("message").value;
         console.log(message);
         console.log(userId);
