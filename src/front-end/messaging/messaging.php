@@ -680,12 +680,11 @@ function acceptorReject($User){
                 </tbody>
             </table>
             <div style="position: absolute; bottom: 10%; padding: 20px;">
-                <input type="message"  id="message" placeholder="Message" name="Message">
 
 
                 <?php
-                if(isset($_SESSION['currentOther']))
-                 echo "<a href='messaging'><button id='send_button' onclick='send_button(\"{$GLOBALS['user']}\", \"{$GLOBALS['currentOther']}\")'>Send</button>";
+                    echo '<input type="message"  id="message" placeholder="Message" name="Message">';
+                    echo "<button id='send_button' onclick='send_button(\"{$GLOBALS['user']}\", \"{$_SESSION['currentOther']}\")'>Send</button>";
                 ?>
 
             </div>
