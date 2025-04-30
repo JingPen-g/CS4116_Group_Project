@@ -1,13 +1,15 @@
 <?php
-require_once("../db/Labels.php");
+require_once(__DIR__ . "/../db/Labels.php");
 
-header('Content-Type: application/json');
+//header('Content-Type: application/json');
 
 $labels = new Labels();
 
 if($_SERVER["REQUEST_METHOD"] == "GET"){
     if(isset($_GET['method']) && $_GET['method'] === 'fetchAll'){
+
         $labelData = $labels->findAll();
+
         if ($labelData !== null) {
             echo json_encode($labelData);
         } else {

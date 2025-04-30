@@ -30,7 +30,7 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
     $serviceDetails["Price"] = $_POST['price']; 
     $serviceDetails["Label"] = '{"labels": "' . $_POST['labelString'] . '"}'; 
     $serviceDetails["Location"] = "Ireland"; 
-    $serviceDetails["Business_ID"] = $_SESSION['businessData'][0]['Business_ID'];
+    $serviceDetails["Business_ID"] = $_SESSION['userData'][0]['Business_ID'];
 
     echo $service->insertService($serviceDetails);
 

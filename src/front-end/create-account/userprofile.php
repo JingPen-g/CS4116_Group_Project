@@ -28,7 +28,7 @@ crossorigin="anonymous">
        $profilePicture = isset($_SESSION['userData'][0]['ProfilePicturePath']) && !empty($_SESSION['userData'][0]['ProfilePicturePath'])
         ? $_SESSION['userData'][0]['ProfilePicturePath']
         : '../front-end/create-account/images/userprofile.jpeg';
-    ?>
+?>
     <div class="container-fluid p-5 border main-bgcolor">
         <div class="row">
             <!-- userprofile --- regular users -->
@@ -87,9 +87,10 @@ crossorigin="anonymous">
         </div>
 
 
-<?php
-        if (!empty($_SESSION['businessData'])) {
-            echo '<div class="row" style="height: 60vh; margin-top: 50px; margin-bottom: 50px">
+        <!-- Add Service -->
+        <?php
+        if (!empty($_SESSION['userData']) && $_SESSION['userData'][0]["usertype"] == "business owner") {
+            echo '<div class="row" style="height: 120vh; margin-top: 50px; margin-bottom: 50px">
 
                 <div class="col-2"></div>
 
@@ -129,47 +130,46 @@ crossorigin="anonymous">
 
                                 <!-- Labels -->
                                 <select id="labels" name="labels" required>
-                                    <option value="" disabled selected>Select an option</option>
-                                    <option value="Giraffe">Giraffe</option>
-                                    <option value="Grooming">Grooming</option>
+<option value="" disabled selected>Select an option</option>
+                                ';}?>
+                    
+        <?php
+        if (!empty($_SESSION['userData']) && $_SESSION['userData'][0]["usertype"] == "business owner") {
+
+
+
+            $label_data = null;
+
+            function retreiveLables(){
+                                            
+                global $label_data;
+
+                //Get Information on posted Ad_ID 
+                $_SERVER["REQUEST_METHOD"] = "GET";
+                $_GET['method'] = 'fetchAll';
+                ob_start(); // read in data echoed from advertisement.php
+                include __DIR__ . '/../../back-end/api/tags.php';
+                $response = ob_get_clean();
+
+                //echo "<BR>RAW RESPONSE<BR>" . $response ."<BR><BR>RAW RESPONSE END<BR>";//testing
+                //Ensures a json object is contained in output
+                if ( str_contains($response, ']') && str_contains($response, '[') && strrpos($response, ']',0) > strrpos($response, '[',0) ) {
+
+                    $label_data = substr($response, strrpos($response, '[', 0), ( strrpos($response, ']',0) - strrpos($response, '[', 0)) + 1 );
+                    $label_data = json_decode($label_data);
+                    //print_r($ad_services_data);//TESTING
+                }
+            }
+
+            retreiveLables();
+            foreach ($label_data as $row) {
+                echo '<option value="' . $row->Description . '">' . $row->Description . '</option>';
+            }
+
+                                    echo '
                                 </select>
                             </div>
                         </div>
-
-                        </div>
-
-                        <!-- Input Row 1 -->
-                        <div class="row">
-                            <!-- Labels -->
-                            <div class="col-4 form-col">
-
-                                <label for="text1">Service Name:</label>
-                                <label for="text2">Service Description:</label>
-                                <label for="number">Price:</label>
-                                <label for="dropdown">Labels:</label>
-                            </div>
-
-                            <!-- Values -->
-                            <div class="col-8 form-col">
-                                <!-- Service Name -->
-                                <input type="text" id="serviceName" name="serviceName" placeholder="Enter text here" required>
-
-                                <!-- Service Description -->
-                                <input type="text" id="serviceDescription" name="serviceDescription" placeholder="Enter more text" required>
-
-                                <!-- Price -->
-                                <input type="number" id="price" name="price" placeholder="Enter a number" min="0" required>
-
-                                <!-- Labels -->
-                                <select id="labels" name="labels" required>
-                                    <option value="" disabled selected>Select an option</option>
-                                    <option value="Giraffe">Giraffe</option>
-                                    <option value="Grooming">Grooming</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        
 
                         <!-- Label Container -->
                         <div class="row">
@@ -177,43 +177,19 @@ crossorigin="anonymous">
                             </div>
                         </div>
 
-                        <!-- Input Row 2 
-                        <div class="row">
-        
-                            <div class="col-4 form-col">
-                                <label style="height: 100%" for="image">Upload an Image:</label>
-                            </div>
-
-                            <div class="col-8 form-col">
-                                 <input style="height: 100%" type="file" id="image" name="image" accept="image/*" required>
-                            </div>
-                        </div>
-                        -->
-
                          <!-- Submit Button -->
                         <div class="row" id="add-service-submit-container">
                             <div class="col-12">
                                  <button id="ad-service-submit-button" type="submit">Submit</button>
                             </div>
                         </div>
-
-                    <!--</form>-->
-                    </div>
-                </div>
-                <div class="col-2"></div>
-            </div>
-            
-            <div class="row" style="height: 60vh; margin-top: 50px; margin-bottom: 50px">
-
-                <div class="col-2"></div>
-
-                <div class="col-8">
-                    <div class="group-container" id="add-ad-service" style="padding-left: 10%; padding-right: 10%;">
-
-            </div>
+            </div>';}?>
 
 
-            <div class="row" style="height: 60vh; margin-top: 50px; margin-bottom: 50px">
+        <!-- Add Advertisment -->
+        <?php
+        if (!empty($_SESSION['userData']) && $_SESSION['userData'][0]["usertype"] == "business owner") {
+            echo '<div class="row" style="height: 60vh; margin-top: 50px; margin-bottom: 50px">
 
                 <div class="col-2"></div>
 
@@ -254,42 +230,41 @@ crossorigin="anonymous">
         ?>
         <?php 
 
-	if (!empty($_SESSION['businessData'])) {
+        if (!empty($_SESSION['userData']) && $_SESSION['userData'][0]["usertype"] == "business owner") {
 
-		$ad_services_data = null;
+            $ad_services_data = null;
 
-                function retreive_ad_services_data(){
+            function retreive_ad_services_data(){
                                             
-			global $ad_services_data;
+                global $ad_services_data;
 
-                       	//Get Information on posted Ad_ID 
-			$_SERVER["REQUEST_METHOD"] = "POST";
-			$_POST['action'] = 'getAdvertServicesInformationBusiness';
-			$_POST['Business_ID'] = $_SESSION['businessData'][0]['Business_ID']; 
-			ob_start(); // read in data echoed from advertisement.php
-			include __DIR__ . '/../../back-end/api/advertisement.php';
-			$response = ob_get_clean();
+                //Get Information on posted Ad_ID 
+                $_SERVER["REQUEST_METHOD"] = "POST";
+                $_POST['action'] = 'getAdvertServicesInformationBusiness';
+                $_POST['Business_ID'] = $_SESSION['userData'][0]['Business_ID']; 
+                ob_start(); // read in data echoed from advertisement.php
+                include __DIR__ . '/../../back-end/api/advertisement.php';
+                $response = ob_get_clean();
 
-			//echo "<BR>RAW RESPONSE<BR>" . $response ."<BR><BR>RAW RESPONSE END<BR>";//testing
-			//Ensures a json object is contained in output
-			if ( str_contains($response, ']') && str_contains($response, '[') && strrpos($response, ']',0) > strrpos($response, '[',0) ) {
+                //echo "<BR>RAW RESPONSE<BR>" . $response ."<BR><BR>RAW RESPONSE END<BR>";//testing
+                //Ensures a json object is contained in output
+                if ( str_contains($response, ']') && str_contains($response, '[') && strrpos($response, ']',0) > strrpos($response, '[',0) ) {
 
-				$ad_services_data = substr($response, strrpos($response, '[', 0), ( strrpos($response, ']',0) - strrpos($response, '[', 0)) + 1 );
-				$ad_services_data = json_decode($ad_services_data);
-				//print_r($ad_services_data);//TESTING
-			}
-		}
+                    $ad_services_data = substr($response, strrpos($response, '[', 0), ( strrpos($response, ']',0) - strrpos($response, '[', 0)) + 1 );
+                    $ad_services_data = json_decode($ad_services_data);
+                    //print_r($ad_services_data);//TESTING
+                }
+            }
 
-		retreive_ad_services_data();
-		//print_r($ad_services_data); //TESTING
-		foreach ($ad_services_data as $row) {
-		    echo '<option value="' . $row->Service_ID . '">' . $row->Name . '</option>';
-		}
+            retreive_ad_services_data();
+            foreach ($ad_services_data as $row) {
+                echo '<option data-service-id="'. $row->Service_ID . '" data-labels=\'' . $row->Label . '\'"value="' . $row->Name . '">' . $row->Name . '</option>';
+            }
         }
 	?>
 
 	<?php
-	if (!empty($_SESSION['businessData'])) {
+        if (!empty($_SESSION['userData']) && $_SESSION['userData'][0]["usertype"] == "business owner") {
  		echo '
                                 </select>
                             </div>
@@ -299,7 +274,7 @@ crossorigin="anonymous">
 
                         <!-- Label Container -->
                         <div class="row">
-                            <div class="col-12" id="label-container">
+                            <div class="col-12" id="ad-label-container">
                             </div>
                         </div>
 
