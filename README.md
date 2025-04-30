@@ -1,24 +1,28 @@
-# CS4116_Group_Project
+# 🐾 CS4116 Group Project: The Magical Pet Marketplace 🐉
 
-The following project is a marketplace for buisness to advertise all of their services related to animal care.
+Welcome to **The Magical Pet Marketplace**, a whimsical yet professional platform where businesses can advertise their pet grooming services. Whether you're looking to pamper your dog, fluff up your cat, or even groom your unicorn or dragon, we've got you covered! ✨
 
-## Set Up
+This project is part of our CS4116 coursework, and we hope you enjoy exploring this magical world of pet care.
 
-1. Once you have pulled the repo cd to the root directory of this project
-2. Run the following command to run the server
+![Frontpage Image](src/images/webpage.png)
 
-```
-docker-compose up
-```
+---
 
-3. You can then acces the site by opening your browser and entering the following
+## 🌟 About the Project
 
-```
-localhost 8080
-```
+The Magical Pet Marketplace is designed to be:
 
+- **Playful**: Catering to all pets, real and imaginary (yes, unicorns and dragons too! 🦄🐉).
+- **Professional**: Built with clean code and thoughtful design to meet the requirements of a school project.
+- **Functional**: A fully operational marketplace for businesses offering animal care services.
 
-## Documentation
+---
 
-All .excalidraw are intended to be viewed at the following url "https://excalidraw.com/"
+## 🛠️ Set Up
 
+To get the project running locally, follow these simple steps:
+
+1. **Clone the Repository**  
+   Pull the repository to your local machine:
+   ```bash
+   git clone https://github.com/your-repo-url.git
