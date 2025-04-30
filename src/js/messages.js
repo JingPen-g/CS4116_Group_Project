@@ -181,23 +181,6 @@ function openExisting(userId ,otherId) {
         .catch(error => {
             console.error('Error:', error);
         });
-    
-        // Second fetch call
-        fetch('/api/messaging.php', {
-            method: 'PUT',
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: JSON.stringify({
-                method: 'gen_convo',
-                convo: userId
-            })
-        })
-        .then(response => response.text())
-        .then(data => {
-            console.log('Response from PHP:', data);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
     }
 function report(){
 

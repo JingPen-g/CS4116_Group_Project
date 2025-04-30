@@ -66,24 +66,22 @@ function retreive_user_data($otherId){
  * @return nothing just sets global array $list_of_conversations which the [0] will be = empty if empty
  */
 function getUserId():string {
-        if(!empty($_SESSION['userData']) && $_SESSION['userData'][0]['Users_ID'] != null){
-            $GLOBALS['user'] = $_SESSION['userData'][0]['Users_ID'];
-            return isset($_SESSION['userData']['Users_ID']);
-        }
-        else if(empty($_SESSION['userData'])){
-            global $type;
-            echo $type;
-            $type = "business";
-            echo $type;
-            if(empty($_SESSION['userData']) && $_SESSION['businessData'][0]['Business_ID'] != null){
-                $GLOBALS['user'] = $_SESSION['businessData'][0]['Business_ID'];
 
-                print_r($_SESSION['businessData'][0]['Business_ID']);
-                return isset($_SESSION['businessData'][0]['Business_ID']);
+
+        
+        if (isset($_SESSION['userData'][0]['Users_ID'])) {
+            $GLOBALS['user'] = $_SESSION['userData'][0]['Users_ID'];
+            return $_SESSION['userData']['Users_ID'];
+        }
+        else if(isset($_SESSION['userData'][0]['Business_ID'])){
+            global $type;
+            $type = "business";
+            if($_SESSION['userData'][0]['Business_ID'] != null){
+                $GLOBALS['user'] = $_SESSION['userData'][0]['Business_ID'];
+                return $_SESSION['userData'][0]['Business_ID'];
             }
     }
     return "noUser";
-    return 64;
 }
 function getListOfConversations($userId) {
 
@@ -237,7 +235,7 @@ function inquire($userId, $otherId, $message) {
     
     if (getmessagecount($userId, $otherId) >= 2) {   
         return -1;
-        // NORMA: OPERATIONS
+        // NORMAL OPERATIONS
 
     }else if(getmessagecount($userId, $otherId) == 0 ){
         // Starting a convo
@@ -402,7 +400,8 @@ function genereate_convo($convo){
         generate_new_convo($convo);
 
     }else if(inquire($GLOBALS['user'], $convo, "") == 1){
-
+        // accept / reject
+        generate_pending_convo($convo);
     }
 }
 function generate_new_convo($otherParty){
@@ -450,7 +449,7 @@ function generate_existing($userId, $otherUser){
         }else{
             $sender = false;
         }
-        if(strcmp($messageString, "PENDING") != 0 || strcmp($messageString, "ACCEPT123") != 0|| strcmp($messageString, "ACCEPT123") != 0){
+        if(strcmp($messageString, "PENDING") != 0 && strcmp($messageString, "ACCEPT123") !=0 &&  strcmp($messageString, "ACCEPT123") != 0){
             generate_message($messageString,$time,$sender);
         }
     }
