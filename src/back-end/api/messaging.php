@@ -2,7 +2,7 @@
 //session_start();
 
 require_once(__DIR__ . "/../db/Messaging.php");
-
+session_start();
 
 $messaging = new Messaging();
 
@@ -37,24 +37,27 @@ else if($_SERVER["REQUEST_METHOD"] == "POST"){
     if(isset($_POST['method']) && $_POST['method'] === "insertmessage"){
         echo json_encode($messaging->insertMessage($_POST['otherId'], $_POST['userId'], $_POST['message']));
     
-    }else if(isset($_POST['method']) && $_POST['method'] === "gen_convo"){
-        echo json_encode(genereate_convo($_POST['convo']));
-    }else{
+    }
+    else{
         echo json_encode(['error' => 'Method not defined this one' ]);
     }
     
 } 
 else if($_SERVER["REQUEST_METHOD"] == "PUT"){
-
+    parse_str(file_get_contents("php://input"), $_PUT);
     print_r($_PUT);
     if(isset($_PUT['method']) && $_PUT['method'] === "insertmessage"){
 
         echo json_encode($messaging->insertMessage($_PUT['otherId'], $_PUT['userId'], $_PUT['message']));
 
-    }else if(isset($_PUT['method']) && $_PUT['method'] === "gen_convo"){
-        echo json_encode(genereate_convo($_PUT['convo']));
+    }else if($_PUT['method'] === "not"){
+            echo"it gets here";
+            print_r($_SESSION);
+            $_SESSION['currentOther'] = $_PUT['otherId'];
+            echo $_SESSION['currentOther'];
+            echo json_encode(['success' => true, 'currentOther' => $_SESSION['currentOther']]);
     
-    }else {
+    }else{
 
         echo json_encode(['error' => 'Method not defined for PUT in Messaging']);
     }

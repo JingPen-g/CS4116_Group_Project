@@ -11,7 +11,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const userId = this.getAttribute('data-user-id');
             const otherId = this.getAttribute('data-other-id');
             openExisting(userId, otherId);
-
         });
     });
 });
@@ -132,24 +131,25 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function openExisting(userId ,otherId) {
     alert("Button clicked with otherId: " + otherId);
-
+    if(otherId != null){
     fetch('/api/messaging.php', {
         method: 'PUT',
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: JSON.stringify({
-            method: 'setCurrentConversation',
-            userId: userId,
-            otherId: otherId
-        })
+            body: new URLSearchParams({
+                method: 'not',
+                userId: userId,
+                otherId: otherId,
+            }),
     })
     .then(response => response.text())
     .then(data => {
-        console.log('Response from PHP:', data);
-        
+        console.log('Response from PHP:', data); 
     })
     .catch(error => {
         console.error('Error:', error);
     });
+    console.log(otherId);
+}
 
 }
     function send_button(userId, otherId) {
