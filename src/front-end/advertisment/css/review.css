@@ -84,7 +84,7 @@
 }
 .review-border-bottom {
     position: relative;
-    z-index: 100;
+    z-index: 1 !important;
     background-color: #a3cae7;
     border-radius: 0px 0px 25px 25px ;
     margin: 10px 10px 10px 10px;
@@ -95,7 +95,7 @@
 }
 .review-border-top {
     position: relative;
-    z-index: 100;
+    z-index: 1 !important;
     background-color: #a3cae7;
     border-radius: 25px 25px 0px 0px;
     margin: 10px 10px 10px 10px;

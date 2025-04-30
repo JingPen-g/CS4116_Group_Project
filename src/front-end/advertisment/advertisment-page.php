@@ -338,10 +338,6 @@ if (!empty($_POST['Ad_ID'])) {
             <div id="serviceDescription">
                 <p style=" margin: 0 auto;max-height: 100%">Word Paws &amp; Shine, we believe every pet deserves to look and feel their best! Our comprehensive pet grooming service is designed to provide a safe, stress-free, and enjoyable experience for your furry friends. Whether your pet needs a quick touch-up or a full spa day, our experienced groomers are here to pam
             </div>
-            <!-- Service Image -->
-            <div style="display: flex; flex-direction: row; width: 100%;height: 40vh; align-items: center;padding-right: 20%; padding-left: 20%;margin-top: 5%">
-                <img id="mainPhoto" alt="service image" src="../front-end/advertisment/images/hello.jpg">
-            </div>
             <!-- Payment/Messaging -->
             <div id="paymentAndServiceInquiryContainer">
                 <button class="tag-container" type="button" id="payment"><b><h3>Pay</h3></b></button>
