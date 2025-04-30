@@ -674,6 +674,7 @@ function acceptorReject($User){
             <table class='conversation' >
             <tbody style = image-item>
                 <?php
+                    if(isset($_SESSION['currentOther']))
                     genereate_convo($_SESSION['currentOther']);
                 ?>
                 </tbody>
@@ -683,6 +684,7 @@ function acceptorReject($User){
 
 
                 <?php
+                if(isset($_SESSION['currentOther']))
                  echo "<a href='messaging'><button id='send_button' onclick='send_button(\"{$GLOBALS['user']}\", \"{$GLOBALS['currentOther']}\")'>Send</button>";
                 ?>
 
