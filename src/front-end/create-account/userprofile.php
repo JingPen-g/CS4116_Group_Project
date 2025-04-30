@@ -28,7 +28,6 @@ crossorigin="anonymous">
        $profilePicture = isset($_SESSION['userData'][0]['ProfilePicturePath']) && !empty($_SESSION['userData'][0]['ProfilePicturePath'])
         ? $_SESSION['userData'][0]['ProfilePicturePath']
         : '../front-end/create-account/images/userprofile.jpeg';
-?>
     ?>
     <div class="container-fluid p-5 border main-bgcolor">
         <div class="row">
@@ -65,6 +64,15 @@ crossorigin="anonymous">
                     <div class="mb-3">
                     <label for="profilePic" class="form-label">Profile Picture</label>
                     <input class="form-control" type="file" id="profilePic" name="profile_picture">
+                    </div>
+
+                    <div class="me-2">
+                        <small id="meter-text" class="text-danger">
+                            <?php if (isset($_SESSION['fileTypeError'])) {
+                                echo htmlspecialchars($_SESSION['fileTypeError']);
+                                unset($_SESSION['fileTypeError']);
+                            } ?>
+                        </small>
                     </div>
 
                     <button type="submit" class="btn btn-primary">Update Profile</button>

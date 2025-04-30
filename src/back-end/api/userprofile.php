@@ -52,8 +52,10 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
             $_SESSION['file write'] =  "Uploads dir is NOT writable!";
         }
 
-        $target_file = $target_dir . basename($_FILES["profile_picture"]["name"]);
-        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+        $imageFileType = strtolower(pathinfo($_FILES["profile_picture"]["name"], PATHINFO_EXTENSION));
+        $filename = uniqid("profile_", true) . "." . $imageFileType;
+        $target_file = $target_dir . $filename;
+
         $_SESSION['file name'] = "Uploaded file name: " . $_FILES["profile_picture"]["name"];
         $_SESSION['extension'] = "Detected extension: " . $imageFileType;
         if ($_FILES['profile_picture']['size'] > 5 * 1024 * 1024) {
@@ -62,8 +64,6 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
         if (!in_array($imageFileType, ["jpg", "jpeg", "png", "gif"])) {
             $_SESSION['fileTypeError'] = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
         } else {
-
-            $_SESSION['fileTypeError'] = "no type error";
             $filename = uniqid("profile_", true) . "." . $imageFileType;
             $target_file = $target_dir . $filename;
             if (move_uploaded_file($_FILES["profile_picture"]["tmp_name"], $target_file)) {
@@ -75,9 +75,13 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
                     $_SESSION['uploaded'] = $result;
                 } else {
                     $result = $user->updateProfilePicture($username, $web_path);
+                    $_SESSION['uploaded'] = $result;
                 }
                 $_SESSION['userData'][0]['ProfilePicturePath'] = $web_path;
+            } else {
+                $_SESSION['fileTypeError'] = "Failed to move uploaded file.";
             } 
+            
         }
 
         
