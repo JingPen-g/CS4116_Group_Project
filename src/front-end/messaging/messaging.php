@@ -1,4 +1,8 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 //Global varriables 
 //Note: They must be set with the appropriate method call first
 $list_of_conversations = null; //[index => "Other_ID"]
@@ -7,7 +11,7 @@ $other_user_info = null;//Object represning a row
 include __DIR__ . '/../global/get-nav.php';
 $user = getUserId();
 //$currentOther =57;
-$currentOther =19;
+$currentOther;
 $type = 'customer';
 
 /*
@@ -310,7 +314,7 @@ function getMessageCount($userId, $otherId) {
                     echo "<div class=\"Convo-btn\">";
                         echo '<div style ="display: inline-block;>';
                         echo '<img src="user1.png" class="msgimg" />';
-                        echo '<button class="convo-button" onclick=fun data-user-id="' . htmlspecialchars($userId) . '" data-other-id="' . htmlspecialchars($otherId) . '" style="padding: 10px;">' . htmlspecialchars($otherId) . '</button>';
+                        echo '<button class="convo-button" onclick="openExisting(' . htmlspecialchars($userId) . ', ' . htmlspecialchars($otherId) . ')" style="padding: 10px;">' . htmlspecialchars($otherId) . '</button>';
                     echo "</div>";
                 echo "</div>";
             echo "</div>";
@@ -402,7 +406,6 @@ function genereate_convo($convo){
     }
     else if(inquire($GLOBALS['user'], $convo, "") == 0){
         // pending in the CONVO
-        echo "Test That its getting Here";
         insertNewMessage($GLOBALS['user'], $convo, "PENDING");
         generate_new_convo($convo);
 
@@ -457,10 +460,11 @@ function generate_pending_convo($otherParty){
     global $currentOther;
     global $current_conversation;
     setCurrentConversation($userId,$currentOther);
-
-
-    $sender = $current_conversation[0]['Sender_ID'];
-    print_r($sender);
+    print_r($current_conversation);
+    $sender = ""; 
+    /*foreach($current_conversation as $message){
+        $sender= $message['Sender_ID'];
+    }
     if(strcmp($sender, string2: $userId) != 0){
         
         acceptorReject($otherParty);
@@ -468,7 +472,7 @@ function generate_pending_convo($otherParty){
     
     else {
         echo "<div class='pending'> Waiting for  \"$otherParty \"  to Respond</div>";   
-    }
+    }*/
 
     
 }
@@ -648,11 +652,16 @@ function acceptorReject($User){
                 float: right;
                 width: 46%;
             }
+        .navbar{
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
      
     </style>
 
 </head>
-    <div style= >
+    <div style="navbar" >
         <?php get_nav() ?>
     </div>
 <div id="header"></div>
@@ -679,7 +688,7 @@ function acceptorReject($User){
 
 
                 <?php
-                 echo "<button id='send_button' onclick='send_button(\"{$GLOBALS['user']}\", \"{$GLOBALS['currentOther']}\")'>Send</button>";
+                 echo "<a href='messaging'><button id='send_button' onclick='send_button(\"{$GLOBALS['user']}\", \"{$GLOBALS['currentOther']}\")'>Send</button>";
                 ?>
 
             </div>
