@@ -7,7 +7,7 @@ $other_user_info = null;//Object represning a row
 include __DIR__ . '/../global/get-nav.php';
 $user = getUserId();
 //$currentOther =57;
-$currentOther =64;
+$currentOther =19;
 $type = 'customer';
 
 /*
@@ -233,7 +233,7 @@ function insertNewMessage($userId, $otherId, $message) {
  */
 function inquire($userId, $otherId, $message) {
     
-    if (getmessagecount($userId, $otherId) >= 2) {   
+    if (getmessagecount($userId, $otherId) > 2) {   
         return -1;
         // NORMAL OPERATIONS
 
@@ -301,6 +301,8 @@ function getMessageCount($userId, $otherId) {
     global $user;
     getListOfConversations($user);
     global $current_conversations;
+    echo "Next is all convos";
+    print_r($list_of_conversations);
     if($list_of_conversations != null){
         foreach ($list_of_conversations as $row) {
             $otherId = $row['Other_ID'];
@@ -389,9 +391,14 @@ function genereate_convo($convo){
     global $type;
     $thisType = $type;
     setCurrentConversation($GLOBALS['user'],$convo);
-
+    global $current_conversation;
     if(inquire($GLOBALS['user'], $convo, "") == -1){
-        generate_existing($GLOBALS['user'],$convo);
+        $message = $current_conversation[1]['Message'];
+        if(strcmp($message, "REJECTED123") != 0){
+            generate_existing($GLOBALS['user'],$convo);
+        }else{
+            generate_rejected();
+        }
         // "Normal Convo";
     }
     else if(inquire($GLOBALS['user'], $convo, "") == 0){
@@ -405,6 +412,10 @@ function genereate_convo($convo){
         generate_pending_convo($convo);
     }
 }
+function generate_rejected(){
+    
+    echo "<div class='pending'> Rejected </div>";   
+}
 function generate_new_convo($otherParty){
     //acceptorReject($otherParty);
     global $list_of_conversations;
@@ -417,17 +428,17 @@ function generate_new_convo($otherParty){
     global $currentOther;
     global $current_conversation;
     setCurrentConversation($userId,$currentOther);
-    echo "TEST VALUE current-convo LINE 418";
-    print_r($current_conversation);
 
 
     $sender = $current_conversation[0]['Sender_ID'];
+    print_r($sender);
     if(strcmp($sender, string2: $userId) != 0){
+        
         acceptorReject($otherParty);
     }
     
     else {
-        echo "Waiting for  \"$otherParty \"  to Respond";   
+        echo "<div class='pending'> Waiting for  \"$otherParty \"  to Respond</div>";   
     }
   // 0 messages We send a PENDING inquiry
   // 1 we need accept or Reject;
@@ -437,7 +448,21 @@ function generate_new_convo($otherParty){
 }
 function generate_pending_convo($otherParty){
     
+    global $list_of_conversations;
+    global $user;
     
+    $userId = $user;
+    
+    getListOfConversations($userId);
+    
+    global $currentOther;
+    global $current_conversation;
+    setCurrentConversation($userId,$currentOther);
+
+
+    $sender = $current_conversation[0]['Sender_ID'];
+    print_r($sender);
+
     
 }
 function generate_existing($userId, $otherUser){
@@ -458,7 +483,7 @@ function generate_existing($userId, $otherUser){
         }else{
             $sender = false;
         }
-        if(strcmp($messageString, "PENDING") != 0 && strcmp($messageString, "ACCEPT123") !=0 &&  strcmp($messageString, "ACCEPT123") != 0){
+        if(strcmp($messageString, "PENDING") != 0 && strcmp($messageString, "ACCEPTED123") !=0 &&  strcmp($messageString, "REJECTED123") != 0){
             generate_message($messageString,$time,$sender);
         }
     }

@@ -188,26 +188,26 @@ function report(){
 function accept(userId, otherId) {
     var acceptReject = document.getElementById("pending");
     var responseValue = 0; 
-    //acceptReject.className = "pending-hidden";
+    acceptReject.className = "pending-hidden";
 
     fetch('/api/messaging.php', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            method: 'responsdToInquiry',
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+            method: 'insertmessage',
             userId: userId,
             otherId: otherId,
-            response: responseValue
-        })
+            message: "ACCEPTED123"
+        }),
     })
-    .then(response => response.text())
+    .then(response => console.log(response.text()))
     .then(data => {
         console.log('Response from PHP:', data);
-        if (data.includes("Inquiry has not been sent yet")) {
-            alert(data);
-        }
+        document.getElementById("message").value = "";
+
+        // if (data.includes("Conversation must be accepted")) {
+        //     alert(data);
+        // }
     })
     .catch(error => {
         console.error('Error:', error);
@@ -219,24 +219,24 @@ function reject(userId, otherId) {
     var responseValue = 1; 
     acceptReject.className = "pending-hidden";
 
-    fetch('/api/.php', {
+    fetch('/api/messaging.php', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            method: 'responsdToInquiry',
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+            method: 'insertmessage',
             userId: userId,
             otherId: otherId,
-            response: responseValue
-        })
+            message: "REJECTED123"
+        }),
     })
-    .then(response => response.text())
+    .then(response => console.log(response.text()))
     .then(data => {
         console.log('Response from PHP:', data);
-        if (data.includes("Inquiry has not been sent yet")) {
-            alert(data);
-        }
+        document.getElementById("message").value = "";
+
+        // if (data.includes("Conversation must be accepted")) {
+        //     alert(data);
+        // }
     })
     .catch(error => {
         console.error('Error:', error);
