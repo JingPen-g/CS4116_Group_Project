@@ -255,6 +255,19 @@ if (!empty($_POST['Ad_ID'])) {
     }
     user_verification_data('1', $ad_services_data);
 }
+
+// Determine the userId dynamically
+$userId = null; // Default value if not logged in
+
+if (isset($_SESSION['userData'])) {
+    if (!empty($_SESSION['userData'][0]['Business_ID'])) {
+        // User is logged in as a business
+        $userId = $_SESSION['userData'][0]['Business_ID'];
+    } elseif (!empty($_SESSION['userData'][0]['Users_ID'])) {
+        // User is logged in as a regular user
+        $userId = $_SESSION['userData'][0]['Users_ID'];
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -402,9 +415,11 @@ if (!empty($_POST['Ad_ID'])) {
     <!-- scripts -->
     <script>
     async function inquireEntity() {
+        let userid = 
+
         const payload = {
             method: "insertmessage",
-            userId: "<?php echo $_SESSION['userData'][0]['Users_ID']; ?>",
+            userId: "<?php echo $userId; ?>",
             otherId: "<?php echo $business_data[0]->Business_ID; ?>",
             message: "PENDING"
         };
@@ -439,7 +454,7 @@ if (!empty($_POST['Ad_ID'])) {
     async function inquireUser(reviewUserID) {
         const payload = {
             method: "insertmessage",
-            userId: "<?php echo $_SESSION['userData'][0]['Users_ID']; ?>",
+            userId: "<?php echo $userId; ?>",
             otherId: reviewUserID,
             message: "PENDING"
         };

@@ -143,6 +143,35 @@ crossorigin="anonymous">
             justify-content: flex-end; 
         }
 
+        /* Style for the ad description */
+        .ad-item-description {
+            position: relative;
+        }
+
+        .ad-description {
+            display: -webkit-box;
+            -webkit-line-clamp: 3; /* Show only 3 lines initially */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: all 0.3s ease;
+        }
+
+        /* Expand the description on hover */
+        .ad-item-description:hover .ad-description {
+            -webkit-line-clamp: unset; /* Remove line clamp */
+            overflow: visible;
+        }
+
+        /* Style for the "Read More" label */
+        .read-more-btn {
+            color: blue;
+            cursor: pointer;
+            text-decoration: underline;
+            margin-top: 10px;
+            display: inline-block;
+        }
+
     </style>
 </head>
 <body class="min-h-screen">
