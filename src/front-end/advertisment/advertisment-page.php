@@ -7,7 +7,7 @@ include __DIR__ . '/../global/get-footer.php';
 include __DIR__ . '/../global/get-nav.php';
 
 $userType;
-// print_r($_SESSION);
+//  _r($_SESSION);
 
 $ad_data = null;
 $ad_services_data = null;
@@ -43,10 +43,11 @@ if (!empty($_POST['Ad_ID'])) {
         include __DIR__ . '/../../back-end/api/advertisement.php';
         $response = ob_get_clean();
 
-        //echo "<BR>RAW RESPONSE<BR>" . $response ."<BR><BR>RAW RESPONSE END<BR>";//testing
+        // echo "<BR>RAW RESPONSE<BR>" . $response ."<BR><BR>RAW RESPONSE END<BR>";//testing
         //Ensures a json object is contained in output
 
-        $ad_data = substr($response, strpos($response,"[",0), strlen($response) - 1);
+        $ad_data = substr($response, strpos($response,"[",0), strlen($response));
+        
         $ad_data = json_decode($ad_data);
     }
 
@@ -60,7 +61,6 @@ if (!empty($_POST['Ad_ID'])) {
         
         global $ad_services_data;
         global $ad_data;
-
         $serviceIds = $ad_data[0]->Service_IDs;
         $serviceIds = substr($serviceIds, 1, strlen($serviceIds) -2);
         $serviceIds = array_map('trim', explode(',', $serviceIds));
@@ -73,7 +73,7 @@ if (!empty($_POST['Ad_ID'])) {
         ob_start(); // read in data echoed from advertisement.php
         include __DIR__ . '/../../back-end/api/advertisement.php';
         $response = ob_get_clean();
-
+        
         //echo "<BR>RAW RESPONSE<BR>" . $response ."<BR><BR>RAW RESPONSE END<BR>";//testing
         //Ensures a json object is contained in output
 
@@ -97,7 +97,6 @@ if (!empty($_POST['Ad_ID'])) {
         $service_ids = [];
         foreach ($ad_services_data as $service) 
             $service_ids[] = $service[0]->Service_ID;
-        //print_r($service_ids);
 
         //Get Information on posted Ad_ID 
         $_SERVER["REQUEST_METHOD"] = "GET";
@@ -411,8 +410,6 @@ if (isset($_SESSION['userData'])) {
     <!-- scripts -->
     <script>
     async function inquireEntity() {
-        let userid = 
-
         const payload = {
             method: "insertmessage",
             userId: "<?php echo $userId; ?>",

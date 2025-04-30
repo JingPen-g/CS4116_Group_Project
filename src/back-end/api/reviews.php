@@ -13,7 +13,7 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
     if(isset($_GET['method']) && $_GET['method'] === "getReviewsOfServiceId"){
 
         $service_ids = $_GET['service_ids'];
-        print_r($service_ids);
+        print_r($service_ids); 
         $reviews = $review->getReviewsOfServiceId($service_ids);
 
         echo json_encode($reviews);

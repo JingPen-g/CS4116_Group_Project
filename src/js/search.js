@@ -75,7 +75,7 @@ function displayAdvertisements(data) {
             <h3 class="text-xl text-orange-400 font-bold mt-10" style="margin-top: 5%">${ad.Name}</h3>
             <div class="ad-item-description">
                 <p class="text-gray-600 mt-2 ad-description">${ad.Description}</p>
-                <p class="read-more-btn">Read More</p>
+                
             </div>
             <div class="ad-item-tags">
                 <p class="text-gray-600  mt-2" >Tags: ${tags}</p>
