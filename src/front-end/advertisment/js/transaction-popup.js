@@ -50,7 +50,7 @@ button.forEach(function(currentBtn){
         //Set the variables in overlay html
         overlay.innerHTML = `
             <div id="overlayInner" class="transaction-container">
-            <div id="transaction_data" data-value="<?php echo htmlspecailchars(${servicePrice},${serviceId}, ${businessId}, ${userId}); ?>></div>
+            <div id="transaction_data" data-value="<?php echo htmlspecailchars(${servicePrice},${serviceId}, ${businessId}, ${userId}); ?>"></div>
          
             <!-- Service Title And Price-->
             <div id="titleAndPriceContainer">
@@ -61,10 +61,6 @@ button.forEach(function(currentBtn){
             <!-- Service Description -->
             <div id="serviceDescription">
                 <p style=" margin: 0 auto;max-height: 100%">${serviceDescription}</p>
-            </div>
-            <!-- Service Image -->
-            <div style="display: flex; flex-direction: row; width: 100%;height: 40vh; align-items: center;padding-right: 20%; padding-left: 20%;margin-top: 5%">
-                <img id="mainPhoto" alt="service image" src="${serviceImagePath}">
             </div>
             <!-- Payment/Messaging -->
             <div id="paymentAndServiceInquiryContainer">
@@ -181,8 +177,10 @@ button.forEach(function(currentBtn){
             transactionComplete.classList.toggle('visible')
 
         });
+
         //Exit Payment Confirmation 
         exitPaymentConfirmation.addEventListener('click', () => {
+            console.log("hit");
 
             document.documentElement.style.overflow = "visible";
             document.body.style.top = `0px`;
