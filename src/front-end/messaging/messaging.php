@@ -301,7 +301,6 @@ function getMessageCount($userId, $otherId) {
     global $user;
     getListOfConversations($user);
     global $current_conversations;
-    echo "Next is all convos";
     print_r($list_of_conversations);
     if($list_of_conversations != null){
         foreach ($list_of_conversations as $row) {
@@ -462,6 +461,14 @@ function generate_pending_convo($otherParty){
 
     $sender = $current_conversation[0]['Sender_ID'];
     print_r($sender);
+    if(strcmp($sender, string2: $userId) != 0){
+        
+        acceptorReject($otherParty);
+    }
+    
+    else {
+        echo "<div class='pending'> Waiting for  \"$otherParty \"  to Respond</div>";   
+    }
 
     
 }
