@@ -268,7 +268,7 @@ if (!empty($_POST['Ad_ID'])) {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, inital-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>advertisment</title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
@@ -304,7 +304,6 @@ if (!empty($_POST['Ad_ID'])) {
 
                 //Display Services
                 generate_service_elements($ad_services_data);
-
                 //Reviews
                 if ($review_data[0] == "empty")
                     generate_empty_review_section();
@@ -407,12 +406,47 @@ if (!empty($_POST['Ad_ID'])) {
         </div>
 
 
+
     <!-- scripts -->
+    <script>
+    async function inquireEntity() {
+        const payload = {
+            method: "insertmessage",
+            userId: "<?php echo $_SESSION['userData'][0]['Users_ID']; ?>",
+            otherId: "<?php echo $business_data[0]->Business_ID; ?>",
+            message: "PENDING"
+        };
+
+        try {
+            // Convert the payload to a URL-encoded string
+            const urlEncodedPayload = new URLSearchParams(payload).toString();
+
+            // Send the request
+            const response = await fetch('/api/messaging.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: urlEncodedPayload // Use the URL-encoded string as the body
+            });
+
+            // Check if the response is OK
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            // Parse and log the response data
+            const data = await response.json();
+            console.log('Success:', data);
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+    </script>
     <script src="../front-end/advertisment/js/image-viewer.js"></script>
     <script src="../front-end/global/js/global-margin.js"></script>
     <script src="../front-end/advertisment/js/transaction-popup.js"></script>
     <script src="../front-end/advertisment/js/review.js"></script>
     <script src="../front-end/advertisment/js/review-reply.js"></script>
-
 </body>
 </html>

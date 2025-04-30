@@ -76,11 +76,7 @@ function generate_review_elements($review_data, $userType, $businessId) {
             </div>';
 
 
-<<<<<<< Updated upstream
             //print_r($row);
-=======
-            print_r($row);
->>>>>>> Stashed changes
             if ($row->Response)
 
                 echo '<!-- Business Response Container-->

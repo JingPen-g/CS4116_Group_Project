@@ -192,6 +192,11 @@ button.forEach(function(currentBtn){
                 });
         });
 
+        document.getElementById('serviceInquiry').addEventListener('click', () => {
+            console.log("in");
+            inquireEntity();
+        });
+
         //Bring up pop up
         overlay.classList.toggle('visible');
         document.documentElement.style.overflow = "hidden";

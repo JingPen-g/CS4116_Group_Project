@@ -34,7 +34,6 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
 } 
 else if($_SERVER["REQUEST_METHOD"] == "POST"){
 
-    print_r($_POST);
     if(isset($_POST['method']) && $_POST['method'] === "insertmessage"){
         echo json_encode($messaging->insertMessage($_POST['otherId'], $_POST['userId'], $_POST['message']));
     
