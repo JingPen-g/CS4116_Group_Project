@@ -26,7 +26,6 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
 
     $serviceDetails["Name"] = $_POST['serviceName']; 
     $serviceDetails["Description"] = $_POST['serviceDescription']; 
-    $serviceDetails["Business_ID"] = 2; 
     $serviceDetails["Price"] = $_POST['price']; 
     $serviceDetails["Label"] = '{"labels": "' . $_POST['labelString'] . '"}'; 
     $serviceDetails["Location"] = "Ireland"; 

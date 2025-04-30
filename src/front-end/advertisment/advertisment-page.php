@@ -47,7 +47,6 @@ if (!empty($_POST['Ad_ID'])) {
         //Ensures a json object is contained in output
 
         $ad_data = substr($response, strpos($response,"[",0), strlen($response));
-        
         $ad_data = json_decode($ad_data);
     }
 
@@ -65,7 +64,6 @@ if (!empty($_POST['Ad_ID'])) {
         $serviceIds = substr($serviceIds, 1, strlen($serviceIds) -2);
         $serviceIds = array_map('trim', explode(',', $serviceIds));
         $serviceIds = array_map('intval', $serviceIds);
-
         //Get Information on posted Ad_ID 
         $_SERVER["REQUEST_METHOD"] = "POST";
         $_POST['action'] = 'getAdvertServicesInformation';
@@ -73,7 +71,6 @@ if (!empty($_POST['Ad_ID'])) {
         ob_start(); // read in data echoed from advertisement.php
         include __DIR__ . '/../../back-end/api/advertisement.php';
         $response = ob_get_clean();
-        
         //echo "<BR>RAW RESPONSE<BR>" . $response ."<BR><BR>RAW RESPONSE END<BR>";//testing
         //Ensures a json object is contained in output
 

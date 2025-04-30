@@ -83,8 +83,9 @@ else if($_SERVER["REQUEST_METHOD"] == "POST"){
         $service_ids = isset($_POST['service_ids']) ? $_POST['service_ids'] : "[]";
         $labels = isset($_POST['labels']) ? $_POST['labels'] : "[]";
         $business_id = $_SESSION["userData"][0]["Business_ID"]; //From session
+        $imagepath = "/images/image1.svg";
         
-        $serviceDetails = ["Name" => $name, "Description" => $description, "Business_ID" => $business_id, "Label" => $labels, "Service_IDs" => json_encode($service_ids)];
+        $serviceDetails = ["Name" => $name, "Description" => $description, "Business_ID" => $business_id, "Label" => $labels, "Service_IDs" => json_encode($service_ids), "ImagePath" => $imagepath ];
 
         $val = $ad->insertAd($serviceDetails);
         echo json_encode($val);

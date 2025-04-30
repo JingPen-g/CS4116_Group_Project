@@ -1,5 +1,5 @@
 let currentPage = 1;
-const pageSize = 10; // Number of ads per page
+const pageSize = 9; // Number of ads per page
 
 document.getElementById('search-button').addEventListener('click', () => {
     currentPage = 1;
@@ -108,7 +108,7 @@ function displayAdvertisements(data) {
 
     // Update pagination controls
     document.getElementById('prev-page').disabled = currentPage === 1;
-    document.getElementById('next-page').disabled = !data.hasMore;
+    //document.getElementById('next-page').disabled = !data.hasMore;
     document.getElementById('page-info').textContent = `Page ${currentPage}`;
 }
 
