@@ -20,21 +20,13 @@ $services_user_is_verifed_for = null;
 
 if (!empty($_POST['Ad_ID'])) {
 
-    if (empty($_SESSION['userType'])) 
-        $userType = "not logged in";
-    else if ($_SESSION['userType'] == "customer")
-        $userType = "customer";
-    else if ($_SESSION['userType'] == "admin")
-        $userType = "admin";
-    else if ($_SESSION['userType'] == 'business')
-        if ($_SESSION['userData'][0]['Business_ID'] == $_POST['Ad_ID'])
-            $userType = "business owner";
-        else
-            $userType = "business";
-    else {
-        $userType = "error determining user type";
-        echo "error determining user type";
-    }
+    if (empty($_SESSION['userData'])) 
+        $userType = "none";
+    else if ($_SESSION['userData'][0]["Business_ID"] == $_POST['Business_ID'])
+        $userType = "this business owner"; 
+    else 
+        $userType = $_SESSION['userData'][0]["usertype"];
+
 
 
     /* retreive_ad_data 

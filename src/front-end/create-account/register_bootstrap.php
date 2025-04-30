@@ -94,7 +94,7 @@ crossorigin="anonymous">
                         <label for="email" class="text-black-50">Enter email</label>
                     </div>
                     <div class="me-2">
-                        <small id="emailErr" class="text-danger"><?php if (!empty($emailErr)) echo htmlspecialchars($emailErr); ?></small>
+                        <small id="emailErr" class="text-danger"><?php if (!empty($_SESSION['$emailErr'])) echo htmlspecialchars($_SESSION['$emailErr']); ?></small>
                     </div>
                     <div class="mb-3 mt-3">
                         <label class="text-dark mb-1 mt-1">Select User Type:</label>
@@ -108,7 +108,7 @@ crossorigin="anonymous">
                         </div>
                     </div>
                     <div class="me-2">
-                        <small id="error_message_radio" class="text-danger"><?php if (!empty($userTypeErr)) echo htmlspecialchars($userTypeErr); ?></small>
+                        <small id="error_message_radio" class="text-danger"><?php if (!empty($_SESSION['userTypeErr'])) echo htmlspecialchars($_SESSION['userTypeErr']); ?></small>
                     </div>
                     <button id="register" type="submit" class="btn btn-primary">Register</button>
                     <div class="form-floating mb-3 mt-3">

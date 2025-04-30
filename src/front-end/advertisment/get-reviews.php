@@ -39,9 +39,9 @@ function generate_review_elements($review_data, $userType, $businessId) {
                             <!-- Message User -->
                             <div class="col-4 grey">
                                 <div class="review-message-user">';
-        if ($userType == "user")
+        if ($userType == "customer" || $userType == "business owner")
             echo                    '<button class="review-submit-message-request" type="button">Message User</button>';
-        else if ($userType == "business owner")
+        else if ($userType == "this business owner")
             echo                    '<button class="review-submit-message-request" type="button" data-user-type="business" data-review-id="' . $row->Review_ID . '">Reply to review</button>';
 
         echo                    '</div>
@@ -76,7 +76,6 @@ function generate_review_elements($review_data, $userType, $businessId) {
             </div>';
 
 
-            //print_r($row);
             if ($row->Response)
 
                 echo '<!-- Business Response Container-->

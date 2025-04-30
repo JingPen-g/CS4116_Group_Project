@@ -27,6 +27,13 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
         $email = $_GET['email'];
         $uniqueUserEmail = $user->getUserByEmail($email);
         $uniqueBusinessEmail = $business->getBusinessByEmail($email);
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Invalid email format'
+            ]);
+            exit;
+        }
         if ($uniqueUserEmail || $uniqueBusinessEmail) {
             echo json_encode([
                 'status' => 'success',
@@ -34,7 +41,7 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
             ]);
             exit;
         } else {
-            echo json_encode(['error' => 'Email not found']);
+            echo json_encode(['message' => 'Email not found']);
         }
 
     } else if(isset($_GET['usercount']) && $_GET['usercount'] == 1){

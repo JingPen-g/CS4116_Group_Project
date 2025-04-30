@@ -181,28 +181,11 @@ function openExisting(userId ,otherId) {
         .catch(error => {
             console.error('Error:', error);
         });
-    
-        // Second fetch call
-        fetch('/api/messaging.php', {
-            method: 'PUT',
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: JSON.stringify({
-                method: 'gen_convo',
-                convo: userId
-            })
-        })
-        .then(response => response.text())
-        .then(data => {
-            console.log('Response from PHP:', data);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
     }
 function report(){
 
 }
-/*function accept(userId, otherId) {
+function accept(userId, otherId) {
     var acceptReject = document.getElementById("pending");
     var responseValue = 0; 
     //acceptReject.className = "pending-hidden";
@@ -259,4 +242,4 @@ function reject(userId, otherId) {
         console.error('Error:', error);
     });
     
-}*/
+}

@@ -18,7 +18,7 @@ class Service extends Model {
     }
 
     public function getAdvertServicesInformation($Business_ID){
-        return $this->find( customWhere: "Business_ID = " . $Business_ID);
+        return $this->find(["Business_ID" => $Business_ID]);
     }
     public function insertService($serviceDetails){
 
