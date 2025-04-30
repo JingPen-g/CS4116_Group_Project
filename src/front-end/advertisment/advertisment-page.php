@@ -22,7 +22,7 @@ if (!empty($_POST['Ad_ID'])) {
 
     if (empty($_SESSION['userData'])) 
         $userType = "none";
-    else if ($_SESSION['userData'][0]["Business_ID"] == $_POST['Business_ID'])
+    else if (!empty($_SESSION['userData'][0]["Business_ID"]) && $_SESSION['userData'][0]["Business_ID"] = $_POST['Business_ID'])
         $userType = "this business owner"; 
     else 
         $userType = $_SESSION['userData'][0]["usertype"];
@@ -430,6 +430,42 @@ if (!empty($_POST['Ad_ID'])) {
             // Parse and log the response data
             const data = await response.json();
             console.log('Success:', data);
+            window.location.href = "/messaging";
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    async function inquireUser(reviewUserID) {
+        const payload = {
+            method: "insertmessage",
+            userId: "<?php echo $_SESSION['userData'][0]['Users_ID']; ?>",
+            otherId: reviewUserID,
+            message: "PENDING"
+        };
+
+        try {
+            // Convert the payload to a URL-encoded string
+            const urlEncodedPayload = new URLSearchParams(payload).toString();
+
+            // Send the request
+            const response = await fetch('/api/messaging.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: urlEncodedPayload // Use the URL-encoded string as the body
+            });
+
+            // Check if the response is OK
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            // Parse and log the response data
+            const data = await response.json();
+            console.log('Success:', data);
+            window.location.href = "/messaging";
         } catch (error) {
             console.error('Error:', error);
         }

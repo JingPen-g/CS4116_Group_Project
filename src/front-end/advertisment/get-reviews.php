@@ -40,7 +40,7 @@ function generate_review_elements($review_data, $userType, $businessId) {
                             <div class="col-4 grey">
                                 <div class="review-message-user">';
         if ($userType == "customer" || $userType == "business owner")
-            echo                    '<button class="review-submit-message-request" type="button">Message User</button>';
+            echo                    '<button class="review-submit-message-request" onclick = "inquireUser(' . $row->Users_ID . ')" type="button">Message User</button>';
         else if ($userType == "this business owner")
             echo                    '<button class="review-submit-message-request" type="button" data-user-type="business" data-review-id="' . $row->Review_ID . '">Reply to review</button>';
 
