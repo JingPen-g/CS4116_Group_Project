@@ -456,7 +456,6 @@ function generate_pending_convo($otherParty){
     global $currentOther;
     global $current_conversation;
     setCurrentConversation($userId,$_SESSION['currentOther']);
-    print_r($current_conversation);
     $sender = ""; 
     /*foreach($current_conversation as $message){
         $sender= $message['Sender_ID'];
