@@ -401,7 +401,9 @@ function genereate_convo($convo){
     else if(inquire($GLOBALS['user'], $convo, "") == 0){
         // pending in the CONVO
         insertNewMessage($GLOBALS['user'], $convo, "PENDING");
+        $_SESSION['currentOther']=$convo;
         generate_new_convo($convo);
+        
 
     }else if(inquire($GLOBALS['user'], $convo, "") == 1){
         // accept / reject
@@ -427,16 +429,16 @@ function generate_new_convo($otherParty){
     setCurrentConversation($userId,$_SESSION['currentOther']);
 
 
-    //$sender = $current_conversation[0]['Sender_ID'];
-    //print_r($sender);
-    /*if(strcmp($sender, string2: $userId) != 0){
+    $sender = $current_conversation[0]['Sender_ID'];
+    print_r($sender);
+    if(strcmp($sender, string2: $userId) != 0){
         
         acceptorReject($otherParty);
     }
     
     else {
         echo "<div class='pending'> Waiting for  \"$otherParty \"  to Respond</div>";   
-    }*/
+    }
   // 0 messages We send a PENDING inquiry
   // 1 we need accept or Reject;
   // more than 2 Normal function like now
