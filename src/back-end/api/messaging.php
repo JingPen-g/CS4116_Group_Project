@@ -47,14 +47,12 @@ else if($_SERVER["REQUEST_METHOD"] == "POST"){
 } 
 else if($_SERVER["REQUEST_METHOD"] == "PUT"){
     parse_str(file_get_contents("php://input"), $_PUT);
-    print_r($_PUT);
     if(isset($_PUT['method']) && $_PUT['method'] === "insertmessage"){
 
         echo json_encode($messaging->insertMessage($_PUT['otherId'], $_PUT['userId'], $_PUT['message']));
 
     }else if($_PUT['method'] === "not"){
             echo"it gets here";
-            print_r($_SESSION);
             $_SESSION['currentOther'] = $_PUT['otherId'];
             echo $_SESSION['currentOther'];
             echo json_encode(['success' => true, 'currentOther' => $_SESSION['currentOther']]);
